@@ -1,0 +1,191 @@
+@import '../var.scss';
+
+.el-button,.el-input__inner,.el-textarea__inner {
+    border-radius: 0;
+}
+
+.el-button--warning {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+    color:#333;
+}
+
+.el-button--info {
+    background-color: #e4e4e4;
+    border-color: #e4e4e4;
+    color: #333;
+}
+
+.el-form-item__label {
+    font-weight: 700;
+    // color:#333;
+}
+
+
+
+.el-table__header-wrapper {
+    .el-table__header th, .el-table__header tr {
+        background-color: #f4f6f9;
+        border-bottom: 0;
+    }
+}
+
+.el-table .cell {
+    .operate {
+        display: block;
+        font-size: 0;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .5s;
+        span {
+            position: relative;
+            display: inline-block;
+            padding:0 5px;
+            cursor: pointer;
+            line-height: 20px;
+            font-size:12px;
+            color:#56b8ce;
+
+            &:not(:first-child):before {
+                position: absolute;
+                content: "";
+                left:0;
+                top:50%;
+                width:1px;
+                height:10px;
+                background-color: #56b8ce;
+                transform:translateY(-50%);
+            }
+
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: #fff6d4;
+
+    .operate {
+        opacity: 1;
+    }
+}
+
+/*****选车弹窗******/
+.car-dialog {
+
+    .el-dialog {
+        border-radius: 0;
+    }
+
+    .el-dialog__header {
+        padding:15px 40px 15px 15px;
+        border-bottom:1px solid #ddd;
+
+        .cartType-dialog-head {
+            .left {
+                font-size: 18px;
+            }
+            .right {
+                color: $orange;
+            }
+        }
+    }
+
+    .el-dialog__headerbtn {
+        top: 8px;
+        right: 12px;
+    }
+
+    .el-dialog__body {
+        max-height: 450px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            background: #dde3e8;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: #b4c8d8
+        }
+    }
+
+    .el-dialog__footer {
+        padding: 0;
+    }
+}
+
+.el-dialog__headerbtn {
+    .el-dialog__close {
+        transition: transform .3s !important;        
+    }
+    &:hover .el-dialog__close {
+        transform: rotate(90deg)
+    }
+}
+
+// 头部筛选
+.top-filter-tab {
+
+    &.sticky {
+        .el-tabs__header {
+            position: sticky;
+            left:0;
+            top:0;
+            z-index: 100;
+        }
+    }
+
+    .el-tabs {
+        &__header {
+            background: #fff;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &__content {
+            overflow: inherit;
+        }
+    
+        &__nav-scroll {
+            padding:0 20px;
+        }
+
+        &__item {
+            height: 50px;
+            line-height: 50px;
+        }
+
+        &__nav-wrap::after {
+            background:#fff;
+        }
+    }
+}
+
+
+.filters-radio {
+    .el-radio-button--mini {
+        height:28px;
+        margin-right:10px;
+        
+        .el-radio-button__inner {
+            height:28px;
+            line-height:28px;
+            padding-top:0;
+            padding-bottom:0;
+            border-radius: 4px!important;
+            border:1px solid transparent!important;
+        }
+
+        &:not(.is-active){
+            .el-radio-button__inner {
+                background:#f3f3f2;
+                color:#787878;
+            }
+        }
+    }
+}

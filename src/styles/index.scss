@@ -1,0 +1,213 @@
+@import './var.scss';
+@import './mixins.scss';
+@import './transition.scss';
+
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td {
+	margin:0;
+	padding:0;
+	line-height:20px;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+body {font-size:14px; background: #eef1f6; color:#333; 
+    height: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+ul,li{list-style:none;}
+figure {display: block; margin:0; padding:0;}
+input,textarea{vertical-align:middle; font-size:100%;}
+textarea{overflow: auto;vertical-align: middle}
+h1,h2,h3,h4,h5,h6{font-size:100%; font-weight:normal;}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,iframe{display: block}
+em,i{font-style:normal; font-size:100%;}
+img{max-width: 100%;max-height: 100%; vertical-align: middle; display: block; border: 0 none; -ms-interpolation-mode: bicubic;}
+input[type=button]{outline:none}
+a {color:#000;}
+a,a:visited,a:link,a:active { text-decoration:none;}
+
+@mixin mt($top){
+    margin-top: $top;
+}
+
+@mixin ml($left){
+    margin-left: $left;
+}
+
+.ml5 {@include ml(5px)}
+.ml10 {@include ml(10px)}
+.ml15 {@include ml(15px)}
+.ml20 {@include ml(20px)}
+.mt5 {@include mt(5px)}
+.mt10 {@include mt(10px)}
+.mt15 {@include mt(15px)}
+.mt20 {@include mt(20px)}
+
+
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#app{
+    height: 100%;
+}
+
+.textCenter {
+    text-align:center
+}
+
+.block {
+    display: block;
+}
+
+.inlineBlock {
+    display: inline-block
+}
+
+.boxshadow {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.ellipsis {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.page-container {
+    flex:1;
+}
+
+.hr {
+    position: relative;
+    height: 40px;
+
+    &:after {
+        position: absolute;
+        content: "";
+        left:0;
+        top:50%;
+        height:1px;
+        width:100%;
+        background:#eef1f6;
+    }
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+a:focus,
+a:active {
+    outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus{
+    outline: none;
+}
+
+.clearfix {
+    &:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+}
+// .el-scrollbar__wrap{
+//     overflow-x: hidden;
+// }
+.row,.flex {
+    display: flex;
+}
+
+.col {
+    flex: 1;
+}
+
+.warp{
+    .btn{
+        text-align: left;
+       
+    }
+}
+
+.el-aside{
+    overflow: hidden;
+}
+#scorll {
+    .el-scrollbar__wrap{
+        overflow: auto !important;
+        height: 100%;
+    }
+}
+.center{
+	display: flex;
+	justify-content: center;
+    align-items: center;
+    flex-wrap:wrap;
+}
+.space-between{
+	display: flex;
+	justify-content: space-between;
+    align-items: center;
+    flex-wrap:wrap;
+}
+
+// .el-popover{
+
+//     top: -80px!important ;
+// }
+.el-table,.el-table__body-wrapper{
+    overflow: visible;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}
+
+.justify-content-spacebetween {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.align-items-end {
+    align-items: flex-end;
+}
+
+.ellipsis {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.radius {
+    border-radius: 50%;
+}
+
+.strong {
+    font-weight: 700;
+}

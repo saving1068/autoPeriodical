@@ -1,0 +1,32 @@
+@mixin clearfix {
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+}
+
+@mixin scrollBar($bg:'#99a9bf') {
+    &::-webkit-scrollbar-track-piece {
+      background: #d3dce6;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $bg;
+      border-radius: 20px;
+    }
+}
+
+@mixin vertical {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+@mixin size($width, $height) {
+    width: $width;
+    height: $height;
+}
