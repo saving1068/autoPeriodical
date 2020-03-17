@@ -4,6 +4,7 @@ console.log(process.env.NODE_ENV)
 
 const path = require('path')
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const productionGzipExtensions = ['js', 'css']
 module.exports = {
 	// 选项...
@@ -27,7 +28,8 @@ module.exports = {
 			filename: 'index.html',
 			// 当使用 title 选项时，
 			// template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-			title: 'Index Page',
+			title: '招商自动化系统',
+			favicon:'public/favicon.ico',
 			// 在这个页面中包含的块，默认情况下会包含
 			// 提取出来的通用 chunk 和 vendor chunk。
 			chunks: ['chunk-vendors', 'chunk-common', 'index']
@@ -67,6 +69,21 @@ module.exports = {
 				deleteOriginalAssets: false,
 				minRatio: 0.8
 			  }))
+			  config.plugins.push(new HtmlWebpackPlugin({ // 打包输出HTML
+				
+				minify: { // 压缩HTML文件
+				  removeComments: true, // 移除HTML中的注释
+				  collapseWhitespace: true, // 删除空白符与换行符
+				  minifyCSS: true,// 压缩内联css
+				  minifyJS: true,
+				  removeComments: true,
+				  removeCommentsFromCDATA: true,
+				},
+				
+			  //   filename: 'index.html',
+			  //   template: 'index.html'
+			  }))
+
 
 				
 

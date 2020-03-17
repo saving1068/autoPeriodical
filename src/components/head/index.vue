@@ -5,14 +5,14 @@
                 <img src="../../images/icon.jpg" >
             </div>
             <div style="flex:1;font-width:600;font-size:32px;letter-spacing:5px;color:#409eff;">
-               佛山市南海区彩雅纸箱包装有限公司管理平台
+               招商自动化系统
             </div>
         </div>
         <div class="login">
             <el-badge :value="notReadNum" :hidden='notReadNum == 0' style="margin:0 35px;">
                 <el-dropdown :hide-on-click="false">
                     <span class="el-dropdown-link">
-                        信息列表<i class="el-icon-arrow-down el-icon--right"></i>
+                        公告信息<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item v-for="(item,index) in msg" :key="index">
@@ -35,18 +35,23 @@
                 </el-dropdown>
             </el-badge>
             
-            <!-- <div class="avatar">
-                <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar>
-            </div> -->
-            <!-- <div>退出登录</div> -->
-            <el-dropdown szie="mini" @command="signOut" size="medium" >
+            <div class="avatar">
+                <!-- <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar> -->
+                当前用户
+            </div>
+            <div>
+                <el-button type='info'>
+                    注销登录
+                </el-button>  
+            </div>
+            <!-- <el-dropdown szie="mini" @command="signOut" size="medium" >
             <span class="el-dropdown-link">
                 下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" >
                 <el-dropdown-item style="min-width:100px">退出登录</el-dropdown-item>
             </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
         </div>
     </div>
 </template>

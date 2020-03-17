@@ -42,7 +42,7 @@
 // @ is an alias to /src
 import navBar from '@/components/nav'
 import myhead from '@/components/head'
-import '@/icons/svg/tupianBG.svg'
+// import '@/icons/svg/tupianBG.svg'
 export default {
   name: 'home',
   components: {
