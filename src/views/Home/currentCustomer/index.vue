@@ -95,6 +95,7 @@
         <el-table
             :data="tableData"
             tooltip-effect="dark"
+            @row-dblclick='rowDblclic'
             style="width: 100%"
             @selection-change="handleSelectionChange">
             <el-table-column
@@ -106,7 +107,7 @@
             <el-table-column label="是否超期" prop='overdue'>
             
             </el-table-column>
-            <el-table-column prop="address"label="处理状态"show-overflow-tooltip>
+            <el-table-column prop="address" label="处理状态" show-overflow-tooltip>
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -121,6 +122,129 @@
             </el-table-column>
         </el-table>
     </div>
+    <el-dialog
+        title="客户详情"
+        :visible.sync="detailVisible"
+        width="80%"
+        center
+        :before-close="handleClose">
+        
+        <el-form inline class="form-inline" label-width='100px'>
+            <el-form-item label="客户池">
+                <el-select v-model="search.customerPool" placeholder="请选择客户池">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="客户来源">
+                <el-select v-model="search.customerSource" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="是否超期">
+            <el-select v-model="search.overdue" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="客户状态">
+            <el-select v-model="search.state" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="是否有效">
+            <el-select v-model="search.effective" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="客户类型">
+            <el-select v-model="search.type" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="是否成交">
+            <el-select v-model="search.deal" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+            
+            <el-form-item label="所属部门">
+            <el-select v-model="search.department" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="所属城市">
+                <el-cascader
+                v-model="search.province"
+                :options="options"
+                @change="handleChange">
+                </el-cascader>
+            </el-form-item>
+            <el-form-item label="获取时间">
+            <el-date-picker
+                v-model="time"
+                type="daterange"
+                range-separator="至"
+                format='yyyy-MM-DD'
+                @change='deteChange'
+                value-format='yyyy-MM-DD'
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item label="客户姓名" width='100%'>
+            <el-input v-model='search.name' placeholder='请输入客户姓名'></el-input>
+            </el-form-item>
+        </el-form>
+        <div class="title space-between">
+            <h1 style="font-width:600;font-size:32px">追踪记录</h1>
+            <el-button  type="primary">新增跟进记录</el-button>
+        </div>
+        <div class="center">
+            <el-form :inline="true"  class="form-inline">
+            <el-form-item label="客户:">
+                {{detail.customer}}
+                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
+            </el-form-item>
+            <el-form-item label="电话号码:">
+                {{detail.ipone}}
+                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
+            </el-form-item>
+             <el-form-item label="地址:">
+                {{detail.address}}
+                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
+            </el-form-item>
+             <el-form-item label="微信:">
+                {{detail.we}}
+                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
+            </el-form-item>
+            </el-form>
+        </div>
+        <div class="center">
+            <ul class="record">
+                <li v-for="(item,index) in detail.record" :key="index">
+                    <div :class="item.type == 1?'manager':''">
+                        {{item.text}}
+                    </div>
+                    
+                </li>
+            </ul>
+        </div>
+        
+
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="handleClose">取 消</el-button>
+            <el-button type="primary" @click="detailVisible = false">确 定</el-button>
+        </span>
+        </el-dialog>
+
   </div>
 </template>
 
@@ -130,6 +254,18 @@ export default {
   data() {
     return {
         time:"",
+        detailVisible:false,
+        detail:{
+            customer:'入货',
+            ipone:"1371111111",
+            address:'地址',
+            we:'微信',
+            record:[
+                {type:0,text:'销售员记录'},
+                {type:1,text:'经理记录111111111111111111111111sasdfsd谁知道发送到发送到股份'},
+            ]
+        },
+
         search:{
             customerPool:'',//池
             customerSource:"",//来源
@@ -163,7 +299,7 @@ export default {
               label: 'Button 按钮'
             }]
             }],
-            tableData:[]
+            tableData:[1]
         }
     
   },
@@ -174,6 +310,13 @@ export default {
    
   },
   methods: {
+       handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
       deteChange(value){
           if(value){
               this.search.beginTime = value[0];
@@ -185,6 +328,11 @@ export default {
       },
       handleChange(value){
           console.log(value)
+      },
+      rowDblclic(value){
+          console.log(value)
+          this.detailVisible =  true;
+        //   this.detail = value
       },
       handleSelectionChange(value){
           console.log(value)
@@ -199,5 +347,14 @@ export default {
         .button{
             padding:20px 0;
         }
+    }
+    .title{
+        padding: 20px 0;
+    }
+    // .record{
+    //     width: 100%;
+    // }
+    .manager{
+        color: red;
     }
 </style>
