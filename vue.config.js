@@ -2,10 +2,10 @@
 console.log(process.env.NODE_ENV)
 // console.log(process.env.VUE_APP_BASE_URL)
 
-const path = require('path')
+// const path = require('path')
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const productionGzipExtensions = ['js', 'css']
+// const productionGzipExtensions = ['js', 'css']
 module.exports = {
 	// 选项...
 	//例如，如果你的应用被部署在 https://www.my-app.com/my-app/，则设置 publicPath 为 /my-app/。
@@ -69,20 +69,20 @@ module.exports = {
 				deleteOriginalAssets: false,
 				minRatio: 0.8
 			  }))
-			  config.plugins.push(new HtmlWebpackPlugin({ // 打包输出HTML
+			//   config.plugins.push(new HtmlWebpackPlugin({ // 打包输出HTML
 				
-				minify: { // 压缩HTML文件
-				  removeComments: true, // 移除HTML中的注释
-				  collapseWhitespace: true, // 删除空白符与换行符
-				  minifyCSS: true,// 压缩内联css
-				  minifyJS: true,
-				  removeComments: true,
-				  removeCommentsFromCDATA: true,
-				},
+			// 	minify: { // 压缩HTML文件
+			// 	  removeComments: true, // 移除HTML中的注释
+			// 	  collapseWhitespace: true, // 删除空白符与换行符
+			// 	  minifyCSS: true,// 压缩内联css
+			// 	  minifyJS: true,
+			// 	  removeComments: true,
+			// 	  removeCommentsFromCDATA: true,
+			// 	},
 				
-			  //   filename: 'index.html',
-			  //   template: 'index.html'
-			  }))
+			//   //   filename: 'index.html',
+			//   //   template: 'index.html'
+			//   }))
 
 
 				

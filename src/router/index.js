@@ -60,6 +60,7 @@ const routes = [
 				},
 				component:() => import('@/views/dictionaries'),
 			},
+			
 		]
 	},
 	{
