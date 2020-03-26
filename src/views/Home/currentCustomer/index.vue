@@ -87,7 +87,7 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-            <el-button type="primary">新增客户</el-button>
+            <el-button type="primary" @click='addVisible = true'>新增客户</el-button>
             <el-button type="danger">批量放弃</el-button>
             <el-button type="warning">批量转移</el-button>
             <el-button >导出</el-button>
@@ -112,17 +112,81 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                    <el-button type="text">成交</el-button>
-                   <el-button type="text">移交</el-button>
+                   <el-button type="text" @click.native='transfer(scope.row)'>移交</el-button>
                    <el-button type="text">来访</el-button>
                    <el-button type="text">编辑</el-button>
-                   <el-button type="text">放弃</el-button>
-                   <el-button type="text">详情</el-button>
-                   <el-button type="text">取消移交</el-button>
+                   <el-button type="text" @click.native='rowDblclic(scope.row)'>详情</el-button>
+                   <el-popconfirm
+                    title="确定放弃该数据吗？"
+                     @onConfirm='sueAbandoned(scope.row)'
+                    @onCancel="canclAbandoned"
+                    :value='ifAbandoned'
+                    :tabindex='99'
+                    >
+                    <el-button  type="text" style='margin: 0 10px'  slot="reference">放弃</el-button>
+                    </el-popconfirm>
+                   
+                   <el-popconfirm
+                    title="确定取消移交该数据吗？"
+                    @onConfirm='sueTransfer(scope.row)'
+                    @onCancel="canclTransfer"
+                    :value='ifTransfer'
+                    :tabindex='99'
+                    >
+                    <el-button  slot="reference" type="text" >取消移交</el-button>
+                    </el-popconfirm>
                 </template>
             </el-table-column>
         </el-table>
     </div>
+
+    <!-- 移交 -->
     <el-dialog
+        title='移交客户'
+        :visible.sync="transferVisible"
+        width="30%"
+        center
+        :before-close="transferClose" 
+    >
+    <el-form inline class="form-inline" label-width='100px'>
+        <el-form-item label="销售员">
+            <el-select v-model="search.customerPool" placeholder="请选择客户池">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+            </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="所属城市">
+            <el-cascader
+            v-model="search.province"
+            :options="options"
+            @change="handleChange">
+            </el-cascader>
+        </el-form-item> -->
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="transferClose">取 消</el-button>
+            <el-button type="primary" @click="transferVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>   
+
+
+    <!-- 新增客户 -->
+    <el-dialog
+        title='新增客户'
+        :visible.sync="addVisible"
+        width="80%"
+        center
+        :before-close="addClose" 
+    >
+        新增客户
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="addClose">取 消</el-button>
+            <el-button type="primary" @click="addVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>   
+
+    <!-- //详情 -->
+    <el-dialog 
         title="客户详情"
         :visible.sync="detailVisible"
         width="80%"
@@ -237,6 +301,19 @@
                 </li>
             </ul>
         </div>
+        <div class='center lMessage'>
+                 <el-input
+                 clearable
+                    type="textarea"
+                    autosize
+                    placeholder="请输入内容"
+                    resize='none'
+                    :autosize="{ minRows: 2, maxRows: 5}"
+                    v-model="message">
+                </el-input>
+                <el-button class='lMessageSure' type="text">确定</el-button>
+            </div>
+        
         
 
         <span slot="footer" class="dialog-footer">
@@ -255,6 +332,11 @@ export default {
     return {
         time:"",
         detailVisible:false,
+        addVisible:false,
+        transferVisible:false,
+        ifTransfer:true,
+        transferInfo:{},
+        ifAbandoned:false,
         detail:{
             customer:'入货',
             ipone:"1371111111",
@@ -265,6 +347,7 @@ export default {
                 {type:1,text:'经理记录111111111111111111111111sasdfsd谁知道发送到发送到股份'},
             ]
         },
+        message:'',
 
         search:{
             customerPool:'',//池
@@ -310,10 +393,40 @@ export default {
    
   },
   methods: {
+        canclAbandoned(){//放弃
+          this.ifAbandoned = false;
+      },
+      sueAbandoned(item){
+          console.log(item)
+      },
+      canclTransfer(){//移交
+          this.ifTransfer = false;
+      },
+      sueTransfer(item){
+          console.log(item)
+      },
+      transfer(item){
+          this.transferVisible =  true;
+          this.transferInfo = item;
+      },
+      transferClose(){
+          this.$confirm('确认关闭？')
+          .then(_ => {
+            this.transferVisible =  false;
+          })
+          .catch(_ => {});
+      },
+      addClose(){
+          this.$confirm('确认关闭？')
+          .then(_ => {
+            this.addVisible =  false;
+          })
+          .catch(_ => {});
+      },
        handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
-            done();
+            this.detailVisible =  false;
           })
           .catch(_ => {});
       },
@@ -340,8 +453,29 @@ export default {
   }
 };
 </script>
+<style lang='scss'>
+    .lMessage{
+         position:relative;
+         padding-top:20px;
+        .lMessageSure{
+                position:absolute;
+                right:0;
+                bottom:0;
+                padding:0 20px  10px 10px;
+            }
+        .el-textarea{
+           
+            
+            .el-textarea__inner{
+                padding-right: 60px;
+            }
+        }
+        
+    }
+</style>
 
 <style scoped="scoped" lang="scss">
+    
     .table{
         
         .button{
