@@ -72,11 +72,11 @@
            
             title="新增用户"
             :visible.sync="userChange"
-            width="50%"
+            width="60%"
             center
             :before-close="addClose">
               <div class="space-between">
-                <el-form label-width="80px"  size='mini'>
+                <el-form label-width="100px"  size='mini'>
                <el-form-item label="账号:">
                    <el-input  v-model="addItemInfo.account"></el-input>
                </el-form-item>
@@ -86,6 +86,9 @@
                </el-form-item>
                <el-form-item label="密码:" v-else>
                    <el-input  v-model="addItemInfo.password"></el-input>
+               </el-form-item>
+               <el-form-item label="是否部门领导:">
+                    <el-checkbox v-model="addItemInfo.dur.isLeader">是</el-checkbox>
                </el-form-item>
                <el-form-item label="联系人:">
                    <el-input  v-model="addItemInfo.contactName"></el-input>
@@ -108,31 +111,26 @@
                     :props="defaultProps">
                 </el-tree>
               </div>
+            <div>
+              <div>所属部门</div>
+                <el-tree
+                 ref="departmentTree"
+                    :data="departmentList"
+                    show-checkbox :props="departmentProps" node-key="id" 
+                     :default-checked-keys='departmentTreeList'
+                     default-expand-all 
+                    @check="sonCheck"
+                   >
+                </el-tree>
+              </div>  
                
-            
+  
            </div>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="addClose">取 消</el-button>
                 <el-button type="primary" @click="addSure">确 定</el-button>
             </span>
         </el-dialog>
-		<!-- <el-tree
-  :data="data"
-  show-checkbox
-  default-expand-all
-  node-key="id"
-  ref="tree"
-  highlight-current
-  :props="defaultProps">
-</el-tree>
-
-<div class="buttons">
-  <el-button @click="getCheckedNodes">通过 node 获取</el-button>
-  <el-button @click="getCheckedKeys">通过 key 获取</el-button>
-  <el-button @click="setCheckedNodes">通过 node 设置</el-button>
-  <el-button @click="setCheckedKeys">通过 key 设置</el-button>
-  <el-button @click="resetChecked">清空</el-button>
-</div> -->
 	</div>
 </template>
 
@@ -143,18 +141,29 @@ import {
 import {
   roleList
 } from '@/api/role'
+  import {
+    updateUserDepartment,
+    departmentList,
+} from '@/api/department'
 let addItemInfo = {
   account:'',contactName:'',contactPhone:'',
   roles:[],password:'',ifChangePassword:true,
+  dur:{did:"", isLeader:""}
 }
   export default {
     async created(){
       this.loading = true;
      await this.getList()
+     await this.getDepartmentList()
      await this.roleList()
       this.loading = false;
     },
     methods: {
+      sonCheck(data){
+          this.addItemInfo.dur.did = data.id;
+          this.$refs.departmentTree.setCheckedKeys([data.id]);
+           console.log(data)
+      },
       addClose(){
         this.$confirm('取消新增, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -187,6 +196,8 @@ let addItemInfo = {
                      if(this.addItemInfo.roles.length != 0&&this.addItemInfo.account
                      &&this.addItemInfo.contactName
                      &&this.addItemInfo.contactPhone
+                     &&this.addItemInfo.dur.did
+                     &&this.addItemInfo.dur.isLeader
                      ){
                        if(this.addItemInfo.id){
                           if(this.addItemInfo.ifChangePassword){
@@ -199,7 +210,7 @@ let addItemInfo = {
                               return this.$message.warning('请为该用户填写密码')
                             }
                        }
-                      
+                        this.addItemInfo.dur.isLeader = this.addItemInfo.dur.isLeader?1:0;
                        console.log(this.addItemInfo)
                        // if(this.addItemInfo.id){//修改
                             await accountUpdate(this.addItemInfo);
@@ -208,7 +219,7 @@ let addItemInfo = {
                             // await updataRole(this.addItemInfo);
                            
                         // }
-                        this.addItemInfo = {}
+                        this.addItemInfo ={dur: {did:"", isLeader:""}}
                             this.getList({})
                          this.$message.success(success);
                          this.userChange = false;
@@ -298,8 +309,12 @@ let addItemInfo = {
 
             this.itemPowerList = roles;
             console.log(this.itemPowerList)
-           
-            this.addItemInfo = {...res.data,ifChangePassword:false}
+            let obj = {
+              did:res.data.did, isLeader:res.data.isLeader==1?true:false
+            }
+            this.departmentTreeList = [res.data.did]
+            this.addItemInfo = {...res.data,ifChangePassword:false,dur:obj}
+            console.log(this.addItemInfo)
           }else{
             this.addItemInfo = {...addItemInfo}
            
@@ -309,6 +324,10 @@ let addItemInfo = {
         },
         showParent(){
 
+        },
+        async getDepartmentList(){
+              let res = await departmentList({});
+              this.departmentList = res.data;
         },
     async getList(obj){
       let res = await accountList(obj);
@@ -336,32 +355,6 @@ let addItemInfo = {
     },
 
 
-
-
-
-
-
-      getCheckedNodes() {
-        console.log(this.$refs.tree.getCheckedNodes());
-      },
-      getCheckedKeys() {
-        console.log(this.$refs.tree.getCheckedKeys());
-      },
-      setCheckedNodes() {
-        this.$refs.tree.setCheckedNodes([{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 9,
-          label: '三级 1-1-1'
-        }]);
-      },
-      setCheckedKeys() {
-        this.$refs.tree.setCheckedKeys([3]);
-      },
-      resetChecked() {
-        this.$refs.tree.setCheckedKeys([]);
-      }
     },
 
     data() {
@@ -371,16 +364,24 @@ let addItemInfo = {
         sonShow:false,
         userChange:false,
         addItemInfo:{
-          ifChangePassword:false
+          ifChangePassword:false,
+          dur:{did:"", isLeader:""}
         },
         list:[],
         initroleList:[],
         treeData:[],
         itemPowerList:[],
+        departmentTreeList:[],
         defaultProps: {
           // children: 'children',
           label:"description"
-        }
+        },
+        
+        departmentProps:{
+            children: 'child',
+          label:"description"
+        },
+        departmentList:[]
       };
     }
   };

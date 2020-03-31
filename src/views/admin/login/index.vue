@@ -14,7 +14,7 @@
 		</div> -->
 		<img class="backgroundImg" src="@/images/background.jpg" />
 		<div class="center pageTitle">
-			佛山市南海区彩雅纸箱包装有限公司管理平台
+			招商自动化系统
 		</div>
 		<div class="login-content">
 			<div class="login-wrap">
@@ -94,7 +94,7 @@
 				loaded: true,
 				tabIndex:0,
 				ifgetCode:false,
-				codeImage:process.env.NODE_ENV === 'production' ? 'http://wearewwx.com:8080/user/kaptcha': '/api/user/kaptcha',
+				codeImage:process.env.NODE_ENV === 'production' ? 'http://wearewwx.com:8001/user/kaptcha': '/api/user/kaptcha',
 				seconds:60,
 				info: '',
 				loginForm: {
@@ -343,11 +343,15 @@
 						})
 						this.loginForm.account = '';this.loginForm.password = '';
 						this.loginForm.verCode = '';
-						// console.log(info)
-						this.$store.commit('setToken',info)
+						console.log(info.menu)
+						// this.$store.commit('setToken',info)
 						sessionStorage.setItem('token', info.token);
+						// this.$store.commit('setPage',info.menu)
+						
+						sessionStorage.setItem('pageList', JSON.stringify(info.menu));
+						console.log(sessionStorage.getItem('pageList'),222)
 						// console.log(token,222)
-						// console.log(this.$store)
+						
 						this.$message.success('登录成功')
 						this.$loading.hide()
 							const {

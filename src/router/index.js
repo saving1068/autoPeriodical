@@ -60,7 +60,22 @@ const routes = [
 				},
 				component:() => import('@/views/dictionaries'),
 			},
-			
+			{//部门
+				path: '/department',
+				name: 'department',
+				meta:{
+					title:'部门管理'
+				},
+				component:() => import('@/views/department'),
+			},
+			{//项目管理
+				path: '/project',
+				name: 'project',
+				meta:{
+					title:'项目管理'
+				},
+				component:() => import('@/views/project'),
+			},
 		]
 	},
 	{

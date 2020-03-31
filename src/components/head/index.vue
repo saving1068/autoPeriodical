@@ -40,7 +40,7 @@
                 当前用户
             </div>
             <div>
-                <el-button type='info'>
+                <el-button type='info' @click="signOut">
                     注销登录
                 </el-button>  
             </div>
@@ -78,8 +78,8 @@
             }
         },
         async created(){
-           await this.notReadMsg()
-            await this.msgList()
+        //    await this.notReadMsg()
+            // await this.msgList()
         },
         methods:{
             

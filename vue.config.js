@@ -134,7 +134,7 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/api': {
-				target: 'http://wearewwx.com:8080',
+				target: 'http://wearewwx.com:8001',
 				// target: 'http://2821r97k36.wicp.vip',
 				// ws: true,
 				changeOrigin: true,
@@ -142,21 +142,18 @@ module.exports = {
 					'^/api': '/'
 				}
 			},
-			// '/foo': {
-			// 	target: '<other_url>'
-			// }
 		}
 	},
-	pluginOptions:{
-		pwa: {
-			iconPaths: {
-			  favicon32: './favicon.ico',
-			  favicon16: './favicon.ico',
-			  appleTouchIcon: './favicon.ico',
-			  maskIcon: './favicon.ico',
-			  msTileImage: './favicon.ico'
-			}
-		  }
-	}
+	// pluginOptions:{
+	// 	pwa: {
+	// 		iconPaths: {
+	// 		  favicon32: './favicon.ico',
+	// 		  favicon16: './favicon.ico',
+	// 		  appleTouchIcon: './favicon.ico',
+	// 		  maskIcon: './favicon.ico',
+	// 		  msTileImage: './favicon.ico'
+	// 		}
+	// 	  }
+	// }
 	
 }

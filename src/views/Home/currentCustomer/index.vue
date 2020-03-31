@@ -1,72 +1,107 @@
 <template>
-  <div class="warp">
+  <div class="warp" v-loading='loading'>
     <el-form inline class="form-inline" label-width='100px'>
-        <el-form-item label="客户池">
-            <el-select v-model="search.customerPool" placeholder="请选择客户池">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="客户姓名" width='100%' >
+           <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
+        </el-form-item>
+        <el-form-item label="广告负责人" >
+            <el-select class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
+            <el-option 
+                    v-for="item in userList"
+                    :key="item.id"
+                    :label="item.contactName"
+                    :value="item.id"
+                ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="客户来源">
-            <el-select v-model="search.customerSource" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+       
+        <el-form-item label="平台" >
+           <el-select class="width280" v-model="search.platform" placeholder="请选择平台">
+           <el-option 
+                v-for="item in platform"
+                :key="Number(item.key)"
+                :label="item.value"
+                :value="Number(item.key)"
+            ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="是否超期">
-           <el-select v-model="search.overdue" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="电子邮箱" >
+            <el-input class="width280" placeholder="请输入电子邮箱" v-model="search.email"></el-input>
+        </el-form-item>
+        <el-form-item label="项目">
+           <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
+            <el-option
+                v-for="item in projectList"
+                :key="Number(item.id)"
+                :label="item.name"
+                :value="Number(item.id)"
+            ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="客户状态">
-           <el-select v-model="search.state" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
+        
+        <el-form-item label="下次跟进时间" >
+            <el-date-picker class="width280"
+                v-model="search.nextFollowUpDate"
+                type="date"
+                value-format='yyyy-MM-DD'
+                placeholder="选择日期">
+                </el-date-picker>
         </el-form-item>
-        <el-form-item label="是否有效">
-           <el-select v-model="search.effective" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="客户类型">
-           <el-select v-model="search.type" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="是否成交">
+        <!-- <el-form-item label="是否成交">
            <el-select v-model="search.deal" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         
-        <el-form-item label="所属部门">
-           <el-select v-model="search.department" placeholder="活动区域">
+        <el-form-item label="所属人员" > <!-- 经理 -->
+           <el-select class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-
-        <el-form-item label="所属城市">
-            <el-cascader
-            v-model="search.province"
-            :options="options"
-            @change="handleChange">
-            </el-cascader>
-           <!-- <el-select v-model="search.province" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="所属部门" > <!-- 经理 -->
+           <el-select class="width280" v-model="search.department" placeholder="活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
             </el-select>
-            <el-select style='margin-left:10px' v-model="search.city" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-            </el-select> -->
         </el-form-item>
-        <el-form-item label="获取时间">
+        <el-form-item label="QQ号码" >
+            <el-input class="width280" placeholder="请输入QQ号码" v-model="search.qq"></el-input>
+        </el-form-item>
+        <el-form-item label="所属省份">
+               <el-select v-model="search.province" @change="provinceChange" placeholder="请选择所属省份">
+                <el-option 
+                v-for="(item,index) in province " :key="index" 
+                :label="item.pname" 
+                :value="item.pid">
+                </el-option>
+                
+                </el-select>
+            </el-form-item>
+        <el-form-item label="所属城市">
+           <el-select v-model="search.city" @change="cityChange" placeholder="请选择所属城市">
+                <el-option 
+                v-for="(item,index) in city " :key="index" 
+                :label="item.cname" 
+                :value="item.cid">
+                </el-option>
+                </el-select>
+            </el-form-item>
+         
+            <el-form-item label="所属地区">
+               <el-select v-model="search.district"  placeholder="请选择所属地区">
+                <el-option 
+                v-for="(item,index) in district " :key="index" 
+                :label="item.dname" 
+                :value="item.did">
+                </el-option>
+                </el-select>
+            </el-form-item>
+        <el-form-item label="关键词" >
+            <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
+        </el-form-item>
+        <el-form-item label="获取时间" >
         <el-date-picker
             v-model="time"
             type="daterange"
@@ -78,16 +113,16 @@
             end-placeholder="结束日期">
             </el-date-picker>
         </el-form-item>
-        <el-form-item label="客户姓名" width='100%'>
-           <el-input v-model='search.name' placeholder='请输入客户姓名'></el-input>
-        </el-form-item>
+         
+        
+        
         <div class='center'>
-            <el-button type="primary" icon="el-icon-seach">搜索</el-button>
+            <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
         </div>
     </el-form>
     <div class='table'>
         <div class='button'>
-            <el-button type="primary" @click='addVisible = true'>新增客户</el-button>
+            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger">批量放弃</el-button>
             <el-button type="warning">批量转移</el-button>
             <el-button >导出</el-button>
@@ -104,18 +139,29 @@
             </el-table-column>
             <el-table-column prop="name" label="客户姓名">
             </el-table-column>
-            <el-table-column label="是否超期" prop='overdue'>
+            <el-table-column prop="adManName" label="广告负责人">
+            </el-table-column>
+            <el-table-column prop="projectName" label="项目名称">
+            </el-table-column>
+            <el-table-column prop="address" label="详细地址">
+            </el-table-column>
+            <el-table-column prop="email" label="电子邮箱">
+            </el-table-column>
+            <el-table-column prop="qq" label="qq">
+            </el-table-column>
+            <el-table-column prop="getDate" label="获取时间">
+            </el-table-column>
+            <!-- <el-table-column label="处理状态" prop='overdue'>
             
-            </el-table-column>
-            <el-table-column prop="address" label="处理状态" show-overflow-tooltip>
-            </el-table-column>
+            </el-table-column> -->
+            
             <el-table-column label="操作">
                 <template slot-scope="scope">
                    <el-button type="text">成交</el-button>
                    <el-button type="text" @click.native='transfer(scope.row)'>移交</el-button>
                    <el-button type="text">来访</el-button>
                    <el-button type="text">编辑</el-button>
-                   <el-button type="text" @click.native='rowDblclic(scope.row)'>详情</el-button>
+                   <el-button type="text" @click.native='rowDblclic(1,scope.row)'>详情</el-button>
                    <el-popconfirm
                     title="确定放弃该数据吗？"
                      @onConfirm='sueAbandoned(scope.row)'
@@ -187,84 +233,93 @@
 
     <!-- //详情 -->
     <el-dialog 
-        title="客户详情"
-        :visible.sync="detailVisible"
+        :title="type == 1?'客户详情':'新增客户'"
+        :visible.sync="detailFlag"
         width="80%"
         center
         :before-close="handleClose">
         
         <el-form inline class="form-inline" label-width='100px'>
-            <el-form-item label="客户池">
-                <el-select v-model="search.customerPool" placeholder="请选择客户池">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="客户来源">
-                <el-select v-model="search.customerSource" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="是否超期">
-            <el-select v-model="search.overdue" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="客户状态">
-            <el-select v-model="search.state" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="是否有效">
-            <el-select v-model="search.effective" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="客户类型">
-            <el-select v-model="search.type" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="是否成交">
-            <el-select v-model="search.deal" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-            </el-form-item>
+            <el-form-item label="客户姓名" width='100%' >
+           <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
+        <el-form-item label="广告负责人" >
+            <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <el-option 
+                v-for="item in userList"
+                :key="item.id"
+                :label="item.contactName"
+                :value="item.id"
+            ></el-option>
             
-            <el-form-item label="所属部门">
-            <el-select v-model="search.department" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+            </el-select>
+        </el-form-item>
+       
+        <el-form-item label="平台" >
+           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type == 1?true:false">
+           <el-option 
+                v-for="item in platform"
+                :key="Number(item.key)"
+                :label="item.value"
+                :value="Number(item.key)"
+            ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="电子邮箱" >
+            <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
+        <el-form-item label="项目">
+           <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+            <el-option
+                v-for="item in projectList"
+                :key="Number(item.id)"
+                :label="item.name"
+                :value="Number(item.id)"
+            ></el-option>
+           
+            </el-select>
+        </el-form-item>
+        
+        <el-form-item label="下次跟进时间" >
+            <el-date-picker class="width280" :disabled="type == 1?true:false"
+                v-model="detail.nextFollowUpDate"
+                type="date"
+                value-format='yyyy-MM-DD'
+                placeholder="选择日期">
+                </el-date-picker>
+        </el-form-item>
+        <el-form-item label="QQ号码" >
+            <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
+        <el-form-item label="所属省份">
+               <el-select v-model="detail.province" @change="provinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
+                    <el-option 
+                    v-for="(item,index) in province " :key="index" 
+                    :label="item.pname" 
+                    :value="item.pid">
+                    </el-option>
                 </el-select>
             </el-form-item>
-
-            <el-form-item label="所属城市">
-                <el-cascader
-                v-model="search.province"
-                :options="options"
-                @change="handleChange">
-                </el-cascader>
+        <el-form-item label="所属城市">
+           <el-select v-model="detail.city" @change="cityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
+                <el-option 
+                v-for="(item,index) in city " :key="index" 
+                :label="item.cname" 
+                :value="item.cid">
+                </el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item label="获取时间">
-            <el-date-picker
-                v-model="time"
-                type="daterange"
-                range-separator="至"
-                format='yyyy-MM-DD'
-                @change='deteChange'
-                value-format='yyyy-MM-DD'
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-                </el-date-picker>
+            <el-form-item label="所属地区">
+               <el-select v-model="detail.district"  placeholder="请选择所属地区" :disabled="type == 1?true:false">
+                <el-option 
+                v-for="(item,index) in district " :key="index" 
+                :label="item.dname" 
+                :value="item.did">
+                </el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item label="客户姓名" width='100%'>
-            <el-input v-model='search.name' placeholder='请输入客户姓名'></el-input>
+            <el-form-item label="详细地址" >
+                <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
         </el-form>
         <div class="title space-between">
@@ -308,7 +363,7 @@
                     autosize
                     placeholder="请输入内容"
                     resize='none'
-                    :autosize="{ minRows: 2, maxRows: 5}"
+                    
                     v-model="message">
                 </el-input>
                 <el-button class='lMessageSure' type="text">确定</el-button>
@@ -318,7 +373,7 @@
 
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="detailVisible = false">确 定</el-button>
+            <el-button type="primary" @click="suerAdd()">确 定</el-button>
         </span>
         </el-dialog>
 
@@ -326,12 +381,38 @@
 </template>
 
 <script>
-
+import {updateCustomer,
+    customerList,
+    detailCustomer,
+    deleteCustomer,} from '@/api/custormer'
+import { 
+    districtList,
+    cityList,
+    provinceList
+} from '@/api/region'
+import {projectList} from '@/api/project'
+import {accountList} from '@/api/user'
+import { dictApi ,idChangeStr} from "@/utils";
+let customerInfo = {
+        adMan:'',//广告负责人
+                department:"",//所属部门
+                platform:"",//逾期
+                project:'',//项目
+                qq:'',//有效
+                getDateBegin:'',
+                getDateEnd:"",
+                personnel:"",//所属人员
+                nextFollowUpDate:'',//下次跟进时间
+                province:'',//省
+                city:"",//市
+                district:'',//区
+                address:""
+    }
 export default {
   data() {
     return {
         time:"",
-        detailVisible:false,
+        detailFlag:false,
         addVisible:false,
         transferVisible:false,
         ifTransfer:true,
@@ -348,52 +429,98 @@ export default {
             ]
         },
         message:'',
-
+        customerInfo:{},
+        type:0,
         search:{
-            customerPool:'',//池
-            customerSource:"",//来源
-            overdue:"",//逾期
-            state:'',//状态
-            effective:'',//有效
-            type:"",//类型
-            beginTime:'',
-            endTime:"",
-            department:"",//部门
+            adMan:'',//广告负责人
+            department:"",//所属部门
+            platform:"",//逾期
+            project:'',//项目
+            qq:'',//有效
+            getDateBegin:'',
+            getDateEnd:"",
+            personnel:"",//所属人员
+            nextFollowUpDate:'',//下次跟进时间
             province:'',//省
             city:"",//市
+            district:'',//区
+            isSuccess:0,
+            isValid:1,
+            keyword:"",
         },
-        options:[{
-            value: 'basic',
-            label: 'Basic',
-            children: [{
-              value: 'layout',
-              label: 'Layout 布局'
-            }, {
-              value: 'color',
-              label: 'Color 色彩'
-            }, {
-              value: 'typography',
-              label: 'Typography 字体'
-            }, {
-              value: 'icon',
-              label: 'Icon 图标'
-            }, {
-              value: 'button',
-              label: 'Button 按钮'
-            }]
-            }],
-            tableData:[1]
+            tableData:[1],
+            province:[],
+            city:[],
+            district:[],
+            userList:[],
+            platform:[],
+            projectList:[],
+            loading:false
         }
     
   },
   create(){
-
+     
   },
-  mounted() {
-   
+   async mounted() {
+    
+    this.dist().then(()=>{
+        this.customerList()
+        
+    })
+        // this.loading= false;
+  },
+  watch:{
+    //   search:{
+    //     async handler(value) {
+            
+           
+    //     },
+    //     deep: true
+    //   },
   },
   methods: {
-        canclAbandoned(){//放弃
+
+    async dist(){
+         this.loading= true;
+        let province = await provinceList();
+        this.province = province.data;
+        
+       
+        
+        // debugger
+        this.platform = await dictApi("platform");
+        let userList = await accountList({roleId:8});
+        this.userList = userList.data;
+        let project = await projectList();
+        this.projectList = project.data;
+          console.log(this.projectList,21312)
+      
+    },
+
+     async customerList(){//客户列表
+        let res = await customerList(this.search)
+        console.log(res,222222222222)
+        this.tableData = res.data;
+         this.loading= false;
+      },
+    async provinceChange(value){
+          if(value){
+                this.search.city =''
+                this.search.district = '';
+                let city = await cityList({fid:value});
+                this.city = city.data;
+            }
+      },
+    async cityChange(value){
+            if(value){
+                // this.district = [];
+                 this.search.district = '';
+                let district = await districtList({fid:value.city});
+                this.district = district.data;
+            }
+      },
+    canclAbandoned(){//放弃
           this.ifAbandoned = false;
       },
       sueAbandoned(item){
@@ -426,14 +553,14 @@ export default {
        handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
-            this.detailVisible =  false;
+            this.detailFlag =  false;
           })
           .catch(_ => {});
       },
       deteChange(value){
           if(value){
-              this.search.beginTime = value[0];
-              this.search.endTime = value[1];
+              this.search.getDateBegin = value[0];
+              this.search.getDateEnd = value[1];
           }else{
               this.search.beginTime = '';
               this.search.endTime = '';
@@ -442,10 +569,42 @@ export default {
       handleChange(value){
           console.log(value)
       },
-      rowDblclic(value){
+     async suerAdd(){
+          try {
+              this.$confirm(tips, "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(async()=>{
+               let res = await updateCustomer(this.detail);
+                this.customerList()
+                this.detailFlag =  false;
+          })
+         
+        } catch (error) {
+            
+        }
+        
+      },
+      addDetail(){
+          this.type = 0;
+           this.detail = {...customerInfo};
+           this.detailFlag =  true;
+           console.log(this.detail,this.detailFlag) 
+      },
+      rowDblclic(value,item){
           console.log(value)
-          this.detailVisible =  true;
-        //   this.detail = value
+        //   try {
+               this.type = value;
+                if(item){
+                    this.detail = {...item};
+                }
+                this.detailFlag =  true;
+        //         console.log(this.detail,this.detailFlag) 
+        //   } catch (error) {
+        //       console.log(error)
+        //   }
+         
       },
       handleSelectionChange(value){
           console.log(value)
@@ -475,7 +634,9 @@ export default {
 </style>
 
 <style scoped="scoped" lang="scss">
-    
+    .width280{
+        width: 200px;
+    }
     .table{
         
         .button{

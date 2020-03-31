@@ -59,62 +59,6 @@ import {userMenu} from '@/api/menu'
 		data(){
 			return{
 				nav:[
-					// {
-					// title:'首页',
-					// path:'home'
-					// },
-					// {
-					// 	title:'我要下订单',
-					// 	path:'placeOrder'
-					// },
-					// {
-					// title:'订单列表',
-					// path:'order'
-					// },
-					// // {
-					// // title:'权限',
-					// // son:[
-					// 	{title:"角色管理",path:"role"},
-					// 	{title:"用户管理",path:"user"},
-					// 	{title:'菜单管理',path:'power'},
-					// // ]
-					// // },
-					// {
-					// title:'系统字典管理',
-					// path:'dictionaries'
-					// },
-					// {
-					// title:'客户管理',
-					// path:'customer'
-					// },
-					// {
-					// title:'供应商管理',
-					// path:'supplier'
-					// },
-					// {
-					// title:'费用管理',
-					// path:'cost'
-					// },
-					// {
-					// title:'箱型管理',
-					// path:'boxHandler'
-					// },
-					// {
-					// 	title:"采购管理",
-					// 	path:'purchaseHandler'
-					// },
-					// {
-					// 	title:"排产管理",
-					// 	path:'pdschedule'
-					// },
-					// {
-					// 	title:"成品库管理",
-					// 	path:'pdstock'
-					// },
-					// {
-					// 	title:"入料记录管理",
-					// 	path:'feeds'
-					// }
 				]
 			}
 		},
@@ -128,7 +72,7 @@ import {userMenu} from '@/api/menu'
 			console.log(this.maxHeight)
 			await this.getUserMunu()
 			await this.initNav(this.nav);
-		
+
 			let routeName = this.$route.name;
 			await this.selectNav(routeName)
 		},
@@ -162,9 +106,10 @@ import {userMenu} from '@/api/menu'
           return obj;
       },
 			async getUserMunu(){
-				let res = await userMenu();
-				this.nav = this.resetList(res.data)
-				console.log(this.nav)
+				// let res = await userMenu();
+				
+				this.nav = this.resetList(JSON.parse(sessionStorage.getItem('pageList')))
+				// console.log(this.nav)
 			},
 			goToSon(item){
 				console.log(item.url,'213213213')
