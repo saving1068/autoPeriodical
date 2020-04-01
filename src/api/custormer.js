@@ -30,13 +30,35 @@ const updateCustomer = (params) => { //更新字典数据
     });
 }
 
+const followList =  (params) => { //跟踪记录
+    return request({
+        url: '/followUpRecords/list',
+        method: 'POST',
+        data:params
+    });
+}
+const deleteFollow  = (params) => { //删除跟踪记录
+    return request({
+        url: '/followUpRecords/delete',
+        method: 'delete',
+        params
+    });
+}
 
-
+const updateFollow =  (params) => { //更新跟踪记录
+    return request({
+        url: '/followUpRecords/update',
+        method: 'POST',
+        data:params
+    });
+}
 
 export {
     updateCustomer,
     customerList,
     detailCustomer,
     deleteCustomer,
-    
+    followList,
+    deleteFollow,
+    updateFollow
 }

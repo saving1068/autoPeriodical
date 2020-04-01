@@ -3,7 +3,8 @@
         <div class="mask"></div>
         <div class="content">
             <div class="loader">
-                <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg>
+                <!-- <svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none" class="path"></circle></svg> -->
+                <i class="el-icon-loading"></i>
             </div>
             <div class="txt">{{title}}</div>
         </div>

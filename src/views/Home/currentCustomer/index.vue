@@ -292,18 +292,18 @@
             <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="所属省份">
-               <el-select v-model="detail.province" @change="provinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
+               <el-select v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
                     <el-option 
-                    v-for="(item,index) in province " :key="index" 
+                    v-for="(item,index) in detailProvince " :key="index" 
                     :label="item.pname" 
                     :value="item.pid">
                     </el-option>
                 </el-select>
             </el-form-item>
         <el-form-item label="所属城市">
-           <el-select v-model="detail.city" @change="cityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
+           <el-select v-model="detail.city" @change="detailCityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
                 <el-option 
-                v-for="(item,index) in city " :key="index" 
+                v-for="(item,index) in detailCity " :key="index" 
                 :label="item.cname" 
                 :value="item.cid">
                 </el-option>
@@ -312,7 +312,7 @@
             <el-form-item label="所属地区">
                <el-select v-model="detail.district"  placeholder="请选择所属地区" :disabled="type == 1?true:false">
                 <el-option 
-                v-for="(item,index) in district " :key="index" 
+                v-for="(item,index) in detailDistrict " :key="index" 
                 :label="item.dname" 
                 :value="item.did">
                 </el-option>
@@ -366,7 +366,7 @@
                     
                     v-model="message">
                 </el-input>
-                <el-button class='lMessageSure' type="text">确定</el-button>
+                <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
             </div>
         
         
@@ -384,7 +384,11 @@
 import {updateCustomer,
     customerList,
     detailCustomer,
-    deleteCustomer,} from '@/api/custormer'
+    deleteCustomer,
+    followList,
+    deleteFollow,
+    updateFollow
+    } from '@/api/custormer'
 import { 
     districtList,
     cityList,
@@ -419,14 +423,6 @@ export default {
         transferInfo:{},
         ifAbandoned:false,
         detail:{
-            customer:'入货',
-            ipone:"1371111111",
-            address:'地址',
-            we:'微信',
-            record:[
-                {type:0,text:'销售员记录'},
-                {type:1,text:'经理记录111111111111111111111111sasdfsd谁知道发送到发送到股份'},
-            ]
         },
         message:'',
         customerInfo:{},
@@ -455,7 +451,10 @@ export default {
             userList:[],
             platform:[],
             projectList:[],
-            loading:false
+            loading:false,
+            detailProvince:[],
+            detailCity:[],
+            detailDistrict:[],
         }
     
   },
@@ -485,7 +484,7 @@ export default {
          this.loading= true;
         let province = await provinceList();
         this.province = province.data;
-        
+        this.detailProvince = province.data;
        
         
         // debugger
@@ -516,8 +515,24 @@ export default {
             if(value){
                 // this.district = [];
                  this.search.district = '';
-                let district = await districtList({fid:value.city});
+                let district = await districtList({cid:value});
                 this.district = district.data;
+            }
+      },
+      async detailProvinceChange(value){
+          if(value){
+                this.detail.city =''
+                this.detail.district = '';
+                let city = await cityList({fid:value});
+                this.detailCity = city.data;
+            }
+      },
+    async detailCityChange(value){
+            if(value){
+                // this.district = [];
+                 this.detail.district = '';
+                let district = await districtList({cid:value});
+                this.detailDistrict = district.data;
             }
       },
     canclAbandoned(){//放弃
@@ -592,20 +607,41 @@ export default {
            this.detailFlag =  true;
            console.log(this.detail,this.detailFlag) 
       },
-      rowDblclic(value,item){
-          console.log(value)
-        //   try {
+     async rowDblclic(value,item){
+          console.log(item)
+          try {
+              this.$loading.show()
                this.type = value;
                 if(item){
                     this.detail = {...item};
+                    let res = await followList({id:item.id})
+                    this.detail.record = res.data
+                    console.log(res)
                 }
                 this.detailFlag =  true;
-        //         console.log(this.detail,this.detailFlag) 
-        //   } catch (error) {
-        //       console.log(error)
-        //   }
+                console.log(this.detail) 
+          }catch (error) {
+             this.$loading.hide()
+         }
+         this.$loading.hide()
          
       },
+     async updataFollowList(){
+         this.$loading.show()
+         try {
+             let obj = {
+             ctId:this.detail.id,
+             remark:this.message
+            }
+            let res = await updateFollow(obj)
+            let followList = await followList({id:this.detail.id})
+            this.detail.record = followList.data;
+         } catch (error) {
+             this.$loading.hide()
+         }
+         this.$loading.hide()
+         
+     },
       handleSelectionChange(value){
           console.log(value)
       },
