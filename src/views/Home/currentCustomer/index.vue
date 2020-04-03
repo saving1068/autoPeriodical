@@ -197,8 +197,12 @@
     <el-form inline class="form-inline" label-width='100px'>
         <el-form-item label="销售员">
             <el-select v-model="search.customerPool" placeholder="请选择客户池">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+                <el-option 
+                v-for="item in saleList"
+                :key="item.id"
+                :label="item.contactName"
+                :value="item.id"
+            ></el-option>
             </el-select>
         </el-form-item>
         <!-- <el-form-item label="所属城市">
@@ -292,11 +296,12 @@
             <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="所属省份">
+        {{province}}{{detail.province}}
                <el-select v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
                     <el-option 
-                    v-for="(item,index) in detailProvince " :key="index" 
+                    v-for="(item,index) in province " :key="index" 
                     :label="item.pname" 
-                    :value="item.pid">
+                    :value="Number(item.pid)">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -305,7 +310,7 @@
                 <el-option 
                 v-for="(item,index) in detailCity " :key="index" 
                 :label="item.cname" 
-                :value="item.cid">
+                :value="Number(item.cid)">
                 </el-option>
                 </el-select>
             </el-form-item>
@@ -314,7 +319,7 @@
                 <el-option 
                 v-for="(item,index) in detailDistrict " :key="index" 
                 :label="item.dname" 
-                :value="item.did">
+                :value="Number(item.did)">
                 </el-option>
                 </el-select>
             </el-form-item>
@@ -444,13 +449,14 @@ export default {
             isValid:1,
             keyword:"",
         },
-            tableData:[1],
+            tableData:[],
             province:[],
             city:[],
             district:[],
-            userList:[],
-            platform:[],
-            projectList:[],
+            userList:[],//广告人
+            saleList:[],//销售
+            platform:[],//平台
+            projectList:[],//项目
             loading:false,
             detailProvince:[],
             detailCity:[],
@@ -491,6 +497,8 @@ export default {
         this.platform = await dictApi("platform");
         let userList = await accountList({roleId:8});
         this.userList = userList.data;
+        let saleList = await accountList({roleId:7});
+        this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
           console.log(this.projectList,21312)
@@ -615,6 +623,10 @@ export default {
                 if(item){
                     this.detail = {...item};
                     let res = await followList({id:item.id})
+                    let city = await cityList({fid:item.city});
+                    this.detailCity = city.data;
+                    let district = await districtList({cid:item.district});
+                    this.detailDistrict = district.data;
                     this.detail.record = res.data
                     console.log(res)
                 }
@@ -634,8 +646,10 @@ export default {
              remark:this.message
             }
             let res = await updateFollow(obj)
-            let followList = await followList({id:this.detail.id})
+            let followList = await followList({id:this.detail.id});
+            this.message = '';
             this.detail.record = followList.data;
+
          } catch (error) {
              this.$loading.hide()
          }
