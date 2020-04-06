@@ -37,7 +37,7 @@
             
             <div class="avatar">
                 <!-- <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar> -->
-                当前用户
+                {{userInfo.contactName}}
             </div>
             <div>
                 <el-button type='info' @click="signOut">
@@ -74,10 +74,15 @@
                 searchValue:{
                     limit:5,
                     page:1,
+                },
+                userInfo:{
+
                 }
             }
         },
         async created(){
+            this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
+            console.log(this.userInfo)
         //    await this.notReadMsg()
             // await this.msgList()
         },
@@ -133,6 +138,9 @@
             signOut(value){
                 console.log(value)
                 this.$store.commit('clearToken')
+                sessionStorage.removeItem('userInfo');
+                sessionStorage.removeItem('token');
+                sessionStorage.removeItem('pageList');
                 this.$router.replace({
                     name:"admin"
                 }).catch(err => {err})

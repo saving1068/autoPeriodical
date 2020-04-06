@@ -25,6 +25,11 @@
                         label="项目平台"
                         >
                     </el-table-column>
+                    <el-table-column
+                        prop="url"
+                        label="接口调用地址"
+                        >
+                    </el-table-column>
                     
                     <el-table-column
                         prop="createTime"
@@ -33,7 +38,7 @@
                     </el-table-column>
                     <el-table-column
                         prop="createAuthorName"
-                        label="创建时间"
+                        label="创建人"
                         >
                     </el-table-column>
                     <el-table-column
@@ -110,6 +115,9 @@
                </el-form-item>
                 <el-form-item label="备注:">
                    <el-input placeholder="请输入备注"  v-model="addItemInfo.remark"></el-input>
+               </el-form-item>
+               <el-form-item label="接口调用地址:">
+                   <el-input placeholder="请输入接口调用地址"  v-model="addItemInfo.url"></el-input>
                </el-form-item>
                  
            </el-form> 
@@ -254,6 +262,7 @@ let addItemInfo = {
       let res = await projectList(obj);
       res.data.map(item =>{
           item.platformStr = idChangeStr(this.platform,item.platform);
+          item.url = item.url?item.url:'--'
       })
       this.list = res.data;
        this.loading = false;
@@ -279,5 +288,6 @@ let addItemInfo = {
 <style lang="scss" scoped>
     .table{
         min-width: 800px;
+        flex: 1;
     }
 </style>

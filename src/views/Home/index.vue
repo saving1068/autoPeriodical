@@ -1,6 +1,6 @@
 <template>
   <div class="warp">
-    <el-tabs v-model="activeName" type="card" >
+    <el-tabs v-model="activeName" type="card" :tab-click='tabClick' >
       <el-tab-pane  name="current">
         <span slot="label"> 当前待处理客户 <i class="el-icon-count">1</i></span>
         <current v-if="activeName =='current'"></current> 
@@ -9,21 +9,21 @@
       <span slot="label"> 已成交客户 <i class="el-icon-count">1</i></span>
         <awaitcustomer v-if="activeName =='awaitcustomer'"></awaitcustomer>
       </el-tab-pane>
-      <el-tab-pane  name="addcustomer">
+      <!-- <el-tab-pane  name="addcustomer">
       <span slot="label"> 新增的客户 <i class="el-icon-count">1</i></span>
         <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane name="history">
       <span slot="label"> 客户跟进历史 <i class="el-icon-count">1</i></span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
-      <!-- <el-tab-pane name="untreated">
-      <span slot="label"> 未处理客户 <i class="el-icon-count">1</i></span>
-        <history></history>
-      </el-tab-pane> -->
-      <el-tab-pane name="refresh">
+      <el-tab-pane name="untreated">
+        <span slot="label"> 废弃池 <i class="el-icon-count">1</i></span>
+        <untreatedCustomer></untreatedCustomer>
+      </el-tab-pane>
+      <el-tab-pane >
       <span slot="label"> 
-        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+        <el-button type="primary" @click="refresh" icon="el-icon-refresh">刷新</el-button>
         <!-- <el-button type="primary" icon="el-icon-refresh" ></el-button> -->
       </span>
         
@@ -53,10 +53,15 @@ export default {
 
   },
   mounted() {
-   
+   console.log(this.activeName)
   },
   methods: {
-   
+    tabClick(tab, event){
+      console.log(tab, event,"----------------------------")
+    },
+   refresh(){
+     console.log('refresh')
+   }
   }
 };
 </script>

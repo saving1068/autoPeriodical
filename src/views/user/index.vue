@@ -28,7 +28,7 @@
                         >
                     </el-table-column>
                     <el-table-column
-                        prop="roleList"
+                        prop="roleName"
                         label="角色"
                         >
                     </el-table-column>
@@ -101,6 +101,7 @@
            <div>
               <div>角色</div>
                 <el-tree
+                    v-if="userChange"
                     :data="initroleList"
                     show-checkbox
                     default-expand-all
@@ -108,6 +109,7 @@
                     ref="tree"
                     :default-checked-keys='itemPowerList'
                     highlight-current
+                    @check="sonRoleCheck"
                     :props="defaultProps">
                 </el-tree>
               </div>
@@ -164,6 +166,10 @@ let addItemInfo = {
           this.$refs.departmentTree.setCheckedKeys([data.id]);
            console.log(data)
       },
+      sonRoleCheck(data){
+        console.log(data)
+        this.$refs.tree.setCheckedKeys([data.roleId]);
+      },
       addClose(){
         this.$confirm('取消新增, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -186,18 +192,17 @@ let addItemInfo = {
                 }).then(async() => {
                     try {
                       console.log(this.$refs.tree.getCheckedNodes())
-                      this.addItemInfo.roles = [];
+                      this.addItemInfo.roleId =''
                       this.$refs.tree.getCheckedNodes().forEach(item =>{
                           console.log(item)
-                           this.addItemInfo.roles.push(item.roleId)
+                            this.addItemInfo.roleId = item.roleId;
                       })
                      
-                      //  console.log(this.addItemInfo)
-                     if(this.addItemInfo.roles.length != 0&&this.addItemInfo.account
+                       console.log(this.addItemInfo,typeof(this.addItemInfo.dur.isLeader))
+                     if(this.addItemInfo.roleId&&this.addItemInfo.account
                      &&this.addItemInfo.contactName
                      &&this.addItemInfo.contactPhone
                      &&this.addItemInfo.dur.did
-                     &&this.addItemInfo.dur.isLeader
                      ){
                        if(this.addItemInfo.id){
                           if(this.addItemInfo.ifChangePassword){
@@ -302,11 +307,11 @@ let addItemInfo = {
             // console.log(item)
            let res =  await accountDetail({id:item.id})
            console.log(res)
-           let roles = [];
-           res.data.roles.forEach(item =>{
-             roles.push(item.roleId)
-           })
-
+           let roles = [res.data.role.roleId];
+          //  res.data.roles.forEach(item =>{
+          //    roles.push(item.roleId)
+          //  })
+           
             this.itemPowerList = roles;
             console.log(this.itemPowerList)
             let obj = {
@@ -321,6 +326,7 @@ let addItemInfo = {
           }
            console.log(this.addItemInfo)
           this.userChange =true;
+          
         },
         showParent(){
 
@@ -331,19 +337,22 @@ let addItemInfo = {
         },
     async getList(obj){
       let res = await accountList(obj);
-      res.data.map(item =>{
-        item.roleList = '';
-      })
+      console.log(res.data)
+      // res.data.map(item =>{
+       
+      //   item.roleList = '';
+      // })
 
       this.list = res.data;
        
       this.list.map(item =>{
-        let roleList =[];
-       item.roles.map(roleItem =>{
-         roleList.push(roleItem.name);
-        //  console.log(roleItem,'roleItem')
-       })
-         item.roleList = roleList.length >0? roleList.join(','):'';
+        item.roleName = item.role.name
+      //   let roleList =[];
+      //  item.roles.map(roleItem =>{
+      //    roleList.push(roleItem.name);
+      //   //  console.log(roleItem,'roleItem')
+      //  })
+      //    item.roleList = roleList.length >0? roleList.join(','):'';
       })
       
       console.log(this.list,221);

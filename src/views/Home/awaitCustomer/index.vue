@@ -1,29 +1,41 @@
 <template>
-  <div class="warp">
+  <div class="warp" v-loading='loading'>
     <el-form inline class="form-inline" label-width='100px'>
         <el-form-item label="客户姓名" width='100%' >
            <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" >
             <el-select class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option 
+                    v-for="item in userList"
+                    :key="item.id"
+                    :label="item.contactName"
+                    :value="item.id"
+                ></el-option>
             </el-select>
         </el-form-item>
        
         <el-form-item label="平台" >
-           <el-select class="width280" v-model="search.platform" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+           <el-select class="width280" v-model="search.platform" placeholder="请选择平台">
+           <el-option 
+                v-for="item in platform"
+                :key="Number(item.key)"
+                :label="item.value"
+                :value="Number(item.key)"
+            ></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="search.email"></el-input>
         </el-form-item>
         <el-form-item label="项目">
-           <el-select  class="width280" v-model="search.project" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+           <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
+            <el-option
+                v-for="item in projectList"
+                :key="Number(item.id)"
+                :label="item.name"
+                :value="Number(item.id)"
+            ></el-option>
             </el-select>
         </el-form-item>
         
@@ -105,11 +117,12 @@
         
         
         <div class='center'>
-            <el-button type="primary" icon="el-icon-seach">搜索</el-button>
+            <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
         </div>
     </el-form>
     <div class='table'>
         <div class='button'>
+        
             <el-button >导出</el-button>
         </div>
         <el-table
@@ -124,43 +137,147 @@
             </el-table-column>
             <el-table-column prop="name" label="客户姓名">
             </el-table-column>
-            <el-table-column label="是否超期" prop='overdue'>
+            <el-table-column prop="adManName" label="广告负责人">
+            </el-table-column>
+            <el-table-column prop="projectName" label="项目名称">
+            </el-table-column>
+            <el-table-column prop="address" label="详细地址">
+            </el-table-column>
+            <el-table-column prop="email" label="电子邮箱">
+            </el-table-column>
+            <el-table-column prop="qq" label="qq">
+            </el-table-column>
+            <el-table-column prop="getDate" label="获取时间">
+            </el-table-column>
+            <!-- <el-table-column label="处理状态" prop='overdue'>
             
-            </el-table-column>
-            <el-table-column prop="address" label="处理状态" show-overflow-tooltip>
-            </el-table-column>
+            </el-table-column> -->
+            
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                   <el-button type="text">来访</el-button>
-                   <el-button type="text" @click.native='rowDblclic(1,scope.row)'>详情</el-button>
-                   <el-popconfirm
-                    title="确定放弃该数据吗？"
-                     @onConfirm='sueAbandoned(scope.row)'
-                    @onCancel="canclAbandoned"
-                    :value='ifAbandoned'
-                    :tabindex='99'
-                    >
-                    <el-button  type="text" style='margin: 0 10px'  slot="reference">放弃</el-button>
-                    </el-popconfirm>
-                   
+                  
+                   <el-button type="text" @click.native='transfer(scope.row)'>分配记录</el-button>
+                   <el-button type="text" @click.native='getVisitList(scope.row)'>来访记录</el-button>
+                   <!-- <el-button type="text">编辑</el-button> -->
+                   <el-button type="text" @click.native='rowDblclic(scope.row,1)'>详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
     </div>
+
+
+    <!-- 来访 -->
+    <el-dialog
+        title='来访记录'
+        :visible.sync="visit"
+        width="80%"
+        center
+        
+    >
+    <div class="center">
+         <el-timeline >
+            <el-timeline-item
+                v-for="(item, index) in visitList"
+                :key="index"
+                :timestamp="item.timestamp">
+                {{activity.content}}
+            </el-timeline-item>
+        </el-timeline>
+
+        <div class="center width280 divider" >
+            <el-input placeholder="请输入备注" v-model="visitInfo.remark"></el-input>
+            <el-date-picker 
+                style="padding:20px 0;"
+                v-model="visitInfo.visitTime"
+                type="date"
+                value-format='yyyy-MM-DD'
+                placeholder="选择日期">
+            </el-date-picker>
+             <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
+            </span>
+        </div>
+        
+    </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="visit = false">取 消</el-button>
+            <el-button type="primary" @click="visit = false">确 定</el-button>
+        </span>
+    </el-dialog>   
+
+
+
+    <!-- 移交 -->
+    <el-dialog
+        title='分配记录'
+        :visible.sync="transferVisible"
+        width="80%"
+        center
+        :before-close="transferClose" 
+    >
+    <div class="center">
+         <el-timeline >
+            <el-timeline-item
+                v-for="(item, index) in transferList"
+                :key="index"
+                :timestamp="item.timestamp">
+                {{activity.content}}
+            </el-timeline-item>
+        </el-timeline>
+
+        <div class="center width280 divider" >
+            <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
+            <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
+            <el-select v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
+                <el-option 
+                v-for="item in saleList"
+                :key="item.id"
+                :label="item.contactName"
+                :value="item.id"
+            ></el-option>
+            </el-select>
+             <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="suerAddTransfer">新增分配记录</el-button>
+            </span>
+        </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="transferClose">取 消</el-button>
+            <el-button type="primary" @click="transferVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>   
+
+
+    <!-- 新增客户 -->
+    <el-dialog
+        title='新增客户'
+        :visible.sync="addVisible"
+        width="80%"
+        center
+        :before-close="addClose" 
+    >
+        新增客户
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="addClose">取 消</el-button>
+            <el-button type="primary" @click="addVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>   
 
     <!-- //详情 -->
     <el-dialog 
         :title="type == 1?'客户详情':'新增客户'"
         :visible.sync="detailFlag"
         width="80%"
+       
         center
         :before-close="handleClose">
         
-        <el-form inline class="form-inline" label-width='100px'>
-            <el-form-item label="客户姓名" width='100%' >
+        <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
+            <el-form-item label="客户姓名" width='100%' prop="name">
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
-        <el-form-item label="广告负责人" >
+        <el-form-item label="广告负责人" prop="adMan">
             <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
@@ -172,20 +289,20 @@
             </el-select>
         </el-form-item>
        
-        <el-form-item label="平台" >
+        <el-form-item label="平台" prop="platform">
            <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type == 1?true:false">
            <el-option 
                 v-for="item in platform"
-                :key="Number(item.key)"
+                :key="item.key"
                 :label="item.value"
-                :value="Number(item.key)"
+                :value="item.key"
             ></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
-        <el-form-item label="项目">
+        <el-form-item label="项目" prop="project">
            <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
@@ -208,82 +325,104 @@
         <el-form-item label="QQ号码" >
             <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
+        <el-form-item label="手机号" prop="telephone" >
+            <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
+        <el-form-item label="微信" >
+            <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
+        <el-form-item label="来源连接" prop="sourceLink">
+            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
+        <el-form-item label="客户类型" >
+            <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+            <el-option
+                v-for="item in currentType"
+                :key="String(item.key)"
+                :label="item.value"
+                :value="String(item.key)"
+            ></el-option>
+           
+            </el-select>
+        </el-form-item>
+        <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
+            <el-select  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+                <el-option
+                    v-for="item in personnel"
+                    :key="item.id"
+                    :label="item.contactName"
+                    :value="item.id"
+                ></el-option>
+           
+            </el-select>
+        </el-form-item>
         <el-form-item label="所属省份">
-               <el-select v-model="detail.province" @change="provinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
+  
+               <el-select class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
+                   
                     <el-option 
-                    v-for="(item,index) in province " :key="index" 
+                    v-for="item in province "
+                     :key="item.pid" 
                     :label="item.pname" 
-                    :value="item.pid">
+                    :value="String(item.pid)">
                     </el-option>
                 </el-select>
             </el-form-item>
         <el-form-item label="所属城市">
-           <el-select v-model="detail.city" @change="cityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
+           <el-select class="width280" v-model="detail.city" @change="detailCityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
+               
                 <el-option 
-                v-for="(item,index) in city " :key="index" 
+                v-for="item in detailCity "
+                 :key="item.cid" 
                 :label="item.cname" 
-                :value="item.cid">
+                :value="String(item.cid)">
                 </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="所属地区">
-               <el-select v-model="detail.district"  placeholder="请选择所属地区" :disabled="type == 1?true:false">
+                
+               <el-select class="width280" v-model="detail.district"  placeholder="请选择所属地区" :disabled="type == 1?true:false">
                 <el-option 
-                v-for="(item,index) in district " :key="index" 
+                v-for="item in detailDistrict " 
+                :key="item.did" 
                 :label="item.dname" 
-                :value="item.did">
+                :value="String(item.did)">
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="详细地址" >
+            <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
         </el-form>
         <div class="title space-between">
             <h1 style="font-width:600;font-size:32px">追踪记录</h1>
-            <el-button  type="primary">新增跟进记录</el-button>
+            <!-- <el-button  type="primary">新增跟进记录</el-button> -->
         </div>
         <div class="center">
-            <el-form :inline="true"  class="form-inline">
-            <el-form-item label="客户:">
-                {{detail.customer}}
-                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
-            </el-form-item>
-            <el-form-item label="电话号码:">
-                {{detail.ipone}}
-                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
-            </el-form-item>
-             <el-form-item label="地址:">
-                {{detail.address}}
-                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
-            </el-form-item>
-             <el-form-item label="微信:">
-                {{detail.we}}
-                <!-- <el-input v-model="detail.customer" placeholder="审批人"></el-input> -->
-            </el-form-item>
-            </el-form>
-        </div>
-        <div class="center">
-            <ul class="record">
-                <li v-for="(item,index) in detail.record" :key="index">
-                    <div :class="item.type == 1?'manager':''">
-                        {{item.text}}
-                    </div>
-                    
-                </li>
-            </ul>
+            <div class="record">
+                <el-timeline >
+                    <el-timeline-item
+                    v-for="(item,index) in detail.record" 
+                    :key="index"
+                    :timestamp="item.fuTime">
+                    <el-card  >
+                        <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                        <p style="text-align:right">{{item.fupName}}</p>
+                    </el-card>
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
         </div>
         <div class='center lMessage'>
                  <el-input
-                 clearable
+                    clearable
                     type="textarea"
                     autosize
                     placeholder="请输入内容"
                     resize='none'
-                    
                     v-model="message">
                 </el-input>
-                <el-button class='lMessageSure' type="text">确定</el-button>
+                <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
             </div>
         
         
@@ -301,7 +440,16 @@
 import {updateCustomer,
     customerList,
     detailCustomer,
-    deleteCustomer,} from '@/api/custormer'
+    deleteCustomer,
+    followList,
+    deleteFollow,
+    updateFollow,
+    visitList,
+    updataVisitList,
+    deleteVisitList,
+    distributionList,
+    updataDistribution
+    } from '@/api/custormer'
 import { 
     districtList,
     cityList,
@@ -312,38 +460,47 @@ import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
-                department:"",//所属部门
-                platform:"",//逾期
-                project:'',//项目
-                qq:'',//有效
-                getDateBegin:'',
-                getDateEnd:"",
-                personnel:"",//所属人员
-                nextFollowUpDate:'',//下次跟进时间
-                province:'',//省
-                city:"",//市
-                district:'',//区
-                address:""
+        department:"",//所属部门
+        platform:"",//逾期
+        project:'',//项目
+        qq:'',//有效
+        personnel:"",//所属人员
+        nextFollowUpDate:'',//下次跟进时间
+        province:'',//省
+        city:"",//市
+        district:'',//区
+        address:"",
+        telephone:"",
+        wechat:'',
+        name:'',
+        sourceLink:"",
+        type:"",
+        email:''
     }
 export default {
   data() {
     return {
-        time:"",
+
+        time:'',
         detailFlag:false,
         addVisible:false,
         transferVisible:false,
+        transferList:[],
+        transferInfo:{
+            ctId:"",
+            list:[],
+            receiver:'',
+            remark:''
+        },
+        visit:false,
+        visitList:[],   
+        visitInfo:{
+            visitTime:'',
+            remark:''
+        },
         ifTransfer:true,
-        transferInfo:{},
         ifAbandoned:false,
         detail:{
-            customer:'入货',
-            ipone:"1371111111",
-            address:'地址',
-            we:'微信',
-            record:[
-                {type:0,text:'销售员记录'},
-                {type:1,text:'经理记录111111111111111111111111sasdfsd谁知道发送到发送到股份'},
-            ]
         },
         message:'',
         customerInfo:{},
@@ -365,24 +522,59 @@ export default {
             isValid:1,
             keyword:"",
         },
-            tableData:[1],
+            tableData:[],
             province:[],
             city:[],
             district:[],
-            userList:[],
-            platform:[],
-            projectList:[]
+            userList:[],//广告人
+            saleList:[],//销售
+            platform:[],//平台
+            projectList:[],//项目
+            loading:false,
+            detailProvince:[],
+            detailCity:[],
+            detailDistrict:[],
+            detailRules:{
+                 name:[
+                      { required: true, message: '请输入名称', trigger: 'blur' },
+                ],
+                adMan:[
+                     { required: true, message: '请选择广告负责人', trigger: 'blur' },
+                ],
+                address:[
+                     { required: true, message: '请输入详细地址', trigger: 'blur' },
+                ],
+                sourceLink:[
+                     { required: true, message: '请输入来源连接', trigger: 'blur' },
+                ],
+                project:[
+                     { required: true, message: '请选择项目', trigger: 'blur' },
+                ],
+                platform:[
+                     { required: true, message: '请选择平台', trigger: 'blur' },
+                ],
+                telephone:[
+                     { required: true, message: '请输入联系方式', trigger: 'blur' },
+                ],
+
+            },
+            currentType:[],
+            userInfo:{},
+            personnel:[]
         }
     
   },
-  create(){
-
+ created(){
+      this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
+      
   },
    async mounted() {
-    console.log(111)
+    
     this.dist().then(()=>{
         this.customerList()
+        
     })
+        // this.loading= false;
   },
   watch:{
     //   search:{
@@ -396,17 +588,26 @@ export default {
   methods: {
 
     async dist(){
+         this.loading= true;
         let province = await provinceList();
         this.province = province.data;
-        
+        this.detailProvince = province.data;
        
         
         // debugger
         this.platform = await dictApi("platform");
+        this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
         this.userList = userList.data;
- let project = await projectList();
+        let saleList = await accountList({roleId:7});
+        this.saleList = saleList.data;
+        let project = await projectList();
         this.projectList = project.data;
+        if(this.userInfo.role.roleId !=7){
+             let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
+            this.personnel = personnel.data;
+        }
+       
           console.log(this.projectList,21312)
       
     },
@@ -415,6 +616,7 @@ export default {
         let res = await customerList(this.search)
         console.log(res,222222222222)
         this.tableData = res.data;
+         this.loading= false;
       },
     async provinceChange(value){
           if(value){
@@ -428,10 +630,54 @@ export default {
             if(value){
                 // this.district = [];
                  this.search.district = '';
-                let district = await districtList({fid:value.city});
+                let district = await districtList({fid:value});
                 this.district = district.data;
             }
       },
+      async detailProvinceChange(value){
+          if(value){
+                this.detail.city =''
+                this.detail.district = '';
+                let city = await cityList({fid:value});
+                this.detailCity = city.data;
+            }
+      },
+    async detailCityChange(value){
+            if(value){
+                // this.district = [];
+                 this.detail.district = '';
+                let district = await districtList({fid:value});
+                this.detailDistrict = district.data;
+            }
+      },
+    async getVisitList(item){ //来访记录
+        this.$loading.show()
+        try {
+            this.visit = true;
+            let res = await visitList({id:item.id})
+            this.visitList = res.data;
+            this.visitInfo.ctId = item.id;
+        } catch (error) {
+            this.$loading.hide()
+        }
+        
+        this.$loading.hide()
+      },
+     async suerAddVisi(){
+         console.log(this.visitInfo)
+          this.$loading.show()
+        try {
+          
+            let res = await updataVisitList(this.visitInfo)
+            this.$message.success(res.returnMsg)
+            let resList = await visitList({id:this.visitInfo.ctId})
+            this.visitList = resList.data;
+        } catch (error) {
+            console.log(error)
+            this.$loading.hide()
+        }
+         this.$loading.hide()
+     },
     canclAbandoned(){//放弃
           this.ifAbandoned = false;
       },
@@ -444,9 +690,36 @@ export default {
       sueTransfer(item){
           console.log(item)
       },
-      transfer(item){
+     async transfer(item){
+         
+           
+        try { 
+            this.$loading.show()
           this.transferVisible =  true;
-          this.transferInfo = item;
+         
+           
+            let res = await distributionList({id:item.id})
+            this.transferList = res.data;
+             this.transferInfo.ctId = item.id;
+        } catch (error) {
+            this.$loading.hide()
+        }
+        
+        this.$loading.hide()
+      },
+      async suerAddTransfer(){
+            this.$loading.show()
+            try {
+                console.log(this.transferInfo)
+                let res = await updataVisitList(this.transferInfo)
+                this.$message.success(res.returnMsg)
+                let resList = await distributionList({id:this.transferInfo.ctId})
+                this.transferList = resList.data;
+            } catch (error) {
+                console.log(error)
+                this.$loading.hide()
+            }
+         this.$loading.hide()
       },
       transferClose(){
           this.$confirm('确认关闭？')
@@ -478,23 +751,35 @@ export default {
               this.search.endTime = '';
           }
       },
-      handleChange(value){
-          console.log(value)
-      },
+
      async suerAdd(){
           try {
-              this.$confirm(tips, "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(async()=>{
-               let res = await updateCustomer(this.detail);
-                this.customerList()
-                this.detailFlag =  false;
-          })
+        this.$refs['detail'].validate((valid) => {
+          if (valid) {
+                this.$confirm('是否确认新增客户', "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(async()=>{
+                    this.detail.department = this.userInfo.did;
+                    if(this.userInfo.role.roleId == 7){
+                        this.detail.personnel = this.userInfo.id;
+                    }
+                    let res = await updateCustomer(this.detail);
+                    this.$message.success(res.returnMsg)
+                        this.customerList()
+                        this.detailFlag =  false;
+                })
+          } else {
+            this.$message.warning("请填写所需信息")
+            return false;
+          }
+        });
+              
+          
          
         } catch (error) {
-            
+            console.log(error)
         }
         
       },
@@ -504,20 +789,96 @@ export default {
            this.detailFlag =  true;
            console.log(this.detail,this.detailFlag) 
       },
-      rowDblclic(value,item){
-          console.log(value)
-        //   try {
+     async rowDblclic(item,value){
+          console.log(value,123213)
+          try {
+              this.$loading.show()
                this.type = value;
+               
                 if(item){
-                    this.detail = {...item};
+                    if(item.city&&item.district){
+                        let city = await cityList({fid:item.province});
+                         this.detailCity = city.data;
+                         let district = await districtList({fid:item.city});
+                        this.detailDistrict = district.data;
+                    }
+                  
+                   let  {
+                        adMan,
+                        department,
+                        platform,
+                        project,
+                        qq,
+                        personnel,//所属人员
+                        nextFollowUpDate,//下次跟进时间
+                        province,//省
+                        city,//市
+                        district,//区
+                        address,
+                        telephone,
+                        wechat,
+                        name,
+                        sourceLink,
+                        type,
+                        email,
+                        id
+                    } = {...item}
+                    
+                    this.detail = { adMan,
+                         department,
+                        platform,
+                        project,
+                        qq,
+                        id,
+                        nextFollowUpDate,//下次跟进时间
+                        province,//省
+                        city,//市
+                        district,//区
+                        address,
+                        telephone,
+                        wechat,
+                        name,
+                        sourceLink,
+                        type,
+                        email
+                        };
+                        
+                    let res = await followList({id:item.id})
+                    
+                    
+                    
+                    this.detail.record = res.data
+                    console.log(res)
                 }
                 this.detailFlag =  true;
-        //         console.log(this.detail,this.detailFlag) 
-        //   } catch (error) {
-        //       console.log(error)
-        //   }
+                console.log(this.detail) 
+          }catch (error) {
+             this.$loading.hide()
+         }
+         this.$loading.hide()
          
       },
+     async updataFollowList(){
+         this.$loading.show()
+         try {
+             
+             let obj = {
+             ctId:this.detail.id,
+             remark:this.message
+            }
+
+            let res = await updateFollow(obj)
+            let follow = await followList({id:this.detail.id});
+            this.message = '';
+            this.detail.record = follow.data;
+
+         } catch (error) {
+             console.log(error)
+             this.$loading.hide()
+         }
+         this.$loading.hide()
+         
+     },
       handleSelectionChange(value){
           console.log(value)
       },
@@ -549,6 +910,10 @@ export default {
     .width280{
         width: 200px;
     }
+    .divider{
+        padding: 0 10px;
+           border-left: 1px solid #dcdfe6;
+    }
     .table{
         
         .button{
@@ -558,9 +923,9 @@ export default {
     .title{
         padding: 20px 0;
     }
-    // .record{
-    //     width: 100%;
-    // }
+    .record{
+        width: 100%;
+    }
     .manager{
         color: red;
     }

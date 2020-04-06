@@ -76,6 +76,8 @@ const routes = [
 				},
 				component:() => import('@/views/project'),
 			},
+			
+			
 		]
 	},
 	{

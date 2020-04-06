@@ -347,7 +347,7 @@
 						// this.$store.commit('setToken',info)
 						sessionStorage.setItem('token', info.token);
 						// this.$store.commit('setPage',info.menu)
-						
+						sessionStorage.setItem('userInfo', JSON.stringify(info.user));
 						sessionStorage.setItem('pageList', JSON.stringify(info.menu));
 						console.log(sessionStorage.getItem('pageList'),222)
 						// console.log(token,222)
