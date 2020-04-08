@@ -16,11 +16,14 @@
           <el-form-item label="内容:">
               <el-input  v-model="muneInfo.description"></el-input>
           </el-form-item>
-          <el-form-item label="地址:">
+          <el-form-item label="地址:"v-if='muneInfo.type != 2'>
               <el-input  v-model="muneInfo.url"></el-input>
           </el-form-item>
           <el-form-item label="编号:">
               <el-input  v-model="muneInfo.type"></el-input>
+          </el-form-item>
+          <el-form-item label="按钮码:" v-if='muneInfo.type == 2'>
+              <el-input  v-model="muneInfo.permCode"></el-input>
           </el-form-item>
           <el-form-item label="菜单排序:">
               <el-input  v-model="muneInfo.sort"></el-input>
@@ -31,8 +34,63 @@
             </el-form-item>
         </el-form>
       </div>
+      <div  v-if='showAddButton' style='width:150px;'>
+        <div class='space-between'>
+          <span>按钮列表</span>
+          <el-button type="primary"  icon="el-icon-edit" @click='addButton()'>新增按钮</el-button>
+        </div>
         
+         <el-tree :data="muneInfo.children" :props="defaultProps" node-key="id"  @node-click="check"></el-tree>
+      </div> 
     </div>
+
+    <!-- 按钮 -->
+
+      <el-dialog
+       width="50%"
+        center
+      :visible.sync="addButtonFlag"
+      
+    >
+    <div class="center">
+      <!-- <div style="padding-bottom:20px;">
+        所属菜单：
+        <el-radio-group v-model="muneInfo.id">
+          <el-radio v-for="(item,index) in list" :key="index" :label="item.id">{{item.description}}</el-radio>
+        </el-radio-group>
+      
+      </div> -->
+      <el-form label-width="100px" size="mini">
+          <el-form-item label="内容:">
+              <el-input  v-model="buttonInfo.description"></el-input>
+          </el-form-item>
+          <el-form-item label="按钮码:">
+              <el-input  v-model="buttonInfo.permCode"></el-input>
+          </el-form-item>
+          <el-form-item label="编号:">
+              <el-input  v-model="buttonInfo.type"></el-input>
+          </el-form-item>
+          <el-form-item label="菜单排序:">
+              <el-input  v-model="buttonInfo.sort"></el-input>
+          </el-form-item>
+            
+      </el-form>
+      
+      
+    </div>
+      
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addButtonFlag = false">取 消</el-button>
+                <el-button type="primary" @click="addButtonSure()">确 定</el-button>
+            </span>
+
+    </el-dialog>
+
+
+
+
+
+    <!-- 菜单 -->
     <el-dialog
        width="50%"
         center
@@ -90,11 +148,35 @@ let initMuneValue = {
   sort:'',
   pid:""
 }
+let buttonInfo = {
+  description:'',
+  sort:'',
+  pid:"",
+  permCode:""
+}
   export default {
     created(){
       this.getList({})
     },
     methods: {
+    async  addButtonSure(){
+      try {
+        console.log(this.buttonInfo)
+         let res=  await updataMenu(this.buttonInfo);
+        this.$message.success(res.returnMsg);
+        this.addButtonFlag = false;
+        this.getList({})
+      } catch (error) {
+        
+      }
+     
+      },
+      addButton(item){
+        console.log(this.muneInfo.id)
+        this.buttonInfo = item?{...item,pid:this.muneInfo.id}:{...buttonInfo,pid:this.muneInfo.id};
+        this.addButtonFlag = true;
+      },
+
       async getList(obj){
         try {
           this.loading = true;
@@ -110,6 +192,7 @@ let initMuneValue = {
       check(data){
         console.log(data)
         this.muneInfo ={...data}
+        this.showAddButton = true;
         console.log(this.muneInfo)
       },
       resetList(arr){
@@ -215,8 +298,10 @@ let initMuneValue = {
         },
         muneInfo:{ },
         routerList:[],
-        cheakInfo:{}
-
+        cheakInfo:{},
+        buttonInfo:{},
+        addButtonFlag:false,
+        showAddButton:false,
       };
     }
   };

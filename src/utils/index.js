@@ -5,6 +5,14 @@ const dictApi = (async (sign)=>{
     return res.data
 })
 
+const filterButton = ((id)=>{
+    let buttonList = JSON.parse(sessionStorage.getItem('buttonList'))||[];
+    console.log(buttonList)
+   let flag = buttonList.find(item  => item==id);
+   console.log(flag)
+   return flag
+})
+
 const idChangeStr = ((list,id)=>{
     // let res = list.find(item => item.id == id);
     let resT = list.find(item => item.key == id);
@@ -39,4 +47,4 @@ const downFile = ((url)=>{
 })
 
 
-export {dictApi,idChangeStr,downFile}
+export {dictApi,idChangeStr,downFile,filterButton}

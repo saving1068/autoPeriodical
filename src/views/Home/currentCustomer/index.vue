@@ -157,14 +157,14 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                   <el-button type="text">成交</el-button>
-                   <el-button type="text" @click.native='transfer(scope.row)'>分配记录</el-button>
-                   <el-button type="text" @click.native='getVisitList(scope.row)'>来访记录</el-button>
-                   <el-button type="text" @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
-                   <el-button type="text" @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>
+                   <el-button type="text" v-show='filterButton(101)'>成交</el-button>
+                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                   <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
+                   <el-button type="text" v-show='filterButton(104)' @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
+                   <el-button type="text" v-show='filterButton(105)' @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>
                    <!-- <el-button type="text">编辑</el-button> -->
-                   <el-button type="text" @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
-                    <el-button  type="text"  @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
+                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                    <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -603,7 +603,7 @@ import {
 } from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
-import { dictApi ,idChangeStr} from "@/utils";
+import { dictApi ,idChangeStr,filterButton} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -630,6 +630,7 @@ let customerInfo = {
 export default {
   data() {
     return {
+        filterButton:filterButton,
         visitTime:'',
         time:'',
         detailFlag:false,

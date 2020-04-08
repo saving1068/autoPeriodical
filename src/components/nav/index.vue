@@ -84,6 +84,7 @@ import {userMenu} from '@/api/menu'
         // console.log(arr)
         let pList = [];
         arr.forEach((item)=>{
+
           if(item.pid == 0){
             let o = this.sonsTree(item, arr);
             pList.push(o)
@@ -107,8 +108,10 @@ import {userMenu} from '@/api/menu'
       },
 			async getUserMunu(){
 				// let res = await userMenu();
-				
-				this.nav = this.resetList(JSON.parse(sessionStorage.getItem('pageList')))
+				let routerList = JSON.parse(sessionStorage.getItem('pageList'));
+				routerList = routerList.filter(item => item.type != 2);
+				console.log(routerList,'routerList')
+				this.nav = this.resetList(routerList)
 				// console.log(this.nav)
 			},
 			goToSon(item){

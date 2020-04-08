@@ -343,10 +343,17 @@
 						})
 						this.loginForm.account = '';this.loginForm.password = '';
 						this.loginForm.verCode = '';
+						let buttonList = [];
+						info.menu.forEach(item =>{
+							if(item.type == 2){
+								buttonList.push(item.permCode)
+							}
+						})
 						console.log(info.menu)
 						// this.$store.commit('setToken',info)
 						sessionStorage.setItem('token', info.token);
 						// this.$store.commit('setPage',info.menu)
+						sessionStorage.setItem('buttonList', JSON.stringify(buttonList));
 						sessionStorage.setItem('userInfo', JSON.stringify(info.user));
 						sessionStorage.setItem('pageList', JSON.stringify(info.menu));
 						console.log(sessionStorage.getItem('pageList'),222)
