@@ -113,6 +113,22 @@ const userFollowList = (params) => { //分配记录
     });
 }
 
+const waitDisList = (params) => { //客户资源列表
+    return request({
+        url: '/customer/waitDistribution',
+        method: 'POST',
+        data:params
+    });
+}
+
+const customerTotal  = (params) => { //客户资源列表
+    return request({
+        url: '/customer/totalSet',
+        method: 'POST',
+        data:params
+    });
+}
+
 
 
 export {
@@ -130,5 +146,7 @@ export {
     updataDistribution,
     waiveList,
     waiveCustomer,
-    userFollowList
+    userFollowList,
+    waitDisList,
+    customerTotal
 }

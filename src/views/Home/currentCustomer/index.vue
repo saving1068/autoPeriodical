@@ -157,12 +157,22 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                   <el-button type="text" v-show='filterButton(101)'>成交</el-button>
+                    <el-popconfirm
+                        v-show='filterButton(101)' 
+                        title="确定成交该数据？"
+                        @onConfirm='sureSuccess(scope.row)'
+                        @onCancel="canclSuccess"
+                        :value='ifSuccess'
+                        :tabindex='99'
+                    >
+                    <el-button  type="text"  slot="reference">成交</el-button>
+                    </el-popconfirm>
+                   <!-- <el-button type="text" >成交</el-button> -->
                    <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
                    <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
                    <el-button type="text" v-show='filterButton(104)' @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
                    <el-button type="text" v-show='filterButton(105)' @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>
-                   <!-- <el-button type="text">编辑</el-button> -->
+                   <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,0)'>编辑</el-button>
                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
                     <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
                 </template>
@@ -389,21 +399,6 @@
         </span>
     </el-dialog>   
 
-
-    <!-- 新增客户 -->
-    <el-dialog
-        title='新增客户'
-        :visible.sync="addVisible"
-        width="80%"
-        center
-        :before-close="addClose" 
-    >
-        新增客户
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="addClose">取 消</el-button>
-            <el-button type="primary" @click="addVisible = false">确 定</el-button>
-        </span>
-    </el-dialog>   
 
     <!-- //详情 -->
     <el-dialog 
@@ -729,7 +724,8 @@ export default {
             amountList:[],
             amountInfoVisi:false,
             amountInfo:{},
-            delAmount:false
+            delAmount:false,
+            ifSuccess:false
         }
     
   },
@@ -1067,17 +1063,22 @@ export default {
         }
          this.$loading.hide()
      },
-    canclAbandoned(){//放弃
-          this.ifAbandoned = false;
+    canclSuccess(){//放弃
+          this.ifSuccess = false;
       },
-      sueAbandoned(item){
-          console.log(item)
-      },
-      canclTransfer(){//移交
-          this.ifTransfer = false;
-      },
-      sueTransfer(item){
-          console.log(item)
+    async  sureSuccess(item){
+           try {
+              let obj = {
+                  id:item.id,
+                  isSuccess:1
+              }
+            let res = await updateCustomer(obj);
+            this.$message.success(res.returnMsg)
+            this.customerList()
+
+          } catch (error) {
+              
+          }
       },
      async transfer(item){
          

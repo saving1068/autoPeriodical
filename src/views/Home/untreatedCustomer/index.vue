@@ -122,8 +122,9 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-           
-            <el-button type="warning">批量转移</el-button>
+            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
+            <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
+            <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button >导出</el-button>
         </div>
         <el-table
@@ -156,14 +157,139 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                   <el-button type="text" @click.native='transfer(scope.row)'>分配记录</el-button>
-                   <el-button type="text" @click.native='getVisitList(scope.row)'>来访记录</el-button>
-                   <!-- <el-button type="text">编辑</el-button> -->
-                   <el-button type="text" @click.native='rowDblclic(scope.row,1)'>详情</el-button>
+                    
+                   <!-- <el-button type="text" >成交</el-button> -->
+                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                   <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
+                   <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,0)'>编辑</el-button>
+                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                   
                 </template>
             </el-table-column>
         </el-table>
     </div>
+
+    <!-- 新增已付金额管理 -->
+    <el-dialog
+        title='新增已付金额管理'
+        :visible.sync="amountInfoVisi"
+        width="30%"
+        center
+    >
+        <el-form  >
+            <el-form-item label="金额">
+                <el-input v-model="amountInfo.money" placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input v-model="amountInfo.remark" placeholder="审批人"></el-input>
+            </el-form-item>
+         </el-form >
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="amountInfoVisi = false">取 消</el-button>
+             <el-button type="primary" @click="sureAddAmount">确 认</el-button>
+        </span>
+    </el-dialog> 
+
+
+
+<!-- 已付金额管理 -->
+     <el-dialog
+        :title='amountTitle'
+        :visible.sync="amountVisi"
+        width="80%"
+        center
+    >
+        <div>
+            <el-button type="primary" @click="addAmountList()">新增已付金额管理</el-button>
+        </div>
+        <div class="center">
+           <el-table
+            :data="amountList"
+            style="width: 100%">
+             <el-table-column
+                prop="payeeName"
+                label="创建人"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                prop="money"
+                label="金额(远)">
+            </el-table-column>
+            <el-table-column
+                prop="remark"
+                label="备注">
+            </el-table-column>
+            <el-table-column
+                prop="colTime"
+                label="创建日期"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                label="操作"
+                >
+                 <template slot-scope="scope">
+                   <el-button style="margin:0 10px" type="primary" @click="addAmountList(scope.row)">修改</el-button>
+                  <el-button  @click="delAmountList(scope.row)" type="danger">删除</el-button>
+                   
+                </template>
+            </el-table-column>
+                
+            </el-table>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="amountVisi = false">取 消</el-button>
+        </span>
+    </el-dialog>  
+
+
+
+
+
+    <!-- 放弃 -->
+    <el-dialog
+        title='批量放弃'
+        :visible.sync="waiveVisi"
+        width="30%"
+        center
+    >
+        <div class="center">
+            <el-input v-model="waiveInfo.invalidCause" placeholder="请输入放弃原因"></el-input>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="waiveVisi = false">取 消</el-button>
+            <el-button type="primary" @click="sureWaiveVisi">确 定</el-button>
+        </span>
+    </el-dialog>  
+
+     <!-- 批量转移 -->
+     <el-dialog
+        title='批量转移'
+        :visible.sync="transferListVisi"
+        width="30%"
+        center
+    >
+        <div class="center">
+             <el-select v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
+                <el-option 
+                v-for="item in saleList"
+                :key="item.id"
+                :label="item.contactName"
+                :value="item.id"
+            ></el-option>
+            </el-select>
+            <el-input v-model="transferListInfo.remark" placeholder="请输入转移原因"></el-input>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="transferListVisi = false">取 消</el-button>
+            <el-button type="primary" @click="sureTransferListInfo">确 定</el-button>
+        </span>
+    </el-dialog>  
+
+
+
 
 
     <!-- 来访 -->
@@ -262,21 +388,6 @@
         </span>
     </el-dialog>   
 
-
-    <!-- 新增客户 -->
-    <el-dialog
-        title='新增客户'
-        :visible.sync="addVisible"
-        width="80%"
-        center
-        :before-close="addClose" 
-    >
-        新增客户
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="addClose">取 消</el-button>
-            <el-button type="primary" @click="addVisible = false">确 定</el-button>
-        </span>
-    </el-dialog>   
 
     <!-- //详情 -->
     <el-dialog 
@@ -462,17 +573,21 @@ import {updateCustomer,
     updataVisitList,
     deleteVisitList,
     distributionList,
-    updataDistribution,
-      waiveList,
+    waiveCustomer,
+    updataDistribution
     } from '@/api/custormer'
 import { 
     districtList,
     cityList,
     provinceList
 } from '@/api/region'
+import { 
+    updataBackcourtPaid,backcourtPaidList,deleteBackcourtPaid,
+    updataFrontPaid,frontPaidList,deleteFrontPaid
+} from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
-import { dictApi ,idChangeStr} from "@/utils";
+import { dictApi ,idChangeStr,filterButton} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -492,9 +607,14 @@ let customerInfo = {
         type:"",
         email:''
     }
+    let amountInfo = {
+        remark:'',
+        money:''
+    }
 export default {
   data() {
     return {
+        filterButton:filterButton,
         visitTime:'',
         time:'',
         detailFlag:false,
@@ -574,12 +694,32 @@ export default {
             },
             currentType:[],
             userInfo:{},
-            personnel:[]
+            personnel:[],
+            waiveInfo:{
+                ids:[],
+                invalidCause:''
+            },
+            waiveVisi:false,
+            transferListVisi:false,
+            transferListInfo:{
+                list:[],
+                receiver:'',
+                remark:''
+            },
+            ctId:'',
+            amountType:0,
+            amountTitle:'',
+            amountVisi:false,
+            amountList:[],
+            amountInfoVisi:false,
+            amountInfo:{},
+            delAmount:false
         }
     
   },
-  create(){
-
+  created(){
+      this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
+      
   },
    async mounted() {
     
@@ -599,16 +739,232 @@ export default {
     //   },
   },
   methods: {
-      test(date){
-          console.log(date)
+      showDelAmount(){
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
+    async delAmountList(item){
+        let res,list;
+        let obj = {
+                id:this.ctId
+            }
+        try {
+            this.$confirm('删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async() => {
+          if(this.amountType == 0){//前
+                 res = await deleteFrontPaid({id:item.id})
+                list = await frontPaidList(obj)
+            }else{//后
+                res = await deleteBackcourtPaid({id:item.id})
+                list = await  await backcourtPaidList(obj)
+            } 
+            this.amountList = list.data;
+            this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+            
+           
+        } catch (error) {
+            
+        }
+    },
+    async  sureAddAmount(){
+         this.$loading.show();
+        try {
+            let res = {};
+            let list = []
+            let obj = {
+                id:this.ctId
+            }
+            console.log(this.amountInfo)
+            if(this.amountType == 0){//前
+                res = await updataFrontPaid(this.amountInfo)
+                list = await frontPaidList(obj)
+            }else{//后
+                res = await updataBackcourtPaid(this.amountInfo)
+                list = await  await backcourtPaidList(obj)
+            } 
+             this.amountList = list.data;
+             this.amountInfoVisi = false;
+             this.amountInfo ={}
+             this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+        } catch (error) {
+            console.log(error)
+             this.$loading.hide();
+        }
+             this.$loading.hide();
+      },
+      addAmountList(item){
+          if(item){
+              let obj = {
+                  id:item.id,
+                  ctId:this.ctId,
+                  money:item.money,
+                  remark:item.remark
+              }
+              this.amountInfo = {...obj}
+          }else{
+              this.amountInfo = {...amountInfo,ctId:this.ctId}
+          }
+           console.log(this.amountInfo,item)
+          this.amountInfoVisi = true
+      },
+    async  amount(item,type){
+          try {
+            this.$loading.show();
+            this.amountList =[];
+            this.amountType = type;
+            this.amountTitle = type == 0?'前场已付金额管理':"后场已付金额管理";
+            this.amountVisi = true;
+            this.ctId = item.id;
+            let obj = {
+                id:item.id
+            }
+            let res = {};
+            if(type == 0){
+                res = await frontPaidList(obj)
+            }else{
+                 res = await backcourtPaidList(obj)
+            }
+            this.amountList = res.data;
+            console.log(this.amountTitle)
+          } catch (error) {
+              console.log(error)
+              this.$loading.hide()
+          }
+           this.$loading.hide()
+          
+      },
+
+
+      waiveCustomerList(){
+          if(this.waiveInfo.ids.length){
+               this.waiveVisi = true;
+          }else{
+              return this.$message.warning("请选择客户")
+          }
+         
+      },
+     waiveCustomer(item){
+        
+            this.waiveInfo =  {
+                ids:[item.id],
+                invalidCause:''
+            }
+            // let res = await waiveCustomer(this.waiveInfo);
+            this.waiveVisi = true;
+
+     },
+    async sureWaiveVisi(){
+         this.$confirm('此操作将客户放入废弃池, 是否继续?', '提示', {//废弃
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+            try {
+                if(!this.waiveInfo.invalidCause){
+                    return this.$message.warning('请输入放弃意见')
+                }
+                let res = await waiveCustomer(this.waiveInfo);
+                this.waiveVisi = false;
+                this.waiveInfo.invalidCause ='';
+                this.customerList()
+                this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+            } catch (error) {
+                console.log(error)
+            }
+           
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+     },
+      getTransferList(){
+          if(this.transferListInfo.list.length){
+               this.transferListVisi = true;
+          }else{
+              return this.$message.warning("请选择客户")
+          }
+         
+      },
+     sureTransferListInfo(){
+          this.$confirm('此操作将客户转移至所选销售员, 是否继续?', '提示', {//废弃
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+            if(!this.transferListInfo.remark){
+                return this.$message.warning('请输入转移意见')
+            }
+            let list = [];
+            this.transferListInfo.list.forEach(item =>{
+                console.log(item)
+                let obj = {
+                    ctId:item.id,
+                    receiver: this.transferListInfo.receiver,
+                    remark:this.transferListInfo.remark
+                }
+                list.push(obj)
+            })
+            let obj = {
+                list:list
+            }
+            console.log(obj)
+            let res = await updataDistribution(obj)
+                this.$message.success(res.returnMsg)
+             this.transferListVisi = false;
+             this.transferListInfo.remark =''
+              this.transferListInfo.receiver =''
+             this.customerList()
+            this.$message({
+                type: 'success',
+                message: res.returnMsg
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+     },
     async dist(){
+           console.log(this.userInfo,'------------------')  
          this.loading= true;
         let province = await provinceList();
         this.province = province.data;
         this.detailProvince = province.data;
-        this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
-         console.log(this.userInfo,'------------------')
+       
         
         // debugger
         this.platform = await dictApi("platform");
@@ -629,7 +985,7 @@ export default {
     },
 
      async customerList(){//客户列表
-        let res = await waiveList(this.search)
+        let res = await customerList(this.search)
         console.log(res,222222222222)
         this.tableData = res.data;
          this.loading= false;
@@ -695,17 +1051,22 @@ export default {
         }
          this.$loading.hide()
      },
-    canclAbandoned(){//放弃
-          this.ifAbandoned = false;
+    canclSuccess(){//放弃
+          this.ifSuccess = false;
       },
-      sueAbandoned(item){
-          console.log(item)
-      },
-      canclTransfer(){//移交
-          this.ifTransfer = false;
-      },
-      sueTransfer(item){
-          console.log(item)
+    async  sureSuccess(item){
+           try {
+              let obj = {
+                  id:item.id,
+                  isSuccess:1
+              }
+            let res = await updateCustomer(obj);
+            this.$message.success(res.returnMsg)
+            this.customerList()
+
+          } catch (error) {
+              
+          }
       },
      async transfer(item){
          
@@ -730,8 +1091,7 @@ export default {
                 console.log(this.transferInfo)
                 let list = [this.transferInfo]
                 console.log(list)
-                debugger
-                let res = await updataVisitList({list})
+                let res = await updataDistribution({list})
                 this.$message.success(res.returnMsg)
                 let resList = await distributionList({id:this.transferInfo.ctId})
                 this.transferList = resList.data;
@@ -901,6 +1261,15 @@ export default {
      },
       handleSelectionChange(value){
           console.log(value)
+          let list = [];
+          let transferListInfo = [];
+          value.forEach(item=>{
+              list.push(item.id)
+              transferListInfo.push(item)
+          })
+          this.waiveInfo.ids = list;
+          this.transferListInfo.list = transferListInfo;
+          
       },
   }
 };

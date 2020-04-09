@@ -163,11 +163,11 @@ let addItemInfo = {
                            this.addItemInfo.pids.push(item.id)
                       })
                      this.addItemInfo.pids = Array.from(new Set([...list,...this.addItemInfo.pids])) 
-                       console.log(this.addItemInfo.pids)
+                       console.log(this.addItemInfo.pids,this.addItemInfo.name,this.addItemInfo.description,this.addItemInfo.sort)
                       //  debugger
                      if(this.addItemInfo.pids.length != 0&&this.addItemInfo.name
                      &&this.addItemInfo.description
-                     &&this.addItemInfo.sort
+                     &&this.addItemInfo.sort != 'undefined'
                      ){
                        // if(this.addItemInfo.id){//修改
                             await updataRole(this.addItemInfo);

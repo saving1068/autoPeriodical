@@ -121,10 +121,7 @@
         </div>
     </el-form>
     <div class='table'>
-        <div class='button'>
-            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
-            <el-button type="danger">批量放弃</el-button>
-            <el-button type="warning">批量转移</el-button>
+        <div>
             <el-button >导出</el-button>
         </div>
         <el-table
@@ -133,46 +130,25 @@
             @row-dblclick='rowDblclic'
             style="width: 100%"
             @selection-change="handleSelectionChange">
-            <el-table-column
-            type="selection"
-            width="55">
-            </el-table-column>
-            <el-table-column prop="name" label="客户姓名">
-            </el-table-column>
-            <el-table-column prop="adManName" label="广告负责人">
-            </el-table-column>
-            <el-table-column prop="projectName" label="项目名称">
-            </el-table-column>
-            <el-table-column prop="address" label="详细地址">
-            </el-table-column>
-            <el-table-column prop="email" label="电子邮箱">
-            </el-table-column>
-            <el-table-column prop="qq" label="qq">
-            </el-table-column>
-            <el-table-column prop="getDate" label="获取时间">
-            </el-table-column>
+                <el-table-column
+                    type="selection"
+                    width="55">
+                </el-table-column>
+                <el-table-column prop="ctName" label="客户姓名">
+                </el-table-column>
+                <el-table-column prop="fupName" label="负责人">
+                </el-table-column>
+                <el-table-column prop="remark" label="留言">
+                </el-table-column>
+                <el-table-column prop="roleStr" label="角色">
+                </el-table-column>
+                <el-table-column prop="fuTime" label="修改时间">
+                </el-table-column>
             <!-- <el-table-column label="处理状态" prop='overdue'>
             
             </el-table-column> -->
             
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                   <el-button type="text">成交</el-button>
-                   <el-button type="text" @click.native='transfer(scope.row)'>分配记录</el-button>
-                   <el-button type="text" @click.native='getVisitList(scope.row)'>来访记录</el-button>
-                   <!-- <el-button type="text">编辑</el-button> -->
-                   <el-button type="text" @click.native='rowDblclic(scope.row,1)'>详情</el-button>
-                   <el-popconfirm
-                    title="确定放弃该数据吗？"
-                     @onConfirm='sueAbandoned(scope.row)'
-                    @onCancel="canclAbandoned"
-                    :value='ifAbandoned'
-                    :tabindex='99'
-                    >
-                    <el-button  type="text"  slot="reference">放弃</el-button>
-                    </el-popconfirm>
-                </template>
-            </el-table-column>
+
         </el-table>
     </div>
 
@@ -482,6 +458,7 @@ import {
     provinceList
 } from '@/api/region'
 import {projectList} from '@/api/project'
+import { roleList} from '@/api/role'
 import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr} from "@/utils";
 let customerInfo = {
@@ -585,7 +562,8 @@ export default {
             },
             currentType:[],
             userInfo:{},
-            personnel:[]
+            personnel:[],
+            roleList:[]
         }
     
   },
@@ -611,8 +589,10 @@ export default {
     //   },
   },
   methods: {
-      test(date){
-          console.log(date)
+     async getRoleList(obj){
+      let res = await roleList(obj)
+      this.roleList = res.data
+  
       },
     async dist(){
          this.loading= true;
@@ -634,6 +614,7 @@ export default {
              let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
             this.personnel = personnel.data;
         }
+        this.getRoleList()
        
           console.log(this.projectList,21312)
       
@@ -642,6 +623,10 @@ export default {
      async customerList(){//客户列表
         let res = await userFollowList(this.search)
         console.log(res,222222222222)
+        res.data.map(item =>{
+            let findItem = this.roleList.find(itemS => item.roleId == itemS.roleId);
+            item.roleStr = findItem.name;
+        })
         this.tableData = res.data;
          this.loading= false;
       },

@@ -154,12 +154,11 @@
             </el-table-column> -->
             
             <el-table-column label="操作">
-                <template slot-scope="scope">
-                  
-                   <el-button type="text" @click.native='transfer(scope.row)'>分配记录</el-button>
-                   <el-button type="text" @click.native='getVisitList(scope.row)'>来访记录</el-button>
-                   <!-- <el-button type="text">编辑</el-button> -->
-                   <el-button type="text" @click.native='rowDblclic(scope.row,1)'>详情</el-button>
+                 <template slot-scope="scope">
+                   
+                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                   <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
+                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
                 </template>
             </el-table-column>
         </el-table>
@@ -184,7 +183,7 @@
             </el-timeline-item>
         </el-timeline>
 
-        <div class="center width280 divider" >
+        <!-- <div class="center width280 divider" >
             <el-input placeholder="请输入备注" v-model="visitInfo.remark"></el-input>
             <el-date-picker 
                 style="padding:20px 0;"
@@ -196,7 +195,7 @@
              <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
             </span>
-        </div>
+        </div> -->
         
     </div>
        
@@ -226,7 +225,7 @@
             </el-timeline-item>
         </el-timeline>
 
-        <div class="center width280 divider" >
+        <!-- <div class="center width280 divider" >
             <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
             <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
             <el-select v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
@@ -240,7 +239,7 @@
              <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="suerAddTransfer">新增分配记录</el-button>
             </span>
-        </div>
+        </div> -->
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="transferClose">取 消</el-button>
@@ -248,21 +247,7 @@
         </span>
     </el-dialog>   
 
-
-    <!-- 新增客户 -->
-    <el-dialog
-        title='新增客户'
-        :visible.sync="addVisible"
-        width="80%"
-        center
-        :before-close="addClose" 
-    >
-        新增客户
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="addClose">取 消</el-button>
-            <el-button type="primary" @click="addVisible = false">确 定</el-button>
-        </span>
-    </el-dialog>   
+  
 
     <!-- //详情 -->
     <el-dialog 
