@@ -122,8 +122,8 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
-            <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
+            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
+            <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button> -->
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button >导出</el-button>
         </div>
@@ -167,6 +167,13 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+        style=" padding:20px;"
+        @current-change="handleCurrentChange"
+        :page-size="10"
+        layout="total, prev, pager, next"
+        :total="total">
+    </el-pagination>
     </div>
 
     <!-- 新增已付金额管理 -->
@@ -655,6 +662,8 @@ export default {
             isSuccess:0,
             isValid:1,
             keyword:"",
+            page:1,
+            size:10
         },
             tableData:[],
             province:[],
@@ -988,6 +997,7 @@ export default {
         let res = await customerList(this.search)
         console.log(res,222222222222)
         this.tableData = res.data;
+        this.total =res.total;
          this.loading= false;
       },
     async provinceChange(value){
@@ -1271,6 +1281,11 @@ export default {
           this.transferListInfo.list = transferListInfo;
           
       },
+       handleCurrentChange(val) {
+        this.search.page = val;
+       this.customerList()
+        console.log(`当前页: ${val}`);
+      }
   }
 };
 </script>

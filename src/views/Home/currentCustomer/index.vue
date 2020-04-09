@@ -172,12 +172,19 @@
                    <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
                    <el-button type="text" v-show='filterButton(104)' @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
                    <el-button type="text" v-show='filterButton(105)' @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>
-                   <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,0)'>编辑</el-button>
+                    <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
                     <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+        style=" padding:20px;"
+        @current-change="handleCurrentChange"
+        :page-size="10"
+        layout="total, prev, pager, next"
+        :total="total">
+    </el-pagination>
     </div>
 
     <!-- 新增已付金额管理 -->
@@ -402,7 +409,7 @@
 
     <!-- //详情 -->
     <el-dialog 
-        :title="type == 1?'客户详情':'新增客户'"
+        :title="type == 0?'新增客户':'客户详情'"
         :visible.sync="detailFlag"
         width="80%"
        
@@ -535,8 +542,8 @@
             <!-- <el-button  type="primary">新增跟进记录</el-button> -->
         </div>
         <div class="center">
-            <div class="record">
-                <el-timeline >
+            <div class="record" v-if='followFlag'>
+                <el-timeline  >
                     <el-timeline-item
                     v-for="(item,index) in detail.record" 
                     :key="index"
@@ -544,6 +551,7 @@
                     <el-card  >
                         <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
                         <p style="text-align:right">{{item.fupName}}</p>
+                        <el-button type="text"  @click="delFollowList(item)">删除</el-button>
                     </el-card>
                     </el-timeline-item>
                 </el-timeline>
@@ -666,6 +674,8 @@ export default {
             isSuccess:0,
             isValid:1,
             keyword:"",
+            page:1,
+            size:10
         },
             tableData:[],
             province:[],
@@ -725,7 +735,10 @@ export default {
             amountInfoVisi:false,
             amountInfo:{},
             delAmount:false,
-            ifSuccess:false
+            ifSuccess:false,
+            choiseItem:{},
+            total:0,
+            followFlag:false,
         }
     
   },
@@ -1000,6 +1013,7 @@ export default {
         let res = await customerList(this.search)
         console.log(res,222222222222)
         this.tableData = res.data;
+        this.total =res.total||0;
          this.loading= false;
       },
     async provinceChange(value){
@@ -1148,7 +1162,8 @@ export default {
           try {
         this.$refs['detail'].validate((valid) => {
           if (valid) {
-                this.$confirm('是否确认新增客户', "提示", {
+              let tips = this.type == 2?'是否确认修改客户':'是否确认新增客户';
+                this.$confirm(tips, "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
@@ -1186,7 +1201,7 @@ export default {
           try {
               this.$loading.show()
                this.type = value;
-               
+               this.choiseItem = {...item}
                 if(item){
                     if(item.city&&item.district){
                         let city = await cityList({fid:item.province});
@@ -1235,8 +1250,9 @@ export default {
                         email
                         };
                         
+                        this.followFlag = false;
                     let res = await followList({id:item.id})
-                    
+                    this.followFlag = true;
                     
                     
                     this.detail.record = res.data
@@ -1249,6 +1265,32 @@ export default {
          }
          this.$loading.hide()
          
+      },
+      delFollowList(item){
+          if(this.type == 1){
+              return
+          }
+         console.log(item)
+         this.$confirm('是否删除跟踪记录', "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(async()=>{
+                    let obj = {
+                        id:item.id
+                    }
+                    this.followFlag = false;
+                    let res = await deleteFollow(obj);
+                    this.$message.success(res.returnMsg)
+                   let followInfo = await followList({id:this.choiseItem.id})
+                    
+                    
+                    
+                    this.detail.record = followInfo.data;
+                     this.followFlag = true;
+                    console.log(this.detail.record)
+                       
+                })
       },
      async updataFollowList(){
          this.$loading.show()
@@ -1283,6 +1325,11 @@ export default {
           this.transferListInfo.list = transferListInfo;
           
       },
+      handleCurrentChange(val) {
+        this.search.page = val;
+       this.customerList()
+        console.log(`当前页: ${val}`);
+      }
   }
 };
 </script>

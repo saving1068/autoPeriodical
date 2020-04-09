@@ -150,6 +150,13 @@
             
 
         </el-table>
+        <el-pagination
+        style=" padding:20px;"
+            @current-change="handleCurrentChange"
+            :page-size="10"
+            layout="total, prev, pager, next"
+            :total="total">
+        </el-pagination>
     </div>
 
 
@@ -523,6 +530,8 @@ export default {
             isSuccess:0,
             isValid:1,
             keyword:"",
+            page:1,
+            size:10
         },
             tableData:[],
             province:[],
@@ -563,7 +572,8 @@ export default {
             currentType:[],
             userInfo:{},
             personnel:[],
-            roleList:[]
+            roleList:[],
+            total:0
         }
     
   },
@@ -628,6 +638,7 @@ export default {
             item.roleStr = findItem.name;
         })
         this.tableData = res.data;
+        this.total =res.total||0;
          this.loading= false;
       },
     async provinceChange(value){
@@ -895,9 +906,11 @@ export default {
          this.$loading.hide()
          
      },
-      handleSelectionChange(value){
-          console.log(value)
-      },
+      handleCurrentChange(val) {
+        this.search.page = val;
+       this.customerList()
+        console.log(`当前页: ${val}`);
+      }
   }
 };
 </script>
