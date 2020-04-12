@@ -17,14 +17,14 @@
                 <el-button
                     type="text"
                     size="mini"
-                    @click.stop="editUserFlag = true">
+                    @click.stop="edit(node)">
                     修改部门信息
                 </el-button>
                 </span>
             </span>
       </el-tree>
       <div class="center" style="flex:1">
-          <div v-if="editUserFlag">
+          <div v-show="editUserFlag">
               <div style="padding-bottom:20px;">
                 所属部门：
                 <el-tree :data="list"  ref="tree" show-checkbox :props="defaultProps" default-expand-all node-key="id" ></el-tree>
@@ -45,7 +45,7 @@
                     </el-form-item>
                 </el-form>
           </div>
-            <div style="width:90%;" v-else>
+            <div style="width:90%;"  v-show="!editUserFlag">
              <div>部门【{{editUserInfo.name}}】所属人员</div>
                  <el-table
                     :data="tableData"
@@ -158,6 +158,12 @@ let initMuneValue = {
         } catch (error) {
           console.log(error)
         }
+      },
+      edit(item){
+          this.editUserFlag = true;
+          console.log(item)
+           this.$refs.tree.setCheckedKeys([item.data.id]);
+        this.muneInfo ={...item.data}
       },
       check(data){
         console.log(data)

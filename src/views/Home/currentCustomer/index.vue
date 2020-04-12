@@ -593,7 +593,8 @@ import {updateCustomer,
     deleteVisitList,
     distributionList,
     waiveCustomer,
-    updataDistribution
+    updataDistribution,
+    customerSuccess
     } from '@/api/custormer'
 import { 
     districtList,
@@ -742,8 +743,16 @@ export default {
         }
     
   },
-  created(){
+    async  created(){
+         
       this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
+      console.log(this.userInfo,11111111111111111111111111111111111111)
+    //   debugger
+       if(this.userInfo.role.roleId !=7){
+             let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
+            this.personnel = personnel.data;
+        }
+        
       
   },
    async mounted() {
@@ -1000,10 +1009,7 @@ export default {
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
-        if(this.userInfo.role.roleId !=7){
-             let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
-            this.personnel = personnel.data;
-        }
+       
        
           console.log(this.projectList,21312)
       
@@ -1084,14 +1090,15 @@ export default {
            try {
               let obj = {
                   id:item.id,
-                  isSuccess:1
               }
-            let res = await updateCustomer(obj);
-            this.$message.success(res.returnMsg)
+            let res = await customerSuccess(obj);
+            
+            this.$message.success(res.returnMsg);
+             this.$emit('succreeRefresh');
             this.customerList()
 
           } catch (error) {
-              
+              console.log(error)
           }
       },
      async transfer(item){

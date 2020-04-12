@@ -7,9 +7,9 @@ const dictApi = (async (sign)=>{
 
 const filterButton = ((id)=>{
     let buttonList = JSON.parse(sessionStorage.getItem('buttonList'))||[];
-    console.log(buttonList)
+    // console.log(buttonList)
    let flag = buttonList.find(item  => item==id);
-   console.log(flag)
+//    console.log(flag)
    return flag
 })
 

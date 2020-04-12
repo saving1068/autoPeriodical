@@ -745,8 +745,12 @@ export default {
         }
     
   },
-  created(){
+  async  created(){
       this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
+       if(this.userInfo.role.roleId !=7){
+             let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
+            this.personnel = personnel.data;
+        }
       
   },
    async mounted() {
@@ -987,10 +991,10 @@ export default {
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
-        if(this.userInfo.role.roleId !=7){
-             let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
-            this.personnel = personnel.data;
-        }
+        // if(this.userInfo.role.roleId !=7){
+        //      let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
+        //     this.personnel = personnel.data;
+        // }
        
           console.log(this.projectList,21312)
       

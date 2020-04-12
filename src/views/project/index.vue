@@ -116,6 +116,12 @@
                 <el-form-item label="备注:">
                    <el-input placeholder="请输入备注"  v-model="addItemInfo.remark"></el-input>
                </el-form-item>
+                <el-form-item label="密钥:" v-show="addItemInfo.platform == 1">
+                   <el-input placeholder="请输入密钥"  v-model="addItemInfo.crmKey"></el-input>
+               </el-form-item>
+                <el-form-item label="Token:"  v-show="addItemInfo.platform == 1">
+                   <el-input placeholder="请输入Token"  v-model="addItemInfo.crmToken"></el-input>
+               </el-form-item>
                <el-form-item label="接口调用地址:">
                    <el-input placeholder="请输入接口调用地址"  v-model="addItemInfo.url"></el-input>
                </el-form-item>
@@ -137,10 +143,11 @@ import {updataProject,
     import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr} from "@/utils";
 let addItemInfo = {
- name:'',personnel:'',platform:'',remark:''
+ name:'',personnel:'',platform:'',remark:'',crmToken:'',crmKey:''
 }
   export default {
     async created(){
+      this.loading = true;
       await this.dict()
       await this.getList({})
     },
@@ -247,9 +254,9 @@ let addItemInfo = {
           if(item){
             // console.log(item)
            
-           let {name,personnel,platform,remark,id} = {...item}
+           let {name,personnel,platform,remark,id,crmKey,crmToken,url} = {...item}
            
-            this.addItemInfo = {name,personnel,platform,remark,id} 
+            this.addItemInfo = {name,personnel,platform,remark,id,crmKey,crmToken,url} 
           }else{
             this.addItemInfo = {...addItemInfo}
            

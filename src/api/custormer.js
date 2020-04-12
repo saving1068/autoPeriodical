@@ -129,6 +129,14 @@ const customerTotal  = (params) => { //客户资源列表
     });
 }
 
+const customerSuccess  = (params) => { //客户资源列表
+    return request({
+        url: '/customer/success',
+        method: 'POST',
+        data:params
+    });
+}
+
 
 
 export {
@@ -148,5 +156,6 @@ export {
     waiveCustomer,
     userFollowList,
     waitDisList,
-    customerTotal
+    customerTotal,
+    customerSuccess
 }

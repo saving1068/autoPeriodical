@@ -1,9 +1,9 @@
 <template>
   <div class="warp">
-    <el-tabs v-model="activeName" type="card" :tab-click='tabClick' >
+    <el-tabs v-model="activeName" type="card" @tab-click='tabClick'  :before-leave="beforeLeave">
       <el-tab-pane  name="current">
         <span slot="label"> 当前待处理客户 <i class="el-icon-count">{{totalInfo.pending}}</i></span>
-        <current v-if="activeName =='current'"></current> 
+        <current @succreeRefresh='refresh' v-if="activeName =='current'"></current> 
       </el-tab-pane>
       <el-tab-pane  name="awaitcustomer">
       <span slot="label"> 已成交客户 <i class="el-icon-count">{{totalInfo.success}}</i></span>
@@ -26,9 +26,9 @@
          </span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
       </el-tab-pane>
-      <el-tab-pane :name="activeName" >
+      <el-tab-pane name="5">
       <span slot="label" > 
-        <el-button type="primary" @click.native="refresh" icon="el-icon-refresh">刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
         <!-- <el-button type="primary" icon="el-icon-refresh" ></el-button> -->
       </span>
         
@@ -54,16 +54,25 @@ export default {
     return {
       activeName:"current",
        filterButton:filterButton,
-       totalInfo:{}
+       totalInfo:{},
     };
   },
   created(){
+    
     this.refresh()
   },
   mounted() {
+
    console.log(this.activeName)
   },
   methods: {
+    beforeLeave(item){
+      console.log(item)
+      if(item == 5){
+        this.refresh()
+        return false
+      }
+    },
 
     tabClick(tab, event){
       console.log(tab, event,"----------------------------")
