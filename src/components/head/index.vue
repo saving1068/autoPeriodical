@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="login">
-            <el-badge :value="notReadNum" :hidden='notReadNum == 0' style="margin:0 35px;">
+            <!-- <el-badge :value="notReadNum" :hidden='notReadNum == 0' style="margin:0 35px;">
                 <el-dropdown :hide-on-click="false">
                     <span class="el-dropdown-link">
                         公告信息<i class="el-icon-arrow-down el-icon--right"></i>
@@ -20,7 +20,7 @@
                                 <div style="padding:0 10px">{{item.content}}</div>
                                 <el-tag style="margin-right:10px;" size="mini"   :type="item.isRead == 1?'info':'warning'">{{item.isRead == 1?'已读':'未读'}}</el-tag>
                                 <el-button @click.native.prevent="readMsg(item)" size="mini" v-if="item.isRead !=1" type="primary">标记已读</el-button>
-                                <!-- <el-button @click.native.prevent="deleteMsg(item)"  size="mini"  type="danger">删除</el-button> -->
+                
                             </div>
                             
                         </el-dropdown-item>
@@ -33,7 +33,7 @@
                             </el-pagination>
                     </el-dropdown-menu>
                 </el-dropdown>
-            </el-badge>
+            </el-badge> -->
             
             <div class="avatar">
                 <!-- <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar> -->

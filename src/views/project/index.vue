@@ -9,34 +9,72 @@
                     <el-table
                     :data="list"
                     fit
-                   
+                  
                     align="center"
                     style="width: 100%">
-                    <el-table-column prop="name" label="项目名称">
+                    <el-table-column  align="center" prop="name" label="项目名称">
 
                     </el-table-column>
                     <el-table-column
+                    align="center"
                         prop="personnelName"
                         label="项目负责人"
                         >
                     </el-table-column>
                      <el-table-column
+                     align="center"
                         prop="platformStr"
                         label="项目平台"
                         >
                     </el-table-column>
                     <el-table-column
+                    align="center"
+                        prop="crmKey"
+                        label="今日头条密钥"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                    align="center"
+                        prop="crmToken"
+                        label="今日头条Token"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                    width="140"
+                    align="center"
+                        prop="isJoin53Str"
+                        label="是否接入53客服系统"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                    align="center"
+                        prop="join53Url"
+                        label="53系统调用接口"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                    align="center"
+                        prop="token53"
+                        label="53系统接入token"
+                        >
+                    </el-table-column>
+                    <el-table-column
+                    align="center"
+                     width="140"
+
                         prop="url"
-                        label="接口调用地址"
+                        label="广点通接口调用地址"
                         >
                     </el-table-column>
                     
                     <el-table-column
+                    align="center"
                         prop="createTime"
                         label="创建时间"
                         >
                     </el-table-column>
                     <el-table-column
+                    align="center"
                         prop="createAuthorName"
                         label="创建人"
                         >
@@ -60,6 +98,13 @@
                         
                     </el-table-column>
                     </el-table>
+                    <el-pagination
+                    style=" padding:20px;"
+                    @current-change="handleCurrentChange"
+                    :page-size="10"
+                    layout="total, prev, pager, next"
+                    :total="total">
+                </el-pagination>
                  <!-- </el-scrollbar> -->
         </div>
         <!-- <div class="tree" v-show="sonShow">
@@ -80,16 +125,16 @@
            
             :title="addItemInfo.id?'修改项目信息':'新增项目'"
             :visible.sync="costChange"
-            width="500px"
+            width="700px"
             center
             :before-close="addClose">
               <div class="center">
-                <el-form label-width="100px"  size='mini'>
+                <el-form label-width="150px"  size='mini' :rules="addItemInfoRule" :model="addItemInfo" ref="addItemInfo" >
 
-                <el-form-item label="项目名:">
-                   <el-input  v-model="addItemInfo.name"></el-input>
+                <el-form-item label="项目名:" prop="name">
+                   <el-input  v-model="addItemInfo.name"  placeholder="请输入项目名" ></el-input>
                </el-form-item>
-               <el-form-item label="项目负责人:">
+               <el-form-item label="项目负责人:" prop="personnel">
                   <el-select v-model="addItemInfo.personnel" placeholder="请选择">
                         <el-option 
                             v-for="item in userList"
@@ -101,7 +146,7 @@
                         
                       </el-select>
                </el-form-item>
-                <el-form-item label="项目平台:">
+                <el-form-item label="项目平台:" prop="platform">
                   <el-select v-model="addItemInfo.platform" placeholder="请选择">
                         <el-option 
                         v-for="item in platform"
@@ -112,18 +157,22 @@
                         </el-option>
                         
                       </el-select>
-               </el-form-item>
-                <el-form-item label="备注:">
+               </el-form-item> 
+                <el-form-item label="备注:" prop="remark">
                    <el-input placeholder="请输入备注"  v-model="addItemInfo.remark"></el-input>
                </el-form-item>
-                <el-form-item label="密钥:" v-show="addItemInfo.platform == 1">
+               <!-- -->
+                <el-form-item label="密钥:" v-show="addItemInfo.platform == 1"  prop="crmKey">
                    <el-input placeholder="请输入密钥"  v-model="addItemInfo.crmKey"></el-input>
                </el-form-item>
-                <el-form-item label="Token:"  v-show="addItemInfo.platform == 1">
+                <el-form-item label="Token:"  v-show="addItemInfo.platform == 1"   prop="crmToken">
                    <el-input placeholder="请输入Token"  v-model="addItemInfo.crmToken"></el-input>
                </el-form-item>
-               <el-form-item label="接口调用地址:">
-                   <el-input placeholder="请输入接口调用地址"  v-model="addItemInfo.url"></el-input>
+               <el-form-item label="是否接入53客服系统:">
+                    <el-radio-group v-model="addItemInfo.isJoin53">
+                      <el-radio :label="1">是</el-radio>
+                      <el-radio :label="0">否</el-radio>
+                    </el-radio-group>
                </el-form-item>
                  
            </el-form> 
@@ -143,20 +192,51 @@ import {updataProject,
     import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr} from "@/utils";
 let addItemInfo = {
- name:'',personnel:'',platform:'',remark:'',crmToken:'',crmKey:''
+ name:'',personnel:'',platform:'',remark:'',crmToken:'',crmKey:'',isJoin53:'1'
 }
+
   export default {
     async created(){
       this.loading = true;
       await this.dict()
-      await this.getList({})
+      await this.getList(this.search)
     },
     methods: {
+       handleCurrentChange(val) {
+        this.search.page = val;
+       this.getList(this.search)
+        console.log(`当前页: ${val}`);
+      },
     async  dict(){
       this.platform = await dictApi("platform");
       let userList = await accountList({roleId:7});
       this.userList = userList.data;
       console.log(this.platform)
+      },
+      checkCrmKey(rule, value, callback){
+        console.log(value,11111,this.addItemInfo.platform == 1)
+        if(this.addItemInfo.platform ==1){
+          if (!value) {
+              return callback(new Error('秘钥不能为空'));
+            }else{
+            callback();
+          }
+        }else{
+           callback();
+        }
+        
+      },
+      checkCrmToken(rule, value, callback){
+         console.log(value,11111,this.addItemInfo.platform == 1)
+       if(this.addItemInfo.platform ==1){
+          if (!value) {
+              return callback(new Error('Token不能为空'));
+            }else{
+            callback();
+          }
+        }else{
+           callback();
+        }
       },
       addClose(){
         this.$confirm('取消新增, 是否继续?', '提示', {
@@ -173,17 +253,25 @@ let addItemInfo = {
         let tips = this.addItemInfo.id?'是否确认修改项目?':'是否确认新增项目?';
             let success = this.addItemInfo.id?'修改项目成功':'新增项目成功';
             console.log(this.addItemInfo.personnel !='',this.addItemInfo.platform !='')
-            this.$confirm(tips, '提示', {
+              this.$refs['addItemInfo'].validate((valid) => {
+              if (valid) {
+                this.$confirm(tips, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(async() => {
+
+
+
+
                     try {
+
                       //  console.log(this.addItemInfo)
                      if(this.addItemInfo.name
                      &&String(this.addItemInfo.personnel)
                      &&String(this.addItemInfo.platform)
                      ){
+                       
                        
                       
                        console.log(this.addItemInfo)
@@ -195,7 +283,7 @@ let addItemInfo = {
                            
                         // }
                         this.addItemInfo = {}
-                            this.getList({})
+                            this.getList(this.search)
                          this.$message.success(success);
                          this.costChange = false;
                        
@@ -212,6 +300,13 @@ let addItemInfo = {
                 }).catch(() => {
                 
                 });
+                
+              } else {
+                console.log('error submit!!');
+                return false;
+              }
+            });
+            
       },
       async searchRole(value){
         try {
@@ -238,7 +333,7 @@ let addItemInfo = {
                     try {
                         await deleteProject({id:item.id})
                         
-                            this.getList({})
+                            this.getList(this.search)
                          this.$message.success(success);
                         
                     } catch (error) {
@@ -254,9 +349,9 @@ let addItemInfo = {
           if(item){
             // console.log(item)
            
-           let {name,personnel,platform,remark,id,crmKey,crmToken,url} = {...item}
+           let {name,personnel,platform,remark,id,crmKey,crmToken,isJoin53} = {...item}
            
-            this.addItemInfo = {name,personnel,platform,remark,id,crmKey,crmToken,url} 
+            this.addItemInfo = {name,personnel,platform,remark,id,crmKey,crmToken,isJoin53} 
           }else{
             this.addItemInfo = {...addItemInfo}
            
@@ -269,8 +364,14 @@ let addItemInfo = {
       let res = await projectList(obj);
       res.data.map(item =>{
           item.platformStr = idChangeStr(this.platform,item.platform);
-          item.url = item.url?item.url:'--'
+          item.url = item.url?item.url:'--';
+          item.isJoin53Str = item.isJoin53 == 0?"否":"是";
+          item.join53Url = item.join53Url?item.join53Url:'--';
+          item.token53 = item.token53?item.token53:'--'
+          item.crmKey = item.crmKey?item.crmKey:'--';
+          item.crmToken = item.crmToken?item.crmToken:'--';
       })
+      this.total =res.total;
       this.list = res.data;
        this.loading = false;
       },
@@ -283,9 +384,32 @@ let addItemInfo = {
         costChange:false,
         addItemInfo:{
         },
+        search:{
+          page:1,
+          size:10
+        },
         list:[],
         platform:[],
-        userList:[]
+        userList:[],
+        total:0,
+        addItemInfoRule:{
+           name:[
+                { required: true, message: '请输入名称', trigger: 'blur' },
+          ],
+          personnel:[
+              { required: true, message: '请选择项目负责人', trigger: 'blur' },
+          ],
+          platform:[
+              { required: true, message: '请输入项目平台', trigger: 'blur' },
+          ],
+          crmKey:[
+              { validator: this.checkCrmKey, trigger: 'blur' }
+          ],
+          crmToken:[
+            { validator: this.checkCrmToken, trigger: 'blur' }
+              
+          ]
+        }
       };
     },
    

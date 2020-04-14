@@ -134,8 +134,8 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/api': {
-				// target: 'http://wearewwx.com:8001',
-				target: 'http://2821r97k36.wicp.vip',
+				target: 'http://wearewwx.com:8001',
+				// target: 'http://2821r97k36.wicp.vip',
 				// ws: true,
 				changeOrigin: true,
 				pathRewrite: {
