@@ -28,6 +28,13 @@
                         >
                     </el-table-column>
                     <el-table-column
+                     align="center"
+                        prop="resourceTypeStr"
+                        label="资源类别"
+                        >
+                    </el-table-column>
+                    
+                    <el-table-column
                     align="center"
                         prop="crmKey"
                         label="今日头条密钥"
@@ -158,6 +165,18 @@
                         
                       </el-select>
                </el-form-item> 
+               <el-form-item label="资源类别:" prop="resourceType">
+                  <el-select v-model="addItemInfo.resourceType" placeholder="请选择">
+                        <el-option 
+                        v-for="item in resourceType"
+                          :key="item.key"
+                          :label="item.value"
+                          :value="item.key  "
+                      >
+                        </el-option>
+                        
+                      </el-select>
+               </el-form-item> 
                 <el-form-item label="备注:" prop="remark">
                    <el-input placeholder="请输入备注"  v-model="addItemInfo.remark"></el-input>
                </el-form-item>
@@ -192,7 +211,7 @@ import {updataProject,
     import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr} from "@/utils";
 let addItemInfo = {
- name:'',personnel:'',platform:'',remark:'',crmToken:'',crmKey:'',isJoin53:'1'
+ name:'',personnel:'',platform:'',remark:'',crmToken:'',crmKey:'',isJoin53:1,resourceType:'0'
 }
 
   export default {
@@ -209,6 +228,7 @@ let addItemInfo = {
       },
     async  dict(){
       this.platform = await dictApi("platform");
+      this.resourceType= await dictApi('resourceType');
       let userList = await accountList({roleId:7});
       this.userList = userList.data;
       console.log(this.platform)
@@ -364,6 +384,7 @@ let addItemInfo = {
       let res = await projectList(obj);
       res.data.map(item =>{
           item.platformStr = idChangeStr(this.platform,item.platform);
+          item.resourceTypeStr = idChangeStr(this.resourceType,item.resourceType);
           item.url = item.url?item.url:'--';
           item.isJoin53Str = item.isJoin53 == 0?"否":"是";
           item.join53Url = item.join53Url?item.join53Url:'--';
@@ -408,8 +429,12 @@ let addItemInfo = {
           crmToken:[
             { validator: this.checkCrmToken, trigger: 'blur' }
               
+          ],
+          resourceType:[
+            { required: true, message: '请输入资源类别', trigger: 'blur' },
           ]
-        }
+        },
+        resourceType:[]
       };
     },
    
