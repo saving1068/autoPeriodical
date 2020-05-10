@@ -68,6 +68,14 @@ const routes = [
 				},
 				component:() => import('@/views/department'),
 			},
+			{//配置
+				path:"/spec",
+				name: 'spec',
+				meta:{
+					title:'销售配置'
+				},
+				component:() => import('@/views/spec'),
+			},
 			{//项目管理
 				path: '/project',
 				name: 'project',
@@ -76,6 +84,7 @@ const routes = [
 				},
 				component:() => import('@/views/project'),
 			},
+			
 			
 			
 		]
