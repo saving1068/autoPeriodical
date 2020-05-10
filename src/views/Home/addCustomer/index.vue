@@ -982,7 +982,7 @@ export default {
         this.detailProvince = province.data;
        
         
-        // debugger
+        //  
         this.platform = await dictApi("platform");
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});

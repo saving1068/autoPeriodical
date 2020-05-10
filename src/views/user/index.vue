@@ -99,7 +99,20 @@
                  
            </el-form>
            <div>
-              <div>角色</div>
+              
+              <div>所属部门</div>
+                <el-tree
+                 ref="departmentTree"
+                    :data="departmentList"
+                    show-checkbox :props="departmentProps" node-key="id" 
+                     :default-checked-keys='departmentTreeList'
+                     default-expand-all 
+                    @check="sonCheck"
+                   >
+                </el-tree>
+              </div>  
+              <div>
+                 <div>角色</div>
                 <el-tree
                     v-if="userChange"
                     :data="initroleList"
@@ -113,18 +126,9 @@
                     :props="defaultProps">
                 </el-tree>
               </div>
+              </div>
+             
             <div>
-              <div>所属部门</div>
-                <el-tree
-                 ref="departmentTree"
-                    :data="departmentList"
-                    show-checkbox :props="departmentProps" node-key="id" 
-                     :default-checked-keys='departmentTreeList'
-                     default-expand-all 
-                    @check="sonCheck"
-                   >
-                </el-tree>
-              </div>  
                
   
            </div>
@@ -157,13 +161,14 @@ let addItemInfo = {
       this.loading = true;
      await this.getList()
      await this.getDepartmentList()
-     await this.roleList()
+    //  await this.roleList()
       this.loading = false;
     },
     methods: {
       sonCheck(data){
           this.addItemInfo.dur.did = data.id;
           this.$refs.departmentTree.setCheckedKeys([data.id]);
+          this.roleList(data)
            console.log(data)
       },
       sonRoleCheck(data){
@@ -304,8 +309,9 @@ let addItemInfo = {
       },
         async addItem(item){
           if(item){
-            // console.log(item)
+            console.log(item)
            let res =  await accountDetail({id:item.id})
+          
            console.log(res)
            let roles = [res.data.role.roleId];
           //  res.data.roles.forEach(item =>{
@@ -317,7 +323,12 @@ let addItemInfo = {
             let obj = {
               did:res.data.did, isLeader:res.data.isLeader==1?true:false
             }
-            this.departmentTreeList = [res.data.did]
+            this.departmentTreeList = [res.data.did];
+
+           let findItem =  this.departmentList.find(item =>item.id == res.data.did);
+           console.log(findItem,'findItem')
+           this.roleList({depRole:findItem.depRole})
+             
             this.addItemInfo = {...res.data,ifChangePassword:false,dur:obj}
             console.log(this.addItemInfo)
           }else{
@@ -357,8 +368,12 @@ let addItemInfo = {
       
       console.log(this.list,221);
       },
-    async roleList(){
-      let res = await roleList()
+    async roleList(data){
+      let roleIds  = data.depRole?data.depRole.split(","):[];
+      // let roleIds  = data.depRole.split(",");
+
+      let obj = {roleIds};
+      let res = await roleList(obj);
       this.initroleList = res.data;
       console.log(res,22222);
     },

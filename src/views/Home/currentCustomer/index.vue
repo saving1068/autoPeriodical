@@ -747,7 +747,7 @@ export default {
          
       this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
       console.log(this.userInfo,11111111111111111111111111111111111111)
-    //   debugger
+    //    
        if(this.userInfo.role.roleId !=7){
              let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
             this.personnel = personnel.data;
@@ -1000,7 +1000,7 @@ export default {
         this.detailProvince = province.data;
        
         
-        // debugger
+        //  
         this.platform = await dictApi("platform");
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});

@@ -164,7 +164,7 @@ let addItemInfo = {
                       })
                      this.addItemInfo.pids = Array.from(new Set([...list,...this.addItemInfo.pids])) 
                        console.log(this.addItemInfo.pids,this.addItemInfo.name,this.addItemInfo.description,this.addItemInfo.sort)
-                      //  debugger
+                      //   
                      if(this.addItemInfo.pids.length != 0&&this.addItemInfo.name
                      &&this.addItemInfo.description
                      &&this.addItemInfo.sort != 'undefined'
@@ -251,7 +251,7 @@ let addItemInfo = {
             contrastList.push(item)
           })
          
-          // debugger
+          //  
            res.data.perList.forEach(item =>{//当前角色的
              perList.push(item.id)
            })
@@ -291,7 +291,7 @@ let addItemInfo = {
           
 
          
-// debugger
+//  
 
             this.itemPowerList = perList;
             console.log(this.itemPowerList,'itemPowerList')

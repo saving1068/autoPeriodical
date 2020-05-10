@@ -24,12 +24,12 @@
             </span>
       </el-tree>
       <div class="center" style="flex:1">
-          <div v-show="editUserFlag">
+          <div v-show="editUserFlag"  class="center" style="padding-bottom:20px;width:500px">
               <div style="padding-bottom:20px;">
                 所属部门：
-                <el-tree :data="list"  ref="tree" show-checkbox :props="defaultProps" default-expand-all node-key="id" ></el-tree>
+                <el-tree :data="list"   ref="tree" show-checkbox :props="defaultProps" default-expand-all node-key="id" ></el-tree>
                 </div>
-                <el-form label-width="100px" size="mini" >
+                <el-form label-width="100px" size="mini" style="width:300px;flex:1;">
                 <el-form-item label="部门描述:">
                     <el-input  v-model="muneInfo.description"></el-input>
                 </el-form-item>
@@ -38,6 +38,13 @@
                 </el-form-item>
                 <el-form-item label="备注:">
                     <el-input  v-model="muneInfo.remark"></el-input>
+                </el-form-item>
+                <el-form-item label="角色所属:">
+                  <el-checkbox-group v-model="muneInfo.depRole">
+                    
+                    <el-checkbox v-for='item in roleArr' :key="String(item.roleId)" :label="String(item.roleId)">{{item.name}}</el-checkbox>
+                    
+                  </el-checkbox-group>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="danger" @click="delteItem()">确认删除</el-button>
@@ -79,7 +86,7 @@
         </el-radio-group> -->
         <!-- <el-tree :data="routerList" node-key="id" show-checkbox :props="routerInfo" @check="check"></el-tree> -->
       </div>
-      <el-form label-width="100px" >
+      <el-form label-width="100px" style="width:300px;flex:1;">
           <el-form-item label="部门描述:">
               <el-input  v-model="addMuneInfo.description"></el-input>
           </el-form-item>
@@ -88,6 +95,11 @@
           </el-form-item>
           <el-form-item label="备注:">
               <el-input  v-model="addMuneInfo.remark"></el-input>
+          </el-form-item>
+          <el-form-item label="角色所属:">
+             <el-checkbox-group v-model="addMuneInfo.depRole">
+              <el-checkbox v-for='item in roleArr' :key="item.roleId" :label="item.roleId">{{item.name}}</el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
       </el-form>
       
@@ -114,16 +126,21 @@
     userDepartmentList
 } from '@/api/department'
 import {accountList} from '@/api/user'
+import {
+    roleList,
+} from '@/api/role'
 let initMuneValue = {
   description:'',
   name:'',
   remark:'',
   superior:0,
+  depRole:[]
 }
   export default {
    async created(){
         this.loading = true;
       await  this.accountList()
+      await this.roleList()
       await this.getList({})
        this.loading = false;
     },
@@ -146,15 +163,20 @@ let initMuneValue = {
          let res = await accountList();
          this.userList = res.data
         },
+        async roleList(){
+          let res = await roleList();
+          this.roleArr = res.data
+        },
       async getList(obj){
         try {
          
           let res = await departmentList(obj);
           this.searchUser({data:res.data[0]})
-          this.list = res.data;
+           console.log()
+          this.list = this.resetList(res.data)
           
           this.routerList =res.data;
-        //   console.log(this.list)
+         
         } catch (error) {
           console.log(error)
         }
@@ -163,7 +185,10 @@ let initMuneValue = {
           this.editUserFlag = true;
           console.log(item)
            this.$refs.tree.setCheckedKeys([item.data.id]);
-        this.muneInfo ={...item.data}
+           let depRole= item.data.depRole?item.data.depRole.split(','):[];
+           
+        this.muneInfo ={...item.data,depRole}
+        console.log(this.muneInfo)
       },
       check(data){
         console.log(data)
@@ -176,30 +201,25 @@ let initMuneValue = {
            console.log(data)
       },
       resetList(arr){
-        // console.log(arr)
-        let pList = [];
-        arr.forEach((item)=>{
-          if(item.superior == 0){
-            let o = this.sonsTree(item, arr);
-            pList.push(o)
+        arr.map((item)=>{
+          item.disabled  = true;
+          if(item.child){
+            let o = this.sonsTree(item.child);
+            item =o;
+          
           }
         })
-        return pList
-        // console.log(pList,123123)
+        console.log(arr)
+        return arr 
       },
-      sonsTree(obj, arr) {
-          var children = [];
-          for (var i = 0; i < arr.length; i++) {
-              console.log(arr[i].superior,obj.id)
-              if (arr[i].superior == obj.id) {  //等于加入数组
-                  this.sonsTree(arr[i], arr);//递归出子元素
-                  children.push(arr[i]);
-              }
-          }
-          // if (children.length > 0) {
-              obj.children = children;
-          // }
-          return obj;
+      sonsTree(arr) {
+          arr.map(item =>{
+            item.disabled  = true;
+            if(item.child){
+               let o = this.sonsTree(item.child);
+            }
+          })
+          return arr;
       },
       closeEdit(){
         this.$confirm('取消新增, 是否继续?', '提示', {
@@ -207,6 +227,8 @@ let initMuneValue = {
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
+                  this.addMuneInfo= {...initMuneValue};
+                  this.muneInfo= {...initMuneValue};
                 this.addMune = false;
                 }).catch(() => {
                 this.$message({
@@ -217,16 +239,20 @@ let initMuneValue = {
       },
       addSure(type){
         let tip = type == 0?'是否确认添加页面?':"是否确认修改页面?";
-        this.$confirm(tip, '提示', {
+           this.$confirm(tip, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(async () => {
-                  console.log(this.addMuneInfo)
+                  
                   let obj = type == 0?this.addMuneInfo:this.muneInfo;
-
+                  
+                  obj.depRole = obj.depRole.join(',');
+                  console.log(obj)
                   let res=  await updataDepartment(obj)
                   this.$message.success(res.returnMsg)
+                  this.addMuneInfo.depRole= [];
+                  this.muneInfo.depRole= [];
                   this.getList({})
                   this.addMune = false;
                   
@@ -234,6 +260,8 @@ let initMuneValue = {
                 
                        
             });
+        
+       
       },
       addItem(item){
         if(item){//修改
@@ -279,11 +307,18 @@ let initMuneValue = {
             children: 'child',
           label:"description"
         },
-        muneInfo:{ },
+        muneInfo:{ 
+          description:'',
+          name:'',
+          remark:'',
+          superior:0,
+          depRole:[]
+        },
         routerList:[],
         editUserInfo:{},
         editUserFlag:false,
-        tableData:[]
+        tableData:[],
+        roleArr:[]
       };
     }
   };

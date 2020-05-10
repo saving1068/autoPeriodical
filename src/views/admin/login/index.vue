@@ -155,7 +155,7 @@
 		mounted() {
 			// this.initCanvas('#loginBackground')
 			// this.setBg()
-			// debugger
+			//  
 		},
 		methods: {
 			setBg(){

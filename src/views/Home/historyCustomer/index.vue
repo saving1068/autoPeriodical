@@ -615,7 +615,7 @@ export default {
         this.detailProvince = province.data;
       
         
-        // debugger
+        //  
         this.platform = await dictApi("platform");
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
@@ -741,7 +741,7 @@ export default {
                 console.log(this.transferInfo)
                 let list = [this.transferInfo]
                 console.log(list)
-                debugger
+                //  
                 let res = await updataVisitList({list})
                 this.$message.success(res.returnMsg)
                 let resList = await distributionList({id:this.transferInfo.ctId})
