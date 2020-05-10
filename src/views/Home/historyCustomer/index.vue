@@ -690,6 +690,18 @@ export default {
         
         this.$loading.hide()
       },
+       handleSelectionChange(value){
+          console.log(value)
+        //   let list = [];
+        //   let transferListInfo = [];
+        //   value.forEach(item=>{
+        //       list.push(item.id)
+        //       transferListInfo.push(item)
+        //   })
+        //   this.waiveInfo.ids = list;
+        //   this.transferListInfo.list = transferListInfo;
+          
+      },
      async suerAddVisi(){
          console.log(this.visitInfo)
           this.$loading.show()
