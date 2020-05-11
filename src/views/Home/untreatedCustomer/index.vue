@@ -39,28 +39,22 @@
             </el-select>
         </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
+        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280"
                 v-model="search.nextFollowUpDate"
                 type="date"
                 value-format='yyyy-MM-DD'
                 placeholder="选择日期">
                 </el-date-picker>
-        </el-form-item>
-        <!-- <el-form-item label="是否成交">
-           <el-select v-model="search.deal" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
         </el-form-item> -->
-        
-        <el-form-item label="所属人员" > <!-- 经理 -->
+         <!--
+        <el-form-item label="所属人员" > 经理
            <el-select class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" > <!-- 经理 -->
+        <el-form-item label="所属部门" > 经理 
            <el-select class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -98,6 +92,7 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+        -->
         <el-form-item label="关键词" >
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
@@ -145,10 +140,10 @@
             </el-table-column>
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
-            <el-table-column prop="email" label="电子邮箱">
+            <!-- <el-table-column prop="email" label="电子邮箱">
             </el-table-column>
             <el-table-column prop="qq" label="qq">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
             <!-- <el-table-column label="处理状态" prop='overdue'>

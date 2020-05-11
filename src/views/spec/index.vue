@@ -82,7 +82,7 @@
     >
     <div class="center">
       
-      <el-form label-width="100px" size="mini">
+      <el-form label-width="100px" size="mini" :model="addSpecInfo" :rules='rules'>
           <el-form-item label="信息流需求数:">
               <el-input  v-model="addSpecInfo.needMessage"></el-input>
           </el-form-item>
@@ -95,6 +95,16 @@
                     v-for="item in projectArr"
                     :key="item.id"
                     :label="item.name"
+                    :value="item.id"
+                    ></el-option>
+                </el-select>
+          </el-form-item>
+          <el-form-item label="销售员:">
+              <el-select  v-model="addSpecInfo.saleId" placeholder="请选择广告负责人">
+                <el-option 
+                    v-for="item in saleArr"
+                    :key="item.id"
+                    :label="item.contactName"
                     :value="item.id"
                     ></el-option>
                 </el-select>
@@ -123,6 +133,7 @@
     startSever,
     specInfo
 } from '@/api/spec'
+import {accountList} from '@/api/user'
 import {projectList} from '@/api/project'
 let saleSpecInfo = {
   needMessage:'',
@@ -131,11 +142,19 @@ let saleSpecInfo = {
 }
   export default {
    async created(){
-    await this.projectList()   
+     await this.spec()
+    await this.projectList()  
+     await this.saleList() 
     await  this.specList({})
-    await this.spec()
+   
+    
     },
     methods: {
+      async saleList(){
+        let res = await accountList({roleId:7});
+        console.log(res)
+        this.saleArr = res.data;
+      },
       async sever(){
         let tips = null;
         try {
@@ -259,7 +278,14 @@ let saleSpecInfo = {
         searchDicValue:'',
         addSpecInfo:{},
         loading:false,
-        specInfo:{ }
+        specInfo:{ },
+        saleArr:[],
+        rules:{
+          needMessage:[{ required: true, message: '请输入信息流需求数', trigger:['blur','change'] }],
+          needSearch:[{ required: true, message: '请输入搜索流需求数', trigger:['blur','change'] }],
+          project:[{ required: true, message: '请选择所属项目', trigger:['blur','change'] }],
+          saleId:[{ required: true, message: '请选择销售员', trigger:['blur','change'] }],
+        }
       };
     }
   };

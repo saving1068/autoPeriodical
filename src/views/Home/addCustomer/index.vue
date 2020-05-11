@@ -25,9 +25,9 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="电子邮箱" >
+        <!-- <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="search.email"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="项目">
            <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
             <el-option
@@ -39,28 +39,22 @@
             </el-select>
         </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
+        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280"
                 v-model="search.nextFollowUpDate"
                 type="date"
                 value-format='yyyy-MM-DD'
                 placeholder="选择日期">
                 </el-date-picker>
-        </el-form-item>
-        <!-- <el-form-item label="是否成交">
-           <el-select v-model="search.deal" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
         </el-form-item> -->
-        
-        <el-form-item label="所属人员" > <!-- 经理 -->
+         <!--
+        <el-form-item label="所属人员" > 经理
            <el-select class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" > <!-- 经理 -->
+        <el-form-item label="所属部门" > 经理 
            <el-select class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -98,6 +92,7 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+        -->
         <el-form-item label="关键词" >
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
@@ -122,9 +117,9 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
+            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
-            <el-button type="warning" @click="getTransferList">批量转移</el-button>
+            <el-button type="warning" @click="getTransferList">批量转移</el-button> -->
             <el-button >导出</el-button>
         </div>
         <el-table
@@ -145,9 +140,9 @@
             </el-table-column>
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
-            <el-table-column prop="email" label="电子邮箱">
+            <el-table-column prop="personnelName" label="所属人">
             </el-table-column>
-            <el-table-column prop="qq" label="qq">
+            <el-table-column prop="departmentName" label="所属部门">
             </el-table-column>
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
@@ -157,15 +152,11 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                  
-                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
-                   <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
-    
-                   <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
+                
                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
-                    <!-- <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button> -->
+                    
                 </template>
-            </el-table-column>
+            </el-table-column>  
         </el-table>
          <el-pagination
             style=" padding:20px;"
@@ -537,6 +528,17 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+             <el-form-item label="是否有效" >
+           <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
+               
+                <el-option 
+                v-for="item in valid "
+                 :key="item.key" 
+                :label="item.label" 
+                :value="item.key">
+                </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
@@ -597,7 +599,8 @@ import {updateCustomer,
     deleteVisitList,
     distributionList,
     waiveCustomer,
-    updataDistribution
+    updataDistribution,
+    customerList
     } from '@/api/custormer'
 import { 
     districtList,
@@ -637,6 +640,15 @@ let customerInfo = {
 export default {
   data() {
     return {
+        valid:[{
+            key:1,
+            label:"有效"
+        },
+        {
+            key:0,
+            label:"无效"
+        }
+        ],
         ifSuccess:false,
         filterButton:filterButton,
         visitTime:'',
@@ -676,8 +688,6 @@ export default {
             province:'',//省
             city:"",//市
             district:'',//区
-            isSuccess:1,
-            isValid:0,
             keyword:"",
             page:1,
             size:10
@@ -1001,7 +1011,7 @@ export default {
     },
 
      async customerList(){//客户列表
-        let res = await waitDisList(this.search)
+        let res = await customerList(this.search)
         console.log(res,222222222222)
         this.tableData = res.data;
         this.total =res.total||0;

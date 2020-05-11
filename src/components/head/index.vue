@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="login">
-            <!-- <el-badge :value="notReadNum" :hidden='notReadNum == 0' style="margin:0 35px;">
+            <el-badge :value="notReadNum" :hidden='notReadNum == 0' style="margin:0 35px;">
                 <el-dropdown :hide-on-click="false">
                     <span class="el-dropdown-link">
                         公告信息<i class="el-icon-arrow-down el-icon--right"></i>
@@ -33,7 +33,7 @@
                             </el-pagination>
                     </el-dropdown-menu>
                 </el-dropdown>
-            </el-badge> -->
+            </el-badge>
             
             <div class="avatar">
                 <!-- <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar> -->
@@ -83,8 +83,8 @@
         async created(){
             this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
             console.log(this.userInfo)
-        //    await this.notReadMsg()
-            // await this.msgList()
+           await this.notReadMsg()
+            await this.msgList()
         },
         methods:{
             

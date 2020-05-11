@@ -25,9 +25,6 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="电子邮箱" >
-            <el-input class="width280" placeholder="请输入电子邮箱" v-model="search.email"></el-input>
-        </el-form-item>
         <el-form-item label="项目">
            <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
             <el-option
@@ -39,37 +36,31 @@
             </el-select>
         </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
+        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280"
                 v-model="search.nextFollowUpDate"
                 type="date"
                 value-format='yyyy-MM-DD'
                 placeholder="选择日期">
                 </el-date-picker>
-        </el-form-item>
-        <!-- <el-form-item label="是否成交">
-           <el-select v-model="search.deal" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
         </el-form-item> -->
-        
-        <!-- <el-form-item label="所属人员" > 
+         <!--
+        <el-form-item label="所属人员" > 经理
            <el-select class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
-        </el-form-item> -->
-        <!-- <el-form-item label="所属部门" > 
+        </el-form-item>
+        <el-form-item label="所属部门" > 经理 
            <el-select class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
-        </el-form-item> -->
-        <!-- <el-form-item label="QQ号码" >
+        </el-form-item>
+        <el-form-item label="QQ号码" >
             <el-input class="width280" placeholder="请输入QQ号码" v-model="search.qq"></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="所属省份">
+        </el-form-item>
+        <el-form-item label="所属省份">
                <el-select v-model="search.province" @change="provinceChange" placeholder="请选择所属省份">
                 <el-option 
                 v-for="(item,index) in province " :key="index" 
@@ -78,8 +69,8 @@
                 </el-option>
                 
                 </el-select>
-            </el-form-item> -->
-        <!-- <el-form-item label="所属城市">
+            </el-form-item>
+        <el-form-item label="所属城市">
            <el-select v-model="search.city" @change="cityChange" placeholder="请选择所属城市">
                 <el-option 
                 v-for="(item,index) in city " :key="index" 
@@ -87,9 +78,9 @@
                 :value="item.cid">
                 </el-option>
                 </el-select>
-            </el-form-item> -->
+            </el-form-item>
          
-            <!-- <el-form-item label="所属地区">
+            <el-form-item label="所属地区">
                <el-select v-model="search.district"  placeholder="请选择所属地区">
                 <el-option 
                 v-for="(item,index) in district " :key="index" 
@@ -97,7 +88,8 @@
                 :value="item.did">
                 </el-option>
                 </el-select>
-            </el-form-item> -->
+            </el-form-item>
+        -->
         <el-form-item label="关键词" >
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
@@ -121,7 +113,10 @@
         </div>
     </el-form>
     <div class='table'>
-        <div>
+        <div class='button'>
+            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
+            <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button> -->
+            <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button >导出</el-button>
         </div>
         <el-table
@@ -130,41 +125,169 @@
             @row-dblclick='rowDblclic'
             style="width: 100%"
             @selection-change="handleSelectionChange">
-                <el-table-column
-                    type="selection"
-                    width="55">
-                </el-table-column>
-                <el-table-column prop="ctName" label="客户姓名">
-                </el-table-column>
-                <el-table-column prop="fupName" label="负责人">
-                </el-table-column>
-                <el-table-column prop="remark" label="留言">
-                </el-table-column>
-                <el-table-column prop="roleStr" label="角色">
-                </el-table-column>
-                <el-table-column prop="fuTime" label="修改时间">
-                </el-table-column>
-                <el-table-column label="操作">
-                <template slot-scope="scope">
-                
-                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
-                    
-                </template>
+            <el-table-column
+            type="selection"
+            width="55">
+            </el-table-column>
+            <el-table-column prop="name" label="客户姓名">
+            </el-table-column>
+            <el-table-column prop="adManName" label="广告负责人">
+            </el-table-column>
+            <el-table-column prop="projectName" label="项目名称">
+            </el-table-column>
+            <el-table-column prop="address" label="详细地址">
+            </el-table-column>
+            <!-- <el-table-column prop="email" label="电子邮箱">
+            </el-table-column>
+            <el-table-column prop="qq" label="qq">
+            </el-table-column> -->
+            <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
             <!-- <el-table-column label="处理状态" prop='overdue'>
             
             </el-table-column> -->
             
-
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    
+                   <!-- <el-button type="text" >成交</el-button> -->
+                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                   <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,0)'>编辑</el-button>
+                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                   
+                </template>
+            </el-table-column>
         </el-table>
         <el-pagination
         style=" padding:20px;"
-            @current-change="handleCurrentChange"
-            :page-size="10"
-            layout="total, prev, pager, next"
-            :total="total">
-        </el-pagination>
+        @current-change="handleCurrentChange"
+        :page-size="10"
+        layout="total, prev, pager, next"
+        :total="total">
+    </el-pagination>
     </div>
+
+    <!-- 新增已付金额管理 -->
+    <el-dialog
+        title='新增已付金额管理'
+        :visible.sync="amountInfoVisi"
+        width="30%"
+        center
+    >
+        <el-form  >
+            <el-form-item label="金额">
+                <el-input v-model="amountInfo.money" placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input v-model="amountInfo.remark" placeholder="审批人"></el-input>
+            </el-form-item>
+         </el-form >
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="amountInfoVisi = false">取 消</el-button>
+             <el-button type="primary" @click="sureAddAmount">确 认</el-button>
+        </span>
+    </el-dialog> 
+
+
+
+<!-- 已付金额管理 -->
+     <el-dialog
+        :title='amountTitle'
+        :visible.sync="amountVisi"
+        width="80%"
+        center
+    >
+        <div>
+            <el-button type="primary" @click="addAmountList()">新增已付金额管理</el-button>
+        </div>
+        <div class="center">
+           <el-table
+            :data="amountList"
+            style="width: 100%">
+             <el-table-column
+                prop="payeeName"
+                label="创建人"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                prop="money"
+                label="金额(远)">
+            </el-table-column>
+            <el-table-column
+                prop="remark"
+                label="备注">
+            </el-table-column>
+            <el-table-column
+                prop="colTime"
+                label="创建日期"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                label="操作"
+                >
+                 <template slot-scope="scope">
+                   <el-button style="margin:0 10px" type="primary" @click="addAmountList(scope.row)">修改</el-button>
+                  <el-button  @click="delAmountList(scope.row)" type="danger">删除</el-button>
+                   
+                </template>
+            </el-table-column>
+                
+            </el-table>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="amountVisi = false">取 消</el-button>
+        </span>
+    </el-dialog>  
+
+
+
+
+
+    <!-- 放弃 -->
+    <el-dialog
+        title='批量放弃'
+        :visible.sync="waiveVisi"
+        width="30%"
+        center
+    >
+        <div class="center">
+            <el-input v-model="waiveInfo.invalidCause" placeholder="请输入放弃原因"></el-input>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="waiveVisi = false">取 消</el-button>
+            <el-button type="primary" @click="sureWaiveVisi">确 定</el-button>
+        </span>
+    </el-dialog>  
+
+     <!-- 批量转移 -->
+     <el-dialog
+        title='批量转移'
+        :visible.sync="transferListVisi"
+        width="30%"
+        center
+    >
+        <div class="center">
+             <el-select v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
+                <el-option 
+                v-for="item in saleList"
+                :key="item.id"
+                :label="item.contactName"
+                :value="item.id"
+            ></el-option>
+            </el-select>
+            <el-input v-model="transferListInfo.remark" placeholder="请输入转移原因"></el-input>
+        </div>
+       
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="transferListVisi = false">取 消</el-button>
+            <el-button type="primary" @click="sureTransferListInfo">确 定</el-button>
+        </span>
+    </el-dialog>  
+
+
+
 
 
     <!-- 来访 -->
@@ -263,21 +386,6 @@
         </span>
     </el-dialog>   
 
-
-    <!-- 新增客户 -->
-    <el-dialog
-        title='新增客户'
-        :visible.sync="addVisible"
-        width="80%"
-        center
-        :before-close="addClose" 
-    >
-        新增客户
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="addClose">取 消</el-button>
-            <el-button type="primary" @click="addVisible = false">确 定</el-button>
-        </span>
-    </el-dialog>   
 
     <!-- //详情 -->
     <el-dialog 
@@ -405,17 +513,6 @@
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="是否有效" >
-           <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
-               
-                <el-option 
-                v-for="item in valid "
-                 :key="item.key" 
-                :label="item.label" 
-                :value="item.key">
-                </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
@@ -474,16 +571,20 @@ import {updateCustomer,
     updataVisitList,
     deleteVisitList,
     distributionList,
-    updataDistribution,
-    userFollowList
+    waiveCustomer,
+    waiveList,
+    updataDistribution
     } from '@/api/custormer'
 import { 
     districtList,
     cityList,
     provinceList
 } from '@/api/region'
+import { 
+    updataBackcourtPaid,backcourtPaidList,deleteBackcourtPaid,
+    updataFrontPaid,frontPaidList,deleteFrontPaid
+} from '@/api/amount'
 import {projectList} from '@/api/project'
-import { roleList} from '@/api/role'
 import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr,filterButton} from "@/utils";
 let customerInfo = {
@@ -505,18 +606,13 @@ let customerInfo = {
         type:"",
         email:''
     }
+    let amountInfo = {
+        remark:'',
+        money:''
+    }
 export default {
   data() {
     return {
-         valid:[{
-            key:1,
-            label:"有效"
-        },
-        {
-            key:0,
-            label:"无效"
-        }
-        ],
         filterButton:filterButton,
         visitTime:'',
         time:'',
@@ -543,9 +639,9 @@ export default {
         customerInfo:{},
         type:0,
         search:{
-            adMan:'',//广告负责人
-            department:"",//所属部门
-            platform:"",//逾期
+            name:"",
+            adMan:'',//广告负责人   
+            platform:"",//平台
             project:'',//项目
             qq:'',//有效
             getDateBegin:'',
@@ -555,7 +651,8 @@ export default {
             province:'',//省
             city:"",//市
             district:'',//区
-            isVisit:1,
+            isSuccess:0,
+            isValid:1,
             keyword:"",
             page:1,
             size:10
@@ -599,7 +696,25 @@ export default {
             currentType:[],
             userInfo:{},
             personnel:[],
-            roleList:[],
+            waiveInfo:{
+                ids:[],
+                invalidCause:''
+            },
+            waiveVisi:false,
+            transferListVisi:false,
+            transferListInfo:{
+                list:[],
+                receiver:'',
+                remark:''
+            },
+            ctId:'',
+            amountType:0,
+            amountTitle:'',
+            amountVisi:false,
+            amountList:[],
+            amountInfoVisi:false,
+            amountInfo:{},
+            delAmount:false,
             total:0
         }
     
@@ -630,17 +745,232 @@ export default {
     //   },
   },
   methods: {
-     async getRoleList(obj){
-      let res = await roleList(obj)
-      this.roleList = res.data
-  
+      showDelAmount(){
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
+    async delAmountList(item){
+        let res,list;
+        let obj = {
+                id:this.ctId
+            }
+        try {
+            this.$confirm('删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async() => {
+          if(this.amountType == 0){//前
+                 res = await deleteFrontPaid({id:item.id})
+                list = await frontPaidList(obj)
+            }else{//后
+                res = await deleteBackcourtPaid({id:item.id})
+                list = await  await backcourtPaidList(obj)
+            } 
+            this.amountList = list.data;
+            this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+            
+           
+        } catch (error) {
+            
+        }
+    },
+    async  sureAddAmount(){
+         this.$loading.show();
+        try {
+            let res = {};
+            let list = []
+            let obj = {
+                id:this.ctId
+            }
+            console.log(this.amountInfo)
+            if(this.amountType == 0){//前
+                res = await updataFrontPaid(this.amountInfo)
+                list = await frontPaidList(obj)
+            }else{//后
+                res = await updataBackcourtPaid(this.amountInfo)
+                list = await  await backcourtPaidList(obj)
+            } 
+             this.amountList = list.data;
+             this.amountInfoVisi = false;
+             this.amountInfo ={}
+             this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+        } catch (error) {
+            console.log(error)
+             this.$loading.hide();
+        }
+             this.$loading.hide();
+      },
+      addAmountList(item){
+          if(item){
+              let obj = {
+                  id:item.id,
+                  ctId:this.ctId,
+                  money:item.money,
+                  remark:item.remark
+              }
+              this.amountInfo = {...obj}
+          }else{
+              this.amountInfo = {...amountInfo,ctId:this.ctId}
+          }
+           console.log(this.amountInfo,item)
+          this.amountInfoVisi = true
+      },
+    async  amount(item,type){
+          try {
+            this.$loading.show();
+            this.amountList =[];
+            this.amountType = type;
+            this.amountTitle = type == 0?'前场已付金额管理':"后场已付金额管理";
+            this.amountVisi = true;
+            this.ctId = item.id;
+            let obj = {
+                id:item.id
+            }
+            let res = {};
+            if(type == 0){
+                res = await frontPaidList(obj)
+            }else{
+                 res = await backcourtPaidList(obj)
+            }
+            this.amountList = res.data;
+            console.log(this.amountTitle)
+          } catch (error) {
+              console.log(error)
+              this.$loading.hide()
+          }
+           this.$loading.hide()
+          
+      },
+
+
+      waiveCustomerList(){
+          if(this.waiveInfo.ids.length){
+               this.waiveVisi = true;
+          }else{
+              return this.$message.warning("请选择客户")
+          }
+         
+      },
+     waiveCustomer(item){
+        
+            this.waiveInfo =  {
+                ids:[item.id],
+                invalidCause:''
+            }
+            // let res = await waiveCustomer(this.waiveInfo);
+            this.waiveVisi = true;
+
+     },
+    async sureWaiveVisi(){
+         this.$confirm('此操作将客户放入废弃池, 是否继续?', '提示', {//废弃
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+            try {
+                if(!this.waiveInfo.invalidCause){
+                    return this.$message.warning('请输入放弃意见')
+                }
+                let res = await waiveCustomer(this.waiveInfo);
+                this.waiveVisi = false;
+                this.waiveInfo.invalidCause ='';
+                this.customerList()
+                this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+            } catch (error) {
+                console.log(error)
+            }
+           
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+     },
+      getTransferList(){
+          if(this.transferListInfo.list.length){
+               this.transferListVisi = true;
+          }else{
+              return this.$message.warning("请选择客户")
+          }
+         
+      },
+     sureTransferListInfo(){
+          this.$confirm('此操作将客户转移至所选销售员, 是否继续?', '提示', {//废弃
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+            if(!this.transferListInfo.remark){
+                return this.$message.warning('请输入转移意见')
+            }
+            let list = [];
+            this.transferListInfo.list.forEach(item =>{
+                console.log(item)
+                let obj = {
+                    ctId:item.id,
+                    receiver: this.transferListInfo.receiver,
+                    remark:this.transferListInfo.remark
+                }
+                list.push(obj)
+            })
+            let obj = {
+                list:list
+            }
+            console.log(obj)
+            let res = await updataDistribution(obj)
+                this.$message.success(res.returnMsg)
+             this.transferListVisi = false;
+             this.transferListInfo.remark =''
+              this.transferListInfo.receiver =''
+             this.customerList()
+            this.$message({
+                type: 'success',
+                message: res.returnMsg
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+     },
     async dist(){
+           console.log(this.userInfo,'------------------')  
          this.loading= true;
         let province = await provinceList();
         this.province = province.data;
         this.detailProvince = province.data;
-      
+       
         
         //  
         this.platform = await dictApi("platform");
@@ -655,28 +985,17 @@ export default {
         //      let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
         //     this.personnel = personnel.data;
         // }
-        this.getRoleList()
        
           console.log(this.projectList,21312)
       
     },
 
      async customerList(){//客户列表
-        try {
-            let res = await userFollowList(this.search)
-            console.log(res,222222222222)
-            res.data.map(item =>{
-                let findItem = this.roleList.find(itemS => item.roleId == itemS.roleId);
-                console.log(findItem)
-                item.roleStr = findItem.name;
-            })
-            this.tableData = res.data;
-            this.total =res.total||0;
+        let res = await waiveList(this.search)
+        console.log(res,222222222222)
+        this.tableData = res.data;
+        this.total =res.total;
          this.loading= false;
-        } catch (error) {
-            console.log(error)
-        }
-        this.loading= false;
       },
     async provinceChange(value){
           if(value){
@@ -723,18 +1042,6 @@ export default {
         
         this.$loading.hide()
       },
-       handleSelectionChange(value){
-          console.log(value)
-        //   let list = [];
-        //   let transferListInfo = [];
-        //   value.forEach(item=>{
-        //       list.push(item.id)
-        //       transferListInfo.push(item)
-        //   })
-        //   this.waiveInfo.ids = list;
-        //   this.transferListInfo.list = transferListInfo;
-          
-      },
      async suerAddVisi(){
          console.log(this.visitInfo)
           this.$loading.show()
@@ -751,17 +1058,22 @@ export default {
         }
          this.$loading.hide()
      },
-    canclAbandoned(){//放弃
-          this.ifAbandoned = false;
+    canclSuccess(){//放弃
+          this.ifSuccess = false;
       },
-      sueAbandoned(item){
-          console.log(item)
-      },
-      canclTransfer(){//移交
-          this.ifTransfer = false;
-      },
-      sueTransfer(item){
-          console.log(item)
+    async  sureSuccess(item){
+           try {
+              let obj = {
+                  id:item.id,
+                  isSuccess:1
+              }
+            let res = await updateCustomer(obj);
+            this.$message.success(res.returnMsg)
+            this.customerList()
+
+          } catch (error) {
+              
+          }
       },
      async transfer(item){
          
@@ -786,8 +1098,7 @@ export default {
                 console.log(this.transferInfo)
                 let list = [this.transferInfo]
                 console.log(list)
-                //  
-                let res = await updataVisitList({list})
+                let res = await updataDistribution({list})
                 this.$message.success(res.returnMsg)
                 let resList = await distributionList({id:this.transferInfo.ctId})
                 this.transferList = resList.data;
@@ -955,7 +1266,19 @@ export default {
          this.$loading.hide()
          
      },
-      handleCurrentChange(val) {
+      handleSelectionChange(value){
+          console.log(value)
+          let list = [];
+          let transferListInfo = [];
+          value.forEach(item=>{
+              list.push(item.id)
+              transferListInfo.push(item)
+          })
+          this.waiveInfo.ids = list;
+          this.transferListInfo.list = transferListInfo;
+          
+      },
+       handleCurrentChange(val) {
         this.search.page = val;
        this.customerList()
         console.log(`当前页: ${val}`);

@@ -76,6 +76,22 @@ const routes = [
 				},
 				component:() => import('@/views/spec'),
 			},
+			{//配置
+				path:"/abandonment",
+				name: 'abandonment',
+				meta:{
+					title:'销售配置'
+				},
+				component:() => import('@/views/abandonment'),
+			},
+			{//配置
+				path:"/resource",
+				name: 'resource',
+				meta:{
+					title:'资源池'
+				},
+				component:() => import('@/views/resource'),
+			},
 			{//项目管理
 				path: '/project',
 				name: 'project',
@@ -83,6 +99,14 @@ const routes = [
 					title:'项目管理'
 				},
 				component:() => import('@/views/project'),
+			},
+			{//项目管理
+				path: '/finance',
+				name: 'finance',
+				meta:{
+					title:'项目管理'
+				},
+				component:() => import('@/views/finance'),
 			},
 			
 			

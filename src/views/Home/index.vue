@@ -2,37 +2,42 @@
   <div class="warp">
     <el-tabs v-model="activeName" type="card" @tab-click='tabClick'  :before-leave="beforeLeave">
       <el-tab-pane  name="current">
-        <span slot="label"> 当前待处理客户 <i class="el-icon-count">{{totalInfo.pending}}</i></span>
+        <span slot="label"> 待跟进客户 
+          <!-- <i class="el-icon-count">{{totalInfo.pending}}</i> -->
+        </span>
         <current @succreeRefresh='refresh' v-if="activeName =='current'"></current> 
       </el-tab-pane>
       <el-tab-pane  name="awaitcustomer">
-      <span slot="label"> 已成交客户 <i class="el-icon-count">{{totalInfo.success}}</i></span>
+      <span slot="label"> 我的客户 
+        <!-- <i class="el-icon-count">{{totalInfo.success}}</i> -->
+        </span>
         <awaitcustomer v-if="activeName =='awaitcustomer'"></awaitcustomer>
       </el-tab-pane>
      
       <el-tab-pane name="history">
-      <span slot="label"> 客户跟进历史 <i class="el-icon-count">{{totalInfo.fuHistory}}</i></span>
+      <span slot="label"> 已来访 
+        <!-- <i class="el-icon-count">{{totalInfo.fuHistory}}</i> -->
+        </span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
-      <el-tab-pane name="untreated">
+      <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
+        <span slot="label"> 全部客户 </span>
+          <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
+      </el-tab-pane>
+      <!-- <el-tab-pane name="untreated">
         <span slot="label"> 废弃池 
-        <!-- <i class="el-icon-count">1</i> -->
+        
         </span>
         <untreatedCustomer></untreatedCustomer>
       </el-tab-pane>
-       <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
-        <span slot="label"> 资源池
-         <!-- <i class="el-icon-count">1</i> -->
-         </span>
-          <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
-      </el-tab-pane>
+       
       <el-tab-pane name="5">
       <span slot="label" > 
         <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
-        <!-- <el-button type="primary" icon="el-icon-refresh" ></el-button> -->
+
       </span>
         
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -59,7 +64,7 @@ export default {
   },
   created(){
     
-    this.refresh()
+    // this.refresh()
   },
   mounted() {
 

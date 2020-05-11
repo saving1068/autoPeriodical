@@ -39,28 +39,22 @@
             </el-select>
         </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
+        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280"
                 v-model="search.nextFollowUpDate"
                 type="date"
                 value-format='yyyy-MM-DD'
                 placeholder="选择日期">
                 </el-date-picker>
-        </el-form-item>
-        <!-- <el-form-item label="是否成交">
-           <el-select v-model="search.deal" placeholder="活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
         </el-form-item> -->
-        
-        <el-form-item label="所属人员" > <!-- 经理 -->
+         <!--
+        <el-form-item label="所属人员" > 经理
            <el-select class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" > <!-- 经理 -->
+        <el-form-item label="所属部门" > 经理 
            <el-select class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -98,6 +92,7 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+        -->
         <el-form-item label="关键词" >
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
@@ -122,7 +117,7 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
+            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button> -->
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button >导出</el-button>
@@ -145,10 +140,10 @@
             </el-table-column>
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
-            <el-table-column prop="email" label="电子邮箱">
+            <!-- <el-table-column prop="email" label="电子邮箱">
             </el-table-column>
             <el-table-column prop="qq" label="qq">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
             <!-- <el-table-column label="处理状态" prop='overdue'>
@@ -165,15 +160,14 @@
                         :value='ifSuccess'
                         :tabindex='99'
                     >
-                    <el-button  type="text"  slot="reference">成交</el-button>
+                    <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
                     </el-popconfirm>
                    <!-- <el-button type="text" >成交</el-button> -->
-                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
-                   <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
-                   <el-button type="text" v-show='filterButton(104)' @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
-                   <el-button type="text" v-show='filterButton(105)' @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>
+                    <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                    <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
                     <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
-                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
+                               
                     <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
                 </template>
             </el-table-column>
@@ -270,11 +264,7 @@
         :visible.sync="waiveVisi"
         width="30%"
         center
-    >
-        <div class="center">
-            <el-input v-model="waiveInfo.invalidCause" placeholder="请输入放弃原因"></el-input>
-        </div>
-       
+    >   
         <span slot="footer" class="dialog-footer">
             <el-button @click="waiveVisi = false">取 消</el-button>
             <el-button type="primary" @click="sureWaiveVisi">确 定</el-button>
@@ -421,7 +411,7 @@
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
-            <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type !=0?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -446,7 +436,7 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project">
-           <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+           <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type !=0?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -457,19 +447,22 @@
             </el-select>
         </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
-            <el-date-picker class="width280" :disabled="type == 1?true:false"
+        <el-form-item label="下次跟进时间" v-if="type != 0" >
+             <el-date-picker
+                 :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
-                type="date"
-                value-format='yyyy-MM-DD'
-                placeholder="选择日期">
-                </el-date-picker>
+                 value-format="yyyy-MM-dd HH:mm"
+                 @change="test"
+                type="datetime"
+                placeholder="选择日期时间">
+            </el-date-picker>
+           
         </el-form-item>
         <el-form-item label="QQ号码" >
             <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="telephone" >
-            <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type == 1?true:false"></el-input>
+            <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type !=0?true:false"></el-input>
         </el-form-item>
         <el-form-item label="微信" >
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
@@ -533,9 +526,21 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="是否有效" v-if="type !=0">
+           <el-select class="width280" v-model="detail.isValid"  placeholder="请选择是否有效">
+               
+                <el-option 
+                v-for="item in valid "
+                 :key="item.key" 
+                :label="item.label" 
+                :value="item.key">
+                </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
+
         </el-form>
         <div class="title space-between">
             <h1 style="font-width:600;font-size:32px">追踪记录</h1>
@@ -625,7 +630,8 @@ let customerInfo = {
         name:'',
         sourceLink:"",
         type:"",
-        email:''
+        email:'',
+        isValid:''
     }
     let amountInfo = {
         remark:'',
@@ -634,6 +640,16 @@ let customerInfo = {
 export default {
   data() {
     return {
+        valid:[{
+            key:1,
+            label:"有效"
+        },
+        {
+            key:0,
+            label:"无效"
+        }
+        ],
+        nextFollowUpDate:"",
         filterButton:filterButton,
         visitTime:'',
         time:'',
@@ -673,8 +689,8 @@ export default {
             city:"",//市
             district:'',//区
             isSuccess:0,
-            isValid:1,
             keyword:"",
+            isFollowUp:0,
             page:1,
             size:10
         },
@@ -719,7 +735,7 @@ export default {
             personnel:[],
             waiveInfo:{
                 ids:[],
-                invalidCause:''
+                // invalidCause:''
             },
             waiveVisi:false,
             transferListVisi:false,
@@ -773,6 +789,9 @@ export default {
     //   },
   },
   methods: {
+      test(value){
+          console.log(value)
+      },
       showDelAmount(){
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -909,7 +928,7 @@ export default {
         
             this.waiveInfo =  {
                 ids:[item.id],
-                invalidCause:''
+                // invalidCause:''
             }
             // let res = await waiveCustomer(this.waiveInfo);
             this.waiveVisi = true;
@@ -922,12 +941,10 @@ export default {
           type: 'warning'
         }).then(async () => {
             try {
-                if(!this.waiveInfo.invalidCause){
-                    return this.$message.warning('请输入放弃意见')
-                }
+              
                 let res = await waiveCustomer(this.waiveInfo);
                 this.waiveVisi = false;
-                this.waiveInfo.invalidCause ='';
+                // this.waiveInfo.invalidCause ='';
                 this.customerList()
                 this.$message({
                     type: 'success',
@@ -1204,7 +1221,7 @@ export default {
            console.log(this.detail,this.detailFlag) 
       },
      async rowDblclic(item,value){
-          console.log(value,123213)
+          console.log(value,123213,item)
           try {
               this.$loading.show()
                this.type = value;
@@ -1235,7 +1252,7 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        id
+                        id,isValid
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1244,7 +1261,7 @@ export default {
                         project,
                         qq,
                         id,
-                        nextFollowUpDate,//下次跟进时间
+                        nextFollowUpDate:nextFollowUpDate?nextFollowUpDate:"",//下次跟进时间
                         province,//省
                         city,//市
                         district,//区
@@ -1254,7 +1271,8 @@ export default {
                         name,
                         sourceLink,
                         type,
-                        email
+                        email,
+                        isValid:isValid?isValid:''
                         };
                         
                         this.followFlag = false;
