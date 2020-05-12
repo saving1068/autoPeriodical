@@ -117,8 +117,8 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-        
-            <el-button >导出</el-button>
+            <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
+             <el-button v-show='filterButton(109)'>导出</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -149,11 +149,24 @@
             </el-table-column> -->
             
             <el-table-column label="操作">
-                 <template slot-scope="scope">
-                   
-                   <!-- <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button> -->
-                   <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
-                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                <template slot-scope="scope">
+                    <el-popconfirm
+                        v-show='filterButton(101)' 
+                        title="确定成交该数据？"
+                        @onConfirm='sureSuccess(scope.row)'
+                        @onCancel="canclSuccess"
+                        :value='ifSuccess'
+                        :tabindex='99'
+                    >
+                    <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
+                    </el-popconfirm>
+                   <!-- <el-button type="text" >成交</el-button> -->
+                    <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                    <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
+                    <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
+                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
+                               
+                    <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -166,6 +179,19 @@
     </el-pagination>
     </div>
 
+    <!-- 放弃 -->
+    <el-dialog
+        title='批量放弃'
+        :visible.sync="waiveVisi"
+        width="30%"
+        center
+    >   
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="waiveVisi = false">取 消</el-button>
+            <el-button type="primary" @click="sureWaiveVisi">确 定</el-button>
+        </span>
+    </el-dialog> 
+
 
     <!-- 来访 -->
     <el-dialog
@@ -176,28 +202,41 @@
         
     >
     <div class="center">
-         <el-timeline >
+         <el-timeline style="width:50%" v-if="visitList.length">
             <el-timeline-item
+                
                 v-for="(item, index) in visitList"
                 :key="index"
-                :timestamp="item.timestamp">
-                {{activity.content}}
+                :timestamp="item.visitingTime">
+                <el-card  >
+                        <h4>{{item.remark}}</h4>
+                        <p style="text-align:right">创建人:{{item.receiverName}}</p>
+                    </el-card>
             </el-timeline-item>
+            
         </el-timeline>
-
-        <!-- <div class="center width280 divider" >
+        <div v-else>暂无记录</div>
+        <div class="center width280 divider" >
             <el-input placeholder="请输入备注" v-model="visitInfo.remark"></el-input>
-            <el-date-picker 
+            <el-date-picker
+             style="padding:20px 0;"
+             v-model="visitInfo.visitingTime"
+             value-format='yyyy-MM-dd'
+            type="date"
+            placeholder="选择日期">
+            </el-date-picker>
+            <!-- <el-date-picker class="width280"
+                v-model="visitInfo.visitingTime"
                 style="padding:20px 0;"
-                v-model="visitInfo.visitTime"
                 type="date"
+                @change="test"
                 value-format='yyyy-MM-DD'
                 placeholder="选择日期">
-            </el-date-picker>
+                </el-date-picker> -->
              <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
             </span>
-        </div> -->
+        </div>
         
     </div>
        
@@ -205,11 +244,11 @@
             <el-button @click="visit = false">取 消</el-button>
             <el-button type="primary" @click="visit = false">确 定</el-button>
         </span>
-    </el-dialog>   
+    </el-dialog>  
 
 
 
-    <!-- 移交 -->
+     <!-- 移交 -->
     <el-dialog
         title='分配记录'
         :visible.sync="transferVisible"
@@ -218,16 +257,17 @@
         :before-close="transferClose" 
     >
     <div class="center">
-         <el-timeline >
+         <el-timeline style="width:50%" v-if="transferList.length">
             <el-timeline-item
                 v-for="(item, index) in transferList"
                 :key="index"
-                :timestamp="item.timestamp">
-                {{activity.content}}
+                :timestamp="item.disTime">
+                       
+                        <p>分配至--{{item.dispName}}</p>
             </el-timeline-item>
         </el-timeline>
-
-        <!-- <div class="center width280 divider" >
+        <div v-else>暂无记录</div>
+        <div class="center width280 divider" >
             <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
             <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
             <el-select v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
@@ -241,13 +281,13 @@
              <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="suerAddTransfer">新增分配记录</el-button>
             </span>
-        </div> -->
+        </div>
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="transferClose">取 消</el-button>
             <el-button type="primary" @click="transferVisible = false">确 定</el-button>
         </span>
-    </el-dialog>   
+    </el-dialog>    
 
   
 
@@ -377,7 +417,7 @@
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="是否有效" >
+            <el-form-item label="是否有效" prop="isValid" v-if="type !=0" >
            <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
                 <el-option 
@@ -387,6 +427,9 @@
                 :value="item.key">
                 </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+                <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
@@ -446,7 +489,8 @@ import {updateCustomer,
     updataVisitList,
     deleteVisitList,
     distributionList,
-    updataDistribution
+    updataDistribution,
+    waiveCustomer
     } from '@/api/custormer'
 import { 
     districtList,
@@ -565,12 +609,17 @@ export default {
                 telephone:[
                      { required: true, message: '请输入联系方式', trigger: 'blur' },
                 ],
+                isValid:[
+                     { required: true, message: '请输入联系方式', trigger: 'blur' },
+                ],
 
             },
             currentType:[],
             userInfo:{},
             personnel:[],
-            total:0
+            total:0,
+            waiveVisi:false,
+            ifSuccess:false
         }
     
   },
@@ -600,6 +649,69 @@ export default {
     //   },
   },
   methods: {
+      waiveCustomerList(){
+          if(this.waiveInfo.ids.length){
+               this.waiveVisi = true;
+          }else{
+              return this.$message.warning("请选择客户")
+          }
+         
+      },
+      waiveCustomer(item){
+        
+            this.waiveInfo =  {
+                ids:[item.id],
+                // invalidCause:''
+            }
+            // let res = await waiveCustomer(this.waiveInfo);
+            this.waiveVisi = true;
+
+     },
+     async sureWaiveVisi(){
+         this.$confirm('此操作将客户放入废弃池, 是否继续?', '提示', {//废弃
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+            try {
+              
+                let res = await waiveCustomer(this.waiveInfo);
+                this.waiveVisi = false;
+                // this.waiveInfo.invalidCause ='';
+                this.customerList()
+                this.$message({
+                    type: 'success',
+                    message: res.returnMsg
+                });
+            } catch (error) {
+                console.log(error)
+            }
+           
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+     },
+      canclSuccess(){//放弃
+          this.ifSuccess = false;
+      },
+      async  sureSuccess(item){
+           try {
+              let obj = {
+                  id:item.id,
+              }
+            let res = await customerSuccess(obj);
+            
+            this.$message.success(res.returnMsg);
+            //  this.$emit('succreeRefresh');
+            this.customerList()
+
+          } catch (error) {
+              console.log(error)
+          }
+      },
 
     async dist(){
          this.loading= true;
@@ -836,6 +948,7 @@ export default {
                         sourceLink,
                         type,
                         email,
+                        leaveWord,
                         id
                     } = {...item}
                     
@@ -855,6 +968,7 @@ export default {
                         name,
                         sourceLink,
                         type,
+                        leaveWord,
                         email
                         };
                         
@@ -895,7 +1009,15 @@ export default {
          
      },
       handleSelectionChange(value){
-          console.log(value)
+          console.log(value) 
+          let list = [];
+          let transferListInfo = [];
+          value.forEach(item=>{
+              list.push(item.id)
+              transferListInfo.push(item)
+          })
+          this.waiveInfo.ids = list;
+          this.transferListInfo.list = transferListInfo;
       },
       handleCurrentChange(val) {
         this.search.page = val;
@@ -928,7 +1050,7 @@ export default {
 
 <style scoped="scoped" lang="scss">
     .width280{
-        width: 200px;
+        min-width: 200px;
     }
     .divider{
         padding: 0 10px;

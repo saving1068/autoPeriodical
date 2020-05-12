@@ -122,7 +122,7 @@
     </el-form>
     <div class='table'>
         <div>
-            <el-button >导出</el-button>
+           <el-button v-show='filterButton(109)'>导出</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -130,33 +130,37 @@
             @row-dblclick='rowDblclic'
             style="width: 100%"
             @selection-change="handleSelectionChange">
-                <el-table-column
-                    type="selection"
-                    width="55">
-                </el-table-column>
-                <el-table-column prop="ctName" label="客户姓名">
-                </el-table-column>
-                <el-table-column prop="fupName" label="负责人">
-                </el-table-column>
-                <el-table-column prop="remark" label="留言">
-                </el-table-column>
-                <el-table-column prop="roleStr" label="角色">
-                </el-table-column>
-                <el-table-column prop="fuTime" label="修改时间">
-                </el-table-column>
-                <el-table-column label="操作">
-                <template slot-scope="scope">
-                
-                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
-                    
-                </template>
+            <el-table-column
+            type="selection"
+            width="55">
+            </el-table-column>
+            <el-table-column prop="name" label="客户姓名">
+            </el-table-column>
+            <el-table-column prop="adManName" label="广告负责人">
+            </el-table-column>
+            <el-table-column prop="projectName" label="项目名称">
+            </el-table-column>
+            <el-table-column prop="address" label="详细地址">
+            </el-table-column>
+            <el-table-column prop="personnelName" label="所属人">
+            </el-table-column>
+            <el-table-column prop="departmentName" label="所属部门">
+            </el-table-column>
+            <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
             <!-- <el-table-column label="处理状态" prop='overdue'>
             
             </el-table-column> -->
             
-
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                
+                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                    
+                </template>
+            </el-table-column>  
         </el-table>
+
         <el-pagination
         style=" padding:20px;"
             @current-change="handleCurrentChange"
@@ -416,6 +420,9 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+                <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input>
+            </el-form-item>
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
@@ -663,15 +670,10 @@ export default {
 
      async customerList(){//客户列表
         try {
-            let res = await userFollowList(this.search)
-            console.log(res,222222222222)
-            res.data.map(item =>{
-                let findItem = this.roleList.find(itemS => item.roleId == itemS.roleId);
-                console.log(findItem)
-                item.roleStr = findItem.name;
-            })
-            this.tableData = res.data;
-            this.total =res.total||0;
+            let res = await customerList(this.search)
+        console.log(res,222222222222)
+        this.tableData = res.data;
+        this.total =res.total||0;
          this.loading= false;
         } catch (error) {
             console.log(error)
@@ -897,6 +899,7 @@ export default {
                         sourceLink,
                         type,
                         email,
+                        leaveWord,
                         id
                     } = {...item}
                     
@@ -916,6 +919,7 @@ export default {
                         name,
                         sourceLink,
                         type,
+                        leaveWord,
                         email
                         };
                         
@@ -985,8 +989,8 @@ export default {
 </style>
 
 <style scoped="scoped" lang="scss">
-    .width280{
-        width: 200px;
+     .width280{
+        min-width: 200px;
     }
     .divider{
         margin-left:10px;

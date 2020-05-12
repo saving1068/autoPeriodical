@@ -108,6 +108,14 @@ const routes = [
 				},
 				component:() => import('@/views/finance'),
 			},
+			{//项目管理
+				path: '/repeat',
+				name: 'repeat',
+				meta:{
+					title:'重复数据'
+				},
+				component:() => import('@/views/repeat'),
+			},
 			
 			
 			

@@ -120,7 +120,7 @@
             <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button> -->
-            <el-button >导出</el-button>
+            <el-button v-show='filterButton(109)'>导出</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -538,6 +538,9 @@
                 :value="item.key">
                 </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+                <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
@@ -1224,7 +1227,9 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        id
+                        id,
+                        
+                        leaveWord
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1243,6 +1248,7 @@ export default {
                         name,
                         sourceLink,
                         type,
+                        leaveWord,
                         email
                         };
                         
@@ -1345,7 +1351,7 @@ export default {
 
 <style scoped="scoped" lang="scss">
     .width280{
-        width: 200px;
+        min-width: 200px;
     }
     .divider{
         margin-left:10px;

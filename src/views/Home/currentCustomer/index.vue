@@ -120,7 +120,7 @@
             <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button> -->
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
-            <el-button >导出</el-button>
+            <el-button v-show='filterButton(109)'>导出</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -164,7 +164,7 @@
                     </el-popconfirm>
                    <!-- <el-button type="text" >成交</el-button> -->
                     <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
-                    <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
+                    <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
                     <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
                     <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
                                
@@ -526,8 +526,8 @@
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="是否有效" v-if="type !=0">
-           <el-select class="width280" v-model="detail.isValid"  placeholder="请选择是否有效">
+            <el-form-item label="是否有效" v-if="type !=0" prop="isValid">
+           <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false"  placeholder="请选择是否有效">
                
                 <el-option 
                 v-for="item in valid "
@@ -537,6 +537,11 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+            
+            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+                <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input>
+            </el-form-item>
+
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
@@ -728,7 +733,9 @@ export default {
                 telephone:[
                      { required: true, message: '请输入联系方式', trigger: 'blur' },
                 ],
-
+                isValid:[
+                     { required: true, message: '请输入联系方式', trigger: 'blur' },
+                ],
             },
             currentType:[],
             userInfo:{},
@@ -1111,7 +1118,7 @@ export default {
             let res = await customerSuccess(obj);
             
             this.$message.success(res.returnMsg);
-             this.$emit('succreeRefresh');
+            //  this.$emit('succreeRefresh');
             this.customerList()
 
           } catch (error) {
@@ -1252,7 +1259,8 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        id,isValid
+                        id,isValid,
+                        leaveWord
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1272,6 +1280,7 @@ export default {
                         sourceLink,
                         type,
                         email,
+                        leaveWord,
                         isValid:isValid?isValid:''
                         };
                         
@@ -1341,13 +1350,13 @@ export default {
       handleSelectionChange(value){
           console.log(value)
           let list = [];
-          let transferListInfo = [];
+        //   let transferListInfo = [];
           value.forEach(item=>{
               list.push(item.id)
-              transferListInfo.push(item)
+            //   transferListInfo.push(item)
           })
           this.waiveInfo.ids = list;
-          this.transferListInfo.list = transferListInfo;
+        //   this.transferListInfo.list = transferListInfo;
           
       },
       handleCurrentChange(val) {
@@ -1381,7 +1390,7 @@ export default {
 
 <style scoped="scoped" lang="scss">
     .width280{
-        width: 200px;
+        min-width: 200px;
     }
     .divider{
         margin-left:10px;

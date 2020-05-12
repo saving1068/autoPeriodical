@@ -150,9 +150,18 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                   <el-button type="text" v-show='filterButton(104)' @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
-                   <el-button type="text" v-show='filterButton(105)' @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>               
-                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                   <el-popconfirm
+                        title="确定成交该数据？"
+                        @onConfirm='sureSuccess(scope.row)'
+                        @onCancel="canclSuccess"
+                        :value='ifSuccess'
+                        :tabindex='99'
+                    >
+                    <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
+                    </el-popconfirm>
+                   <el-button type="text"  @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
+                   <el-button type="text" @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>               
+                   <el-button type="text"  @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
                 </template>
             </el-table-column>
         </el-table>
