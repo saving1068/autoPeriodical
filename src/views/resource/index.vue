@@ -435,7 +435,7 @@
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
-           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type == 1?true:false">
+           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
            <el-option 
                 v-for="item in platform"
                 :key="item.key"
@@ -483,7 +483,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type == 1?true:false"></el-input>
+            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
         <el-form-item label="客户类型" >
             <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -507,7 +507,7 @@
            
             </el-select>
         </el-form-item> -->
-        <el-form-item label="所属省份">
+        <!-- <el-form-item label="所属省份">
   
                <el-select class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
                    
@@ -540,9 +540,9 @@
                 :value="String(item.did)">
                 </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="是否有效" v-if="type !=0">
-            <el-select class="width280" v-model="detail.isValid"  placeholder="请选择是否有效" >
+            <el-select class="width280" v-model="detail.isValid"  :disabled="type == 1?true:false" placeholder="请选择是否有效" >
                
                 <el-option 
                 v-for="item in valid "

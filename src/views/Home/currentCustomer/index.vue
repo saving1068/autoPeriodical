@@ -152,7 +152,7 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-popconfirm
+                    <!-- <el-popconfirm
                         v-show='filterButton(101)' 
                         title="确定成交该数据？"
                         @onConfirm='sureSuccess(scope.row)'
@@ -161,7 +161,7 @@
                         :tabindex='99'
                     >
                     <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
-                    </el-popconfirm>
+                    </el-popconfirm> -->
                    <!-- <el-button type="text" >成交</el-button> -->
                     <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
                     <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
@@ -426,7 +426,7 @@
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
-           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type == 1?true:false">
+           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
            <el-option 
                 v-for="item in platform"
                 :key="item.key"
@@ -472,7 +472,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type == 1?true:false"></el-input>
+            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
         <el-form-item label="客户类型" >
             <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -485,7 +485,7 @@
            
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
+        <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
             <el-select  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in personnel"
@@ -529,7 +529,7 @@
                 :value="String(item.did)">
                 </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="是否有效" v-if="type !=0" prop="isValid">
            <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false"  placeholder="请选择是否有效">
                

@@ -414,7 +414,7 @@
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
-           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type == 1?true:false">
+           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" disabled>
            <el-option 
                 v-for="item in platform"
                 :key="item.key"
@@ -457,7 +457,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type == 1?true:false"></el-input>
+            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " disabled></el-input>
         </el-form-item>
         <el-form-item label="客户类型" >
             <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -470,7 +470,7 @@
            
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
+        <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
             <el-select  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in personnel"
@@ -514,7 +514,7 @@
                 :value="String(item.did)">
                 </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
