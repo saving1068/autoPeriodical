@@ -137,6 +137,21 @@ const customerSuccess  = (params) => { //客户资源列表
     });
 }
 
+const reusePhoneList  = (params) => { //客户资源列表
+    return request({
+        url: '/reusePhone/select',
+        method: 'POST',
+        data:params
+    });
+}
+
+const deleteReusePhone =  (params) => { //来访记录
+    return request({
+        url: '/reusePhone/delete',
+        method: 'delete',
+        params
+    });
+}
 
 
 export {
@@ -157,5 +172,7 @@ export {
     userFollowList,
     waitDisList,
     customerTotal,
-    customerSuccess
+    customerSuccess,
+    reusePhoneList,
+    deleteReusePhone
 }

@@ -101,6 +101,16 @@
         <el-form-item label="关键词" >
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
+        <el-form-item label="是否已成交">
+           <el-select  class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
+            <el-option
+                v-for="item in isSuccess"
+                :key="item.index"
+                :label="item.value"
+                :value="item.key"
+            ></el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="获取时间" >
         <el-date-picker
             v-model="time"
@@ -148,9 +158,9 @@
             </el-table-column>
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
-            <!-- <el-table-column label="处理状态" prop='overdue'>
+            <el-table-column label="是否已成交" prop='isSuccessStr'>
             
-            </el-table-column> -->
+            </el-table-column>
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -297,7 +307,7 @@
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
-            <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <!-- <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -305,7 +315,8 @@
                 :value="item.id"
             ></el-option>
             
-            </el-select>
+            </el-select> -->
+            {{detail.adManName||'--'}}
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
@@ -322,7 +333,7 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project">
-           <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+           <!-- <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -330,7 +341,8 @@
                 :value="Number(item.id)"
             ></el-option>
            
-            </el-select>
+            </el-select> -->
+            {{detail.projectName||'--'}}
         </el-form-item>
         
         <el-form-item label="下次跟进时间" >
@@ -549,6 +561,10 @@ export default {
         message:'',
         customerInfo:{},
         type:0,
+        isSuccess:[
+                {value:'是',key:1},
+                {value:'否',key:0},
+            ],
         search:{
             adMan:'',//广告负责人
             department:"",//所属部门
@@ -564,6 +580,7 @@ export default {
             district:'',//区
             isVisit:1,
             keyword:"",
+            isSuccess:"",
             page:1,
             size:10
         },
@@ -672,6 +689,9 @@ export default {
         try {
             let res = await customerList(this.search)
         console.log(res,222222222222)
+        res.data.map(item =>{
+            item.isSuccessStr = idChangeStr(this.isSuccess,item.isSuccess)
+        })
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;

@@ -151,6 +151,7 @@ import {
     updateUserDepartment,
     departmentList,
 } from '@/api/department'
+import md5 from 'md5'
 let addItemInfo = {
   account:'',contactName:'',contactPhone:'',
   roles:[],password:'',ifChangePassword:true,
@@ -161,6 +162,7 @@ let addItemInfo = {
       this.loading = true;
      await this.getList()
      await this.getDepartmentList()
+    
     //  await this.roleList()
       this.loading = false;
     },
@@ -221,6 +223,7 @@ let addItemInfo = {
                             }
                        }
                         this.addItemInfo.dur.isLeader = this.addItemInfo.dur.isLeader?1:0;
+                        this.addItemInfo.password = md5(this.addItemInfo.password)
                        console.log(this.addItemInfo)
                        // if(this.addItemInfo.id){//修改
                             await accountUpdate(this.addItemInfo);
@@ -325,7 +328,7 @@ let addItemInfo = {
             }
             this.departmentTreeList = [res.data.did];
 
-           let findItem =  this.departmentList.find(item =>item.id == res.data.did);
+           let findItem =  this.departmentArr.find(item =>item.id == res.data.did);
            console.log(findItem,'findItem')
            this.roleList({depRole:findItem.depRole})
              
@@ -345,7 +348,61 @@ let addItemInfo = {
         async getDepartmentList(){
               let res = await departmentList({});
               this.departmentList = res.data;
+              this.resetList(res.data)
+               console.log(this.departmentArr,'departmentArr')
+              // this.departmentArr = this.resetList(res.data)
+              
         },
+        resetList(arr){
+        // console.log(arr)
+        let pList = [];
+        arr.forEach(item =>{
+         this.departmentArr.push(item)
+          if(item.child.length){
+            this.sonsTree(item);
+            // console.log(son,'son')
+           
+          }
+        })
+        
+        // console.log(pList,123123)
+      },
+      sonsTree(obj) {
+        // console.log(obj.name,obj.child.length)
+        // let son  = []
+        console.log(obj,'obj')
+        if(obj.child.length){
+          obj.child.forEach((item)=>{
+           
+           this.departmentArr.push(item)
+           
+            this.sonsTree(item)
+            // console.log(son)
+            console.log(this.departmentArr)
+            
+
+          })
+        }
+        // console.log(son)
+        // debugger
+        
+        //  console.log(son)
+      
+          
+         
+         
+          // for (var i = 0; i < arr.length; i++) {
+          //   console.log(arr[i].superior == obj.id)
+          //     if (arr[i].superior == obj.id) {  //等于加入数组
+          //         this.sonsTree(arr[i], arr);//递归出子元素
+          //         return obj;
+          //     }
+          // }
+          // if (children.length > 0) {
+              // obj.children = children;
+          // }
+          
+      },  
     async getList(obj){
       let res = await accountList(obj);
       console.log(res.data)
@@ -405,7 +462,8 @@ let addItemInfo = {
             children: 'child',
           label:"description"
         },
-        departmentList:[]
+        departmentList:[],
+        departmentArr:[]
       };
     }
   };

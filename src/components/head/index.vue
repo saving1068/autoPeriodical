@@ -39,11 +39,37 @@
                 <!-- <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar> -->
                 {{userInfo.contactName}}
             </div>
+            <div style="margin:0 10px;">
+                <el-button type='warning' @click="updatapasswar = true">
+                    修改密码
+                </el-button>  
+            </div>
             <div>
                 <el-button type='info' @click="signOut">
                     注销登录
                 </el-button>  
             </div>
+                <!-- 修改密码 -->
+    <el-dialog
+        title='修改密码'
+        :visible.sync="updatapasswar"
+        width="30%"
+        center
+    >   
+        <el-form :model="pawInfo" status-icon :rules="rules" ref="pawInfo" label-width="100px"  autocomplete="off">
+            <el-form-item label="新密码" prop="newPassword">
+                <el-input type="password" show-password v-model="pawInfo.newPassword" autocomplete="new-password"></el-input>
+            </el-form-item>
+            <el-form-item label="旧密码" prop="oldPassword">
+                <el-input type="password" show-password v-model="pawInfo.oldPassword" autocomplete="new-password"></el-input>
+            </el-form-item>
+           
+            </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="updatapasswar = false">取 消</el-button>
+            <el-button type="primary" @click="updataPaw">确 定</el-button>
+        </span>
+    </el-dialog> 
             <!-- <el-dropdown szie="mini" @command="signOut" size="medium" >
             <span class="el-dropdown-link">
                 下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
@@ -64,6 +90,8 @@
     readMsg,
     notReadMsg
 }  from '@/api/msgTips'
+import {loginOut,updatePassword} from '@/api/user'
+import md5 from 'md5'
      export default{
         data(){
             return{
@@ -77,6 +105,15 @@
                 },
                 userInfo:{
 
+                },
+                pawInfo:{
+                    newPassword:"",
+                    oldPassword:"",
+                },
+                updatapasswar:false,
+                rules:{
+                    newPassword:[{ required: true, message: '请输入新密码', trigger:['change','blur']  }],
+                    oldPassword:[{ required: true, message: '请输入旧密码', trigger: ['change','blur'] }]
                 }
             }
         },
@@ -135,7 +172,19 @@
                 }
               
             },
-            signOut(value){
+          async  updataPaw(){
+            //   this.pawInfo.newPassword = md5(this.pawInfo.newPassword);
+            //   this.pawInfo.oldPassword = md5(this.pawInfo.oldPassword);
+            let obj = {
+                newPassword:md5(this.pawInfo.newPassword),
+                oldPassword:md5(this.pawInfo.oldPassword)
+            }
+              let res = await updatePassword(obj)
+               this.$message.success(res.returnMsg)
+            },
+           async signOut(value){
+               let res = await loginOut()
+               this.$message.success(res.returnMsg)
                 console.log(value)
                 this.$store.commit('clearToken')
                 sessionStorage.removeItem('userInfo');

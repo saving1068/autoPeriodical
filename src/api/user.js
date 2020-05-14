@@ -8,6 +8,22 @@ const login = (params) => { //登录--+
     });
 }
 
+const loginOut = (params) => { //注销--+
+    return request({
+        url: '/user/loginOut',
+        method: 'get',
+        data:params
+    });
+}
+const  updatePassword = (params) => { //修改密码
+    return request({
+        url: '/user/update/password',
+        method: 'POST',
+        data:params
+    });
+}
+
+
 
 const kaptcha = (params) => { //验证玛
     return request({
@@ -55,5 +71,5 @@ const accountUpdate = (params) => { //账号修改
 
 
 export{
-    login,accountUpdate,resetUser,accountDetail,accountList,delteAccount,kaptcha
+    login,accountUpdate,resetUser,accountDetail,accountList,delteAccount,kaptcha,loginOut,updatePassword
 }

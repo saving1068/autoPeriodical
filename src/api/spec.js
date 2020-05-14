@@ -45,11 +45,20 @@ const specInfo  = (params) => { //服务信息
         params
     });
 }
+const selectUpdata  = (params) => { //修改配置
+    return request({
+        url: '/saleQuantity/insertBatch',
+        method: 'POST',
+        data:params
+    });
+}
+
 export {
     specList,
     deleteSpec,
     updataSpec,
     stopSever,
     startSever,
-    specInfo
+    specInfo,
+    selectUpdata
 }

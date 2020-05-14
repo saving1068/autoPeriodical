@@ -140,19 +140,20 @@
             </el-table-column>
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
-            <!-- <el-table-column prop="email" label="电子邮箱">
+            <el-table-column prop="telephone" label="电话号码">
             </el-table-column>
-            <el-table-column prop="qq" label="qq">
+            <!-- <el-table-column prop="qq" label="qq">
             </el-table-column> -->
-            <el-table-column prop="getDate" label="获取时间">
-            </el-table-column>
+            <!-- <el-table-column prop="getDate" label="获取时间">
+            </el-table-column> -->
             <!-- <el-table-column label="处理状态" prop='overdue'>
             
             </el-table-column> -->
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
+                    <el-button type="text"  @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
+                    <el-button type="text" @click.native='deleteReusePhone(scope.row)'>删除</el-button> 
                 </template>
             </el-table-column>
         </el-table>
@@ -165,80 +166,7 @@
     </el-pagination>
     </div>
 
-    <!-- 新增已付金额管理 -->
-    <el-dialog
-        title='新增已付金额管理'
-        :visible.sync="amountInfoVisi"
-        width="30%"
-        center
-    >
-        <el-form  >
-            <el-form-item label="金额">
-                <el-input v-model="amountInfo.money" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="备注">
-                <el-input v-model="amountInfo.remark" placeholder="审批人"></el-input>
-            </el-form-item>
-         </el-form >
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="amountInfoVisi = false">取 消</el-button>
-             <el-button type="primary" @click="sureAddAmount">确 认</el-button>
-        </span>
-    </el-dialog> 
-
-
-
-<!-- 已付金额管理 -->
-     <el-dialog
-        :title='amountTitle'
-        :visible.sync="amountVisi"
-        width="80%"
-        center
-    >
-        <div>
-            <el-button type="primary" @click="addAmountList()">新增已付金额管理</el-button>
-        </div>
-        <div class="center">
-           <el-table
-            :data="amountList"
-            style="width: 100%">
-             <el-table-column
-                prop="payeeName"
-                label="创建人"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="money"
-                label="金额(远)">
-            </el-table-column>
-            <el-table-column
-                prop="remark"
-                label="备注">
-            </el-table-column>
-            <el-table-column
-                prop="colTime"
-                label="创建日期"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                >
-                 <template slot-scope="scope">
-                   <el-button style="margin:0 10px" type="primary" @click="addAmountList(scope.row)">修改</el-button>
-                  <el-button  @click="delAmountList(scope.row)" type="danger">删除</el-button>
-                   
-                </template>
-            </el-table-column>
-                
-            </el-table>
-        </div>
-       
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="amountVisi = false">取 消</el-button>
-        </span>
-    </el-dialog>  
-
-
+  
 
 
 
@@ -570,30 +498,13 @@
 </template>
 
 <script>
-import {updateCustomer,
-    customerList,
-    detailCustomer,
-    deleteCustomer,
-    followList,
-    deleteFollow,
-    updateFollow,
-    visitList,
-    updataVisitList,
-    deleteVisitList,
-    distributionList,
-    waiveCustomer,
-    updataDistribution,
-    customerSuccess
-    } from '@/api/custormer'
+import {reusePhoneList,
+    deleteReusePhone} from '@/api/custormer'
 import { 
     districtList,
     cityList,
     provinceList
 } from '@/api/region'
-import { 
-    updataBackcourtPaid,backcourtPaidList,deleteBackcourtPaid,
-    updataFrontPaid,frontPaidList,deleteFrontPaid
-} from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr,filterButton} from "@/utils";
@@ -775,8 +686,23 @@ export default {
     //   },
   },
   methods: {
-      test(value){
-          console.log(value)
+      deleteReusePhone(item){
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async() => {
+            let res = await deleteReusePhone({id:item.id})
+          this.$message({
+            type: 'success',
+            message: res.returnMsg
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
       showDelAmount(){
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -1019,7 +945,7 @@ export default {
     },
 
      async customerList(){//客户列表
-        let res = await customerList(this.search)
+        let res = await reusePhoneList(this.search)
         console.log(res,222222222222)
         this.tableData = res.data;
         this.total =res.total||0;

@@ -70,6 +70,7 @@
 <script>
 	
 	import {login,kaptcha} from '@/api/user'
+	import md5 from 'md5'
 	// import {validMobile} from '@/utils/index'
 
 	export default {
@@ -126,7 +127,7 @@
 			}
 		},
 		created() {
-			
+			console.log(md5)
 // 			try {
 // 				// const isLogin = await checkLogin()
 // 				this.$loading.show()
@@ -326,12 +327,12 @@
 
 				// this.btnLoading = true
 				if(this.loginForm.account&&this.loginForm.password&&this.loginForm.verCode){
-					const {
+					let {
 						account,
 						password,verCode
 					} = this.loginForm
 
-					
+					password = md5(password)
 					this.$loading.show()
 					
 					try {

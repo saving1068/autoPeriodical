@@ -389,7 +389,7 @@
 
     <!-- //详情 -->
     <el-dialog 
-        :title="type == 1?'客户详情':'新增客户'"
+        :title="type == 1?'客户详情':'编辑客户'"
         :visible.sync="detailFlag"
         width="80%"
        
@@ -401,7 +401,7 @@
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
-            <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <!-- <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -409,7 +409,8 @@
                 :value="item.id"
             ></el-option>
             
-            </el-select>
+            </el-select> -->
+             {{detail.adManName||'--'}}
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
@@ -426,7 +427,8 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project">
-           <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+            {{detail.projectName||'--'}}
+           <!-- <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -434,7 +436,7 @@
                 :value="Number(item.id)"
             ></el-option>
            
-            </el-select>
+            </el-select> -->
         </el-form-item>
         
         <el-form-item label="下次跟进时间" >
