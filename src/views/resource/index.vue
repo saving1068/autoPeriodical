@@ -140,12 +140,14 @@
             </el-table-column>
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
+             <el-table-column prop="telephone" label="手机号">
+            </el-table-column> 
             <!-- <el-table-column prop="email" label="电子邮箱">
             </el-table-column>
             <el-table-column prop="qq" label="qq">
             </el-table-column> -->
-            <el-table-column prop="getDate" label="获取时间">
-            </el-table-column>
+            <!-- <el-table-column prop="getDate" label="获取时间">
+            </el-table-column> -->
             <!-- <el-table-column label="处理状态" prop='overdue'>
             
             </el-table-column> -->
@@ -361,7 +363,7 @@
                 :key="index"
                 :timestamp="item.disTime">
                        
-                        <p>分配至--{{item.dispName}}</p>
+                        <p>分配至--{{item.receiverName}}</p>
             </el-timeline-item>
         </el-timeline>
         <div v-else>暂无记录</div>
