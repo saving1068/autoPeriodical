@@ -5,6 +5,7 @@
 				<div class="image center" >
 					<!-- <i size="medium" class="el-icon-user-solid"></i>
 					 -->
+					 <!-- <icon-svg className='run'></icon-svg> -->
 					 <img src="../../images/icon.jpg" alt="">
 				</div>
 				<div class="info">

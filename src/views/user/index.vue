@@ -52,6 +52,14 @@
                         
                     </el-table-column>
                     </el-table>
+                    <el-pagination
+                    style=" padding:20px;"
+                    @current-change="handleCurrentChange"
+                    :page-size="10"
+                   
+                    layout="total, prev, pager, next"
+                    :total="total">
+                    </el-pagination>
                  <!-- </el-scrollbar> -->
         </div>
         <!-- <div class="tree" v-show="sonShow">
@@ -160,7 +168,7 @@ let addItemInfo = {
   export default {
     async created(){
       this.loading = true;
-     await this.getList()
+     await this.getList(this.search)
      await this.getDepartmentList()
     
     //  await this.roleList()
@@ -223,7 +231,7 @@ let addItemInfo = {
                             }
                        }
                         this.addItemInfo.dur.isLeader = this.addItemInfo.dur.isLeader?1:0;
-                        this.addItemInfo.password = md5(this.addItemInfo.password)
+                        this.addItemInfo.password = this.addItemInfo.ifChangePassword? md5(this.addItemInfo.password):this.addItemInfo.password
                        console.log(this.addItemInfo)
                        // if(this.addItemInfo.id){//修改
                             await accountUpdate(this.addItemInfo);
@@ -233,7 +241,8 @@ let addItemInfo = {
                            
                         // }
                         this.addItemInfo ={dur: {did:"", isLeader:""}}
-                            this.getList({})
+                        this.search.page =1;
+                            this.getList(this.search)
                          this.$message.success(success);
                          this.userChange = false;
                        
@@ -254,8 +263,10 @@ let addItemInfo = {
       async searchRole(value){
         try {
               let obj ={
-                keyWord:value
+                keyWord:value,
                 // sign:value
+                page:1,
+                size:10
             }
             this.getList(obj)
         } catch (error) {
@@ -273,8 +284,8 @@ let addItemInfo = {
                 }).then(async() => {
                     try {
                         await resetUser({id:item.id})
-                        
-                        this.getList({})
+                        this.search.page =1;
+                        this.getList(this.search)
                         this.$message.success(success);
                         
                     } catch (error) {
@@ -297,8 +308,8 @@ let addItemInfo = {
                 }).then(async() => {
                     try {
                         await delteAccount({id:item.id})
-                        
-                            this.getList({})
+                        this.search.page =1;
+                            this.getList(this.search)
                          this.$message.success(success);
                         
                     } catch (error) {
@@ -330,7 +341,10 @@ let addItemInfo = {
 
            let findItem =  this.departmentArr.find(item =>item.id == res.data.did);
            console.log(findItem,'findItem')
-           this.roleList({depRole:findItem.depRole})
+           if(findItem){
+             this.roleList({depRole:findItem.depRole})
+           }
+           
              
             this.addItemInfo = {...res.data,ifChangePassword:false,dur:obj}
             console.log(this.addItemInfo)
@@ -403,6 +417,11 @@ let addItemInfo = {
           // }
           
       },  
+      handleCurrentChange(val) {
+        this.search.page = val;
+       this.getList(this.search)
+        console.log(`当前页: ${val}`);
+      },
     async getList(obj){
       let res = await accountList(obj);
       console.log(res.data)
@@ -463,7 +482,12 @@ let addItemInfo = {
           label:"description"
         },
         departmentList:[],
-        departmentArr:[]
+        departmentArr:[],
+        search:{
+          page:1,
+          size:10
+        },
+        total:0
       };
     }
   };

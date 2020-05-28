@@ -386,7 +386,7 @@ let addPlatformInfo = {
     async  dict(){
       this.platform = await dictApi("platform");
       this.resourceType= await dictApi('resourceType');
-      let userList = await accountList({roleId:7});
+      let userList = await accountList({roleId:8});
       this.userList = userList.data;
       console.log(this.platform)
       },

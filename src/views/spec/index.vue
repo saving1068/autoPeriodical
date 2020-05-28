@@ -45,8 +45,8 @@
                         >
                     </el-table-column>
                     <el-table-column
-                        prop="createAuthorName"
-                        label="创建人"
+                        prop="saleName"
+                        label="销售员"
                         >
                     </el-table-column>
                     <el-table-column

@@ -29,19 +29,20 @@
                 所属部门：
                 <el-tree :data="list"   ref="tree" show-checkbox :props="defaultProps" default-expand-all node-key="id" ></el-tree>
                 </div>
-                <el-form label-width="100px" size="mini" style="width:300px;flex:1;">
+                <el-form label-width="100px" size="mini"  :rules="muneInfoRules" :model="muneInfo" ref="muneInfo"   style="width:300px;flex:1;">
                 <el-form-item label="部门描述:">
-                    <el-input  v-model="muneInfo.description"></el-input>
+                    <el-input placeholder='请输入部门描述' v-model="muneInfo.description"></el-input>
                 </el-form-item>
-                <el-form-item label="部门名称:">
-                    <el-input  v-model="muneInfo.name"></el-input>
+                <el-form-item label="部门名称:" prop='name'>
+                    <el-input placeholder='请输入部门名称'  v-model="muneInfo.name"></el-input>
                 </el-form-item>
                 <el-form-item label="备注:">
-                    <el-input  v-model="muneInfo.remark"></el-input>
+                    <el-input placeholder='请输入备注'  v-model="muneInfo.remark"></el-input>
                 </el-form-item>
-                <el-form-item label="角色所属:">
+                <el-form-item label="角色所属:" prop='depRole'>
+                
                   <el-checkbox-group v-model="muneInfo.depRole">
-                    
+                   
                     <el-checkbox v-for='item in roleArr' :key="String(item.roleId)" :label="String(item.roleId)">{{item.name}}</el-checkbox>
                     
                   </el-checkbox-group>
@@ -80,13 +81,13 @@
     <div class="center">
       <div style="padding-bottom:20px;">
         所属部门：
-        <el-tree :data="list" show-checkbox :props="defaultProps" node-key="id"  default-expand-all @check="sonCheck"></el-tree>
+        <el-tree :data="routerList" show-checkbox :props="defaultProps" node-key="id"  default-expand-all @check="sonCheck"></el-tree>
         <!-- <el-radio-group v-model="addMuneInfo.superior">
           <el-radio v-for="(item,index) in list" :key="index" :label="item.id">{{item.description}}</el-radio>
         </el-radio-group> -->
         <!-- <el-tree :data="routerList" node-key="id" show-checkbox :props="routerInfo" @check="check"></el-tree> -->
       </div>
-      <el-form label-width="100px" style="width:300px;flex:1;">
+      <el-form label-width="100px" style="width:300px;flex:1;"  :rules="addMuneInfo" :model="addMuneInfo" ref="addMuneInfo">
           <el-form-item label="部门描述:">
               <el-input  v-model="addMuneInfo.description"></el-input>
           </el-form-item>
@@ -171,12 +172,16 @@ let initMuneValue = {
         try {
          
           let res = await departmentList(obj);
-          this.searchUser({data:res.data[0]})
-           console.log()
-          this.list = this.resetList(res.data)
+          if(res.data.length){
+            this.searchUser({data:res.data[0]})
+          }
           
-          this.routerList =res.data;
-         
+           this.routerList =res.data;
+           this.list = res.data;
+          // this.list = this.resetList(res.data)
+          
+          
+         console.log(this.list,this.routerList)
         } catch (error) {
           console.log(error)
         }
@@ -193,7 +198,8 @@ let initMuneValue = {
       check(data){
         console.log(data)
         this.$refs.tree.setCheckedKeys([data.id]);
-        this.muneInfo ={...data}
+        let depRole= data.depRole?data.depRole.split(','):[];
+        this.muneInfo ={...data,depRole}
         // console.log(this.muneInfo)
       },
       sonCheck(data){
@@ -239,6 +245,8 @@ let initMuneValue = {
       },
       addSure(type){
         let tip = type == 0?'是否确认添加页面?':"是否确认修改页面?";
+        this.$refs['muneInfo'].validate((valid) => {
+          if (valid) {
            this.$confirm(tip, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -246,8 +254,11 @@ let initMuneValue = {
                 }).then(async () => {
                   
                   let obj = type == 0?this.addMuneInfo:this.muneInfo;
-                  
                   obj.depRole = obj.depRole.join(',');
+                  if(obj.depRole.length <=0){
+                    return this.$message.warning('请选择所属角色')
+                  }
+                  
                   console.log(obj)
                   let res=  await updataDepartment(obj)
                   this.$message.success(res.returnMsg)
@@ -260,6 +271,8 @@ let initMuneValue = {
                 
                        
             });
+          }
+        })
         
        
       },
@@ -306,6 +319,14 @@ let initMuneValue = {
         defaultProps:{
             children: 'child',
           label:"description"
+        },
+        muneInfoRules:{
+          name:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+          depRole:[{ required: true, message: '请选择所属角色', trigger: 'blur' }]
+        },
+        addMuneInfo:{
+          name:[{ required: true, message: '请输入名称', trigger: 'blur' }],
+          depRole:[{ required: true, message: '请选择所属角色', trigger: 'blur' }]
         },
         muneInfo:{ 
           description:'',

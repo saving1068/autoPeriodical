@@ -1,8 +1,8 @@
 <template>
 	<div class="warp"  v-loading='loading'>
-     <div class="btn">
+     <!-- <div class="btn">
           <el-button type="primary" @click="addItem()" icon="el-icon-edit">新增</el-button>
-      </div>
+      </div> -->
       <div class="data space-between">
         <div class="table" style="width:600px;">
                     <el-table
@@ -40,7 +40,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-button type="primary" @click.stop="addItem(scope.row)" size="mini">修改</el-button>
-                            <el-button type="danger" @click.stop="delteItem(scope.row)" size="mini">删除</el-button>
+                            <!-- <el-button type="danger" @click.stop="delteItem(scope.row)" size="mini">删除</el-button> -->
                         </template>
                         
                     </el-table-column>
@@ -51,7 +51,7 @@
       <!-- 新增角色 -->
         <el-dialog
            
-            title="新增角色"
+            :title="addItemInfo.roleId?'新增角色':'修改角色'"
             :visible.sync="roleChange"
             width="50%"
             center
@@ -71,6 +71,7 @@
            </el-form>
               <el-tree
             :data="initMenuList"
+            v-if='roleChange'
             show-checkbox
             default-expand-all
             node-key="id"
@@ -240,54 +241,55 @@ let addItemInfo = {
            let perList = [];
           let menuList = [];//全部角色
           let contrastList = [];//全部角色
-          this.initMenuList.forEach(item =>{
-            if(item.children){
-              item.children.forEach(sitem=>{
-                  menuList.push(sitem.id);
-                  contrastList.push(sitem);
-              })
-            } 
-            menuList.push(item.id);
-            contrastList.push(item)
-          })
+          // this.initMenuList.forEach(item =>{
+          //   if(item.children){
+          //     item.children.forEach(sitem=>{
+          //         menuList.push(sitem.id);
+          //         contrastList.push(sitem);
+          //     })
+          //   } 
+          //   menuList.push(item.id);
+          //   contrastList.push(item)
+          // })
          
           //  
            res.data.perList.forEach(item =>{//当前角色的
+            
              perList.push(item.id)
            })
-
-          let otherArr = [...menuList,...perList].filter((item,index,arr)=>{//当前角色和全包角色中找出没选中的
-            return arr.indexOf(item) == arr.lastIndexOf(item)
-          })
+          // debugger
+          // let otherArr = [...menuList,...perList].filter((item,index,arr)=>{//当前角色和全包角色中找出没选中的
+          //   return arr.indexOf(item) == arr.lastIndexOf(item)
+          // })
         
-          let notCArr = [];//没选中
-          otherArr.forEach((item,index)=>{
-            contrastList.find((sItem)=>{
-              // console.log(sItem,item);
-              if(sItem.id == item){
-                notCArr.push(sItem)
-              }
-            })//找出没选择的内容
+          // let notCArr = [];//没选中
+          // otherArr.forEach((item,index)=>{
+          //   contrastList.find((sItem)=>{
+          //     // console.log(sItem,item);
+          //     if(sItem.id == item){
+          //       notCArr.push(sItem)
+          //     }
+          //   })//找出没选择的内容
             
-          })
-           console.log('notCArr:',notCArr,'otherArr:',otherArr)
-          notCArr.forEach((item,index)=>{
-            let notIndex= perList.findIndex(sItem =>sItem == item.pid);
-            perList.splice(notIndex,1)
-            console.log(notIndex)
-            // perList.findIndex((sItem,sIndex)=>{
-            //   // console.log(sItem,item.pid)
-            //   if(item.pid == sItem){
-            //     // console.log(sIndex)
-            //     perList.splice(sIndex,1)
-            //     console.log(perList,'perList')
-            //   }
-            // });
+          // })
+          //  console.log('notCArr:',notCArr,'otherArr:',otherArr)
+          // notCArr.forEach((item,index)=>{
+          //   let notIndex= perList.findIndex(sItem =>sItem == item.pid);
+          //   // perList.splice(notIndex,1)
+          //   console.log(notIndex)
+          //   // perList.findIndex((sItem,sIndex)=>{
+          //   //   // console.log(sItem,item.pid)
+          //   //   if(item.pid == sItem){
+          //   //     // console.log(sIndex)
+          //   //     perList.splice(sIndex,1)
+          //   //     console.log(perList,'perList')
+          //   //   }
+          //   // });
             
             
-          })
+          // })
          
-          console.log(perList,'perList')
+          // console.log(perList,'perList')
           
 
          
