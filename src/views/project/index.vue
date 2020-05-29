@@ -4,7 +4,7 @@
           <el-button type="primary" @click="addItem()" icon="el-icon-edit">新增</el-button>
       </div>
       <div class="data space-between">
-        <div class="table">
+        <div class="table" style='flex:1'>
           
                     <el-table
                     :data="list"

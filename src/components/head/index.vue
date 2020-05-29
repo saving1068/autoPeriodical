@@ -1,7 +1,7 @@
 <template>
     <div class="warp">
         <div style="flex:1" class="center">
-            <div style="width:60px;height:60px;">
+            <div style="width:60px;height:60px;" class="center">
                 <img src="../../images/icon.jpg" >
             </div>
             <div style="flex:1;font-width:600;font-size:32px;letter-spacing:5px;color:#409eff;">

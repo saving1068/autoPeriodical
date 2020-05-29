@@ -370,7 +370,7 @@
                 :key="index"
                 :timestamp="item.disTime">
                        
-                        <p>分配至--{{item.dispName}}</p>
+                        <p>分配至--{{item.receiverName}}</p>
             </el-timeline-item>
         </el-timeline>
         <div v-else>暂无记录</div>
@@ -402,11 +402,11 @@
        :title="type == 1?'客户详情':'编辑客户'"
         :visible.sync="detailFlag"
         width="80%"
-       
         center
         :before-close="handleClose">
-        
-        <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
+         <el-tabs v-model="activeName">
+            <el-tab-pane label="基本信息" name="first">
+                <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
             <el-form-item label="客户姓名" width='100%' prop="name">
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
@@ -420,7 +420,10 @@
             ></el-option>
             
             </el-select> -->
-             {{detail.adManName||'--'}}
+             <div class="width280">
+               {{detail.adManName||'--'}}
+            </div>
+             
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
@@ -446,7 +449,10 @@
             ></el-option>
            
             </el-select> -->
-            {{detail.projectName||'--'}}
+            <div class="width280">
+                {{detail.projectName||'--'}}
+            </div>
+            
         </el-form-item>
         
         <el-form-item label="下次跟进时间" >
@@ -543,17 +549,20 @@
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
         </el-form>
-        <div v-if='type != 0'>
+            </el-tab-pane>
+            <el-tab-pane label="跟踪记录" v-if='type != 0' name="second">
+                <div >
             <div class="title space-between">
-            <h1 style="font-width:600;font-size:32px">追踪记录</h1>
+            <!-- <h1 style="font-width:600;font-size:32px">追踪记录</h1> -->
             <!-- <el-button  type="primary">新增跟进记录</el-button> -->
             </div>
             <div class="center">
-                <div class="record">
+                <div class="record" v-if='detail.record.length'>
                     <el-timeline >
                         <el-timeline-item
                         v-for="(item,index) in detail.record" 
                         :key="index"
+                        size='large'
                         :timestamp="item.fuTime">
                         <el-card  >
                             <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
@@ -562,6 +571,9 @@
                         </el-card>
                         </el-timeline-item>
                     </el-timeline>
+                </div>
+                <div v-else>
+                    暂无跟踪记录
                 </div>
             </div>
             <div class='center lMessage'>
@@ -576,6 +588,11 @@
                     <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
                 </div>
         </div>
+            </el-tab-pane>
+        </el-tabs>
+        
+        
+        
         
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
@@ -640,6 +657,7 @@ let customerInfo = {
 export default {
   data() {
     return {
+        activeName:"first",
         valid:[{
             key:1,
             label:"有效"
@@ -1162,35 +1180,36 @@ export default {
       },
 
      async suerAdd(){
-          try {
-        this.$refs['detail'].validate((valid) => {
-          if (valid) {
-              let tips = this.type == 2?'是否确认修改客户':'是否确认新增客户';
-                this.$confirm('是否确认新增客户', "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(async()=>{
-                    this.detail.department = this.userInfo.did;
-                    if(this.userInfo.role.roleId == 7){
-                        this.detail.personnel = this.userInfo.id;
-                    }
-                    let res = await updateCustomer(this.detail);
-                    this.$message.success(res.returnMsg)
-                        this.customerList()
-                        this.detailFlag =  false;
-                })
-          } else {
-            this.$message.warning("请填写所需信息")
-            return false;
-          }
-        });
+         this.detailFlag =  false;
+        //   try {
+        // this.$refs['detail'].validate((valid) => {
+        //   if (valid) {
+        //       let tips = this.type == 2?'是否确认修改客户':'是否确认新增客户';
+        //         this.$confirm('是否确认新增客户', "提示", {
+        //             confirmButtonText: "确定",
+        //             cancelButtonText: "取消",
+        //             type: "warning"
+        //         }).then(async()=>{
+        //             this.detail.department = this.userInfo.did;
+        //             if(this.userInfo.role.roleId == 7){
+        //                 this.detail.personnel = this.userInfo.id;
+        //             }
+        //             let res = await updateCustomer(this.detail);
+        //             this.$message.success(res.returnMsg)
+        //                 this.customerList()
+        //                 this.detailFlag =  false;
+        //         })
+        //   } else {
+        //     this.$message.warning("请填写所需信息")
+        //     return false;
+        //   }
+        // });
               
           
          
-        } catch (error) {
-            console.log(error)
-        }
+        // } catch (error) {
+        //     console.log(error)
+        // }
         
       },
       addDetail(){
@@ -1373,7 +1392,11 @@ export default {
     }
     .record{
         width: 100%;
+        
     }
+    .record ::v-deep .el-card__body{
+          padding:5px 10px;  
+        }
     .manager{
         color: red;
     }

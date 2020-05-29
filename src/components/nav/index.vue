@@ -18,7 +18,7 @@
 					 <el-scrollbar id="scorll" :style='{"height":maxHeight-100+"px"}'>
 					<div class="nav-item " v-for="(item,index) in nav" 
 					:key='index' >
-						<div class='parent'  @click="goTo(item)">
+						<div class='parent'  @click="goTo(item)" :class="{'active':item.isActive}">
 							<div style="width:150px" class="center">{{item.description}}</div>
 							<div class="icon" v-if="item.children.length">
 								<i class="el-icon-arrow-up" v-if="item.ifShowSon"></i>
@@ -216,7 +216,7 @@ import {userMenu} from '@/api/menu'
 				width: 50px;
 				height: 50px;
 				border-radius: 50%;
-				background: rgb(41,151,255) ;
+				background: #fff;
 				overflow: hidden;
 				.el-icon-user-solid{
 					font-size:32px;

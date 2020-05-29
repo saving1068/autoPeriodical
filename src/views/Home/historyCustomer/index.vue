@@ -251,7 +251,7 @@
                 :key="index"
                 :timestamp="item.disTime">
                        
-                        <p>分配至--{{item.dispName}}</p>
+                        <p>分配至--{{item.receiverName}}</p>
             </el-timeline-item>
         </el-timeline>
         <div v-else>暂无记录</div>
@@ -302,7 +302,9 @@
         center
         :before-close="handleClose">
         
-        <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
+        <el-tabs v-model="activeName">
+            <el-tab-pane label="基本信息" name="first">
+                <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
             <el-form-item label="客户姓名" width='100%' prop="name">
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
@@ -316,7 +318,10 @@
             ></el-option>
             
             </el-select> -->
-            {{detail.adManName||'--'}}
+             <div class="width280">
+               {{detail.adManName||'--'}}
+            </div>
+             
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
@@ -342,7 +347,10 @@
             ></el-option>
            
             </el-select> -->
-            {{detail.projectName||'--'}}
+            <div class="width280">
+                {{detail.projectName||'--'}}
+            </div>
+            
         </el-form-item>
         
         <el-form-item label="下次跟进时间" >
@@ -421,7 +429,7 @@
                 </el-option>
                 </el-select>
             </el-form-item> -->
-            <el-form-item label="是否有效" >
+             <el-form-item label="是否有效" >
            <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
                 <el-option 
@@ -439,36 +447,47 @@
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
         </el-form>
-        <div class="title space-between">
-            <h1 style="font-width:600;font-size:32px">追踪记录</h1>
+            </el-tab-pane>
+            <el-tab-pane label="跟踪记录" v-if='type != 0' name="second">
+                <div >
+            <div class="title space-between">
+            <!-- <h1 style="font-width:600;font-size:32px">追踪记录</h1> -->
             <!-- <el-button  type="primary">新增跟进记录</el-button> -->
-        </div>
-        <div class="center">
-            <div class="record">
-                <el-timeline >
-                    <el-timeline-item
-                    v-for="(item,index) in detail.record" 
-                    :key="index"
-                    :timestamp="item.fuTime">
-                    <el-card  >
-                        <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                        <p style="text-align:right">{{item.fupName}}</p>
-                    </el-card>
-                    </el-timeline-item>
-                </el-timeline>
             </div>
-        </div>
-        <div class='center lMessage'>
-                 <el-input
-                    clearable
-                    type="textarea"
-                    autosize
-                    placeholder="请输入内容"
-                    resize='none'
-                    v-model="message">
-                </el-input>
-                <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
+            <div class="center">
+                <div class="record" v-if='detail.record.length'>
+                    <el-timeline >
+                        <el-timeline-item
+                        v-for="(item,index) in detail.record" 
+                        :key="index"
+                        size='large'
+                        :timestamp="item.fuTime">
+                        <el-card  >
+                            <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                            <p style="text-align:right">{{item.fupName}}</p>
+                            <el-button  type="text"  @click="delFollowList(item)" slot="reference">删除</el-button>
+                        </el-card>
+                        </el-timeline-item>
+                    </el-timeline>
+                </div>
+                <div v-else>
+                    暂无跟踪记录
+                </div>
             </div>
+            <div class='center lMessage'>
+                    <el-input
+                        clearable
+                        type="textarea"
+                        autosize
+                        placeholder="请输入内容"
+                        resize='none'
+                        v-model="message">
+                    </el-input>
+                    <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
+                </div>
+        </div>
+            </el-tab-pane>
+        </el-tabs>
         
         
 
@@ -527,6 +546,7 @@ let customerInfo = {
 export default {
   data() {
     return {
+        activeName:"first",
          valid:[{
             key:1,
             label:"有效"

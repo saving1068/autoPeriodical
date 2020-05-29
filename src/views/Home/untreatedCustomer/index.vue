@@ -364,7 +364,7 @@
                 :key="index"
                 :timestamp="item.disTime">
                        
-                        <p>分配至--{{item.dispName}}</p>
+                        <p>分配至--{{item.receiverName}}</p>
             </el-timeline-item>
         </el-timeline>
         <div v-else>暂无记录</div>
