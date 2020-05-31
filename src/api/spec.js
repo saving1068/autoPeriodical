@@ -4,7 +4,7 @@ const  specList = (params) => { //配置列表
     return request({
         url: '/saleQuantity/list',
         method: 'POST',
-        params
+        data:params
     });
 }
 
@@ -27,7 +27,7 @@ const stopSever = (params) => { //服务暂停
     return request({
         url: '/job/pause/'+params,
         method: 'GET',
-        data:params
+        
     });
 }
 

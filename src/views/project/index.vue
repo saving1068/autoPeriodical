@@ -559,7 +559,7 @@ let addPlatformInfo = {
         },
         search:{
           page:1,
-          size:10
+          limit:10
         },
         list:[],
         platform:[],
@@ -590,7 +590,7 @@ let addPlatformInfo = {
         platformRequest:{
           project:null,
           page:1,
-          size:10
+          limit:10
         },
         platformInfo:{},
         addPlatformInfo:{},

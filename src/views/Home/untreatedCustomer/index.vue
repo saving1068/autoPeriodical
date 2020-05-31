@@ -134,21 +134,18 @@
             </el-table-column>
             <el-table-column prop="name" label="客户姓名">
             </el-table-column>
+            <el-table-column prop="telephone" label="手机号码">
+            </el-table-column>
             <el-table-column prop="adManName" label="广告负责人">
             </el-table-column>
-            <el-table-column prop="projectName" label="项目名称">
+             <el-table-column prop="projectName" label="项目名称">
             </el-table-column>
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
-            <!-- <el-table-column prop="email" label="电子邮箱">
+            <el-table-column prop="personnelName" label="销售员">
             </el-table-column>
-            <el-table-column prop="qq" label="qq">
-            </el-table-column> -->
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
-            <!-- <el-table-column label="处理状态" prop='overdue'>
-            
-            </el-table-column> -->
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -658,7 +655,7 @@ export default {
             isValid:1,
             keyword:"",
             page:1,
-            size:10
+            limit:10
         },
             tableData:[],
             province:[],

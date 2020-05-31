@@ -69,7 +69,13 @@
                         
                     </el-table-column>
                     </el-table>
-
+                    <el-pagination
+                    style=" padding:20px;"
+                        @current-change="handleCurrentChange"
+                        :page-size="10"
+                        layout="total, prev, pager, next"
+                        :total="total">
+                    </el-pagination>
                         <!-- 菜单 -->
     <el-dialog
        width="50%"
@@ -86,7 +92,7 @@
               <el-input  v-model="addSpecInfo.needSearch"></el-input>
           </el-form-item>
           <el-form-item label="所属项目:">
-              <el-select  v-model="addSpecInfo.project" placeholder="请选择广告负责人">
+              <el-select  v-model="addSpecInfo.project" placeholder="请选择所属项目">
                 <el-option 
                     v-for="item in projectArr"
                     :key="item.id"
@@ -96,7 +102,7 @@
                 </el-select>
           </el-form-item>
           <el-form-item label="销售员:">
-              <el-select  v-model="addSpecInfo.saleId" placeholder="请选择广告负责人">
+              <el-select  v-model="addSpecInfo.saleId" placeholder="请选择销售员">
                 <el-option 
                     v-for="item in saleArr"
                     :key="item.id"
@@ -219,7 +225,7 @@ import {projectList} from '@/api/project'
      await this.spec()
     await this.projectList()  
      await this.saleList() 
-    await  this.specList({})
+    await  this.specList()
    
     
     },
@@ -256,18 +262,18 @@ import {projectList} from '@/api/project'
        async projectList(){
            let obj = {
                page:1,
-               size:10,
+               limit:10,
            }
            let res = await projectList(obj)
             this.projectArr = res.data;
        },
 
-      async specList(obj){
+      async specList(){
         try {
           this.loading = true;
-          let res = await specList(obj);
+          let res = await specList(this.search);
           this.list = res.data;
-       
+          this.total = res.total
         } catch (error) {
           console.log(error)
         }
@@ -333,7 +339,7 @@ import {projectList} from '@/api/project'
                  
                   let res=  await updataSpec(this.addSpecInfo)
                   this.$message.success(res.returnMsg)
-                  this.specList({})
+                  this.specList()
                   this.addSpec = false;
                   
                 }).catch((e) => {
@@ -350,7 +356,7 @@ import {projectList} from '@/api/project'
                   
                     let res=  await selectUpdata({list:this.selectList})
                     this.$message.success(res.returnMsg)
-                    this.specList({})
+                    this.specList()
                     this.select = false;
                     
                   }).catch((e) => {
@@ -386,6 +392,11 @@ import {projectList} from '@/api/project'
       showParent(item){
 
       },
+      handleCurrentChange(val) {
+        this.search.page = val;
+       this.specList()
+        console.log(`当前页: ${val}`);
+      },
       delteItem(){
         this.$confirm('是否确认删除页面?', '提示', {
                 confirmButtonText: '确定',
@@ -394,7 +405,7 @@ import {projectList} from '@/api/project'
                 }).then(async () => {
                    let res=  await deleteMenu({id:this.muneInfo.id})
                   this.$message.success(res.returnMsg)
-                  this.specList({})
+                  this.specList()
                   
                 }).catch((e) => {
                 
@@ -421,6 +432,12 @@ import {projectList} from '@/api/project'
         },
         selectList:[],
         select:false,
+        search:{
+          limit:10,
+          page:1
+        },
+        total:0
+
       };
     }
   };

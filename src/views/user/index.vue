@@ -266,7 +266,7 @@ let addItemInfo = {
                 keyWord:value,
                 // sign:value
                 page:1,
-                size:10
+                limit:10
             }
             this.getList(obj)
         } catch (error) {
@@ -431,7 +431,7 @@ let addItemInfo = {
       // })
 
       this.list = res.data;
-       
+       this.total = res.total;
       this.list.map(item =>{
         item.roleName = item.role.name
       //   let roleList =[];
@@ -485,7 +485,7 @@ let addItemInfo = {
         departmentArr:[],
         search:{
           page:1,
-          size:10
+          limit:10
         },
         total:0
       };
