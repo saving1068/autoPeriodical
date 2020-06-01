@@ -879,7 +879,7 @@ export default {
             this.$loading.show();
             this.amountList =[];
             this.amountType = type;
-            this.amountTitle = type == 0?'前场已付金额管理':"后场已付金额管理";
+            this.amountTitle = type == 0?'前场金额':"后场金额";
             this.amountVisi = true;
             this.ctId = item.id;
             let obj = {

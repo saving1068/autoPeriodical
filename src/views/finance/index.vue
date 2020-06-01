@@ -156,8 +156,8 @@
                     >
                     <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
                     </el-popconfirm>
-                   <el-button type="text"  @click.native='amount(scope.row,0)'>前场已付金额管理</el-button>
-                   <el-button type="text" @click.native='amount(scope.row,1)'>后场已付金额管理</el-button>               
+                   <el-button type="text"  @click.native='amount(scope.row,0)'>前场金额</el-button>
+                   <el-button type="text" @click.native='amount(scope.row,1)'>后场金额</el-button>               
                    <el-button type="text"  @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
                 </template>
             </el-table-column>
@@ -903,7 +903,7 @@ export default {
             this.$loading.show();
             this.amountList =[];
             this.amountType = type;
-            this.amountTitle = type == 0?'前场已付金额管理':"后场已付金额管理";
+            this.amountTitle = type == 0?'前场金额':"后场金额";
             this.amountVisi = true;
             this.ctId = item.id;
             let obj = {

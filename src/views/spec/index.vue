@@ -44,11 +44,11 @@
                         label="所属项目"
                         >
                     </el-table-column>
-                    <el-table-column
+                    <!-- <el-table-column
                         prop="saleName"
                         label="销售员"
                         >
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column
                         align="right"
                         width="300px"

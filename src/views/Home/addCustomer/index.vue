@@ -323,8 +323,8 @@
             
         </el-timeline>
         <div v-else>暂无记录</div>
-        <div class="center width280 divider" >
-            <el-input placeholder="请输入备注" v-model="visitInfo.remark"></el-input>
+        <div class=" divider" >
+            <el-input placeholder="请输入备注" style='width:220px'  v-model="visitInfo.remark"></el-input>
             <el-date-picker
              style="padding:20px 0;"
              v-model="visitInfo.visitingTime"
@@ -374,7 +374,7 @@
             </el-timeline-item>
         </el-timeline>
         <div v-else>暂无记录</div>
-        <div class="center width280 divider" >
+        <div class="divider" >
             <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
             <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
             <el-select v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
@@ -888,7 +888,7 @@ export default {
             this.$loading.show();
             this.amountList =[];
             this.amountType = type;
-            this.amountTitle = type == 0?'前场已付金额管理':"后场已付金额管理";
+            this.amountTitle = type == 0?'前场金额':"后场金额";
             this.amountVisi = true;
             this.ctId = item.id;
             let obj = {
@@ -1377,6 +1377,7 @@ export default {
         min-width: 200px;
     }
     .divider{
+         width: 200px;
         margin-left:10px;
         padding: 0 10px;
            border-left: 1px solid #dcdfe6;

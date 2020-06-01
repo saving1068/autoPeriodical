@@ -204,8 +204,8 @@
             
         </el-timeline>
         <div v-else>暂无记录</div>
-        <div class="center width280 divider" >
-            <el-input placeholder="请输入备注" v-model="visitInfo.remark"></el-input>
+        <div class=" divider" >
+            <el-input placeholder="请输入备注" style='width:220px'  v-model="visitInfo.remark"></el-input>
             <el-date-picker
              style="padding:20px 0;"
              v-model="visitInfo.visitingTime"
@@ -1033,6 +1033,7 @@ export default {
         min-width: 200px;
     }
     .divider{
+        width: 200px;
         margin-left:10px;
         padding: 0 10px;
            border-left: 1px solid #dcdfe6;
