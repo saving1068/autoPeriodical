@@ -3,25 +3,25 @@
     <el-tabs v-model="activeName" type="card" @tab-click='tabClick'  :before-leave="beforeLeave">
       <el-tab-pane  name="current">
         <span slot="label"> 待跟进客户 
-          <!-- <i class="el-icon-count">{{totalInfo.pending}}</i> -->
+          <i class="el-icon-count">{{totalInfo.pending}}</i>
         </span>
         <current @succreeRefresh='refresh' v-if="activeName =='current'"></current> 
       </el-tab-pane>
       <el-tab-pane  name="awaitcustomer">
       <span slot="label"> 我的客户 
-        <!-- <i class="el-icon-count">{{totalInfo.success}}</i> -->
+        <i class="el-icon-count">{{totalInfo.own}}</i>
         </span>
         <awaitcustomer v-if="activeName =='awaitcustomer'"></awaitcustomer>
       </el-tab-pane>
      
       <el-tab-pane name="history">
       <span slot="label"> 已来访 
-        <!-- <i class="el-icon-count">{{totalInfo.fuHistory}}</i> -->
+        <i class="el-icon-count">{{totalInfo.visit}}</i>
         </span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
       <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
-        <span slot="label"> 全部客户 </span>
+        <span slot="label"> 全部客户 <i class="el-icon-count">{{totalInfo.all}}</i></span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
       </el-tab-pane>
       <!-- <el-tab-pane name="untreated">
@@ -64,7 +64,7 @@ export default {
   },
   created(){
     
-    // this.refresh()
+    this.refresh()
   },
   mounted() {
 
@@ -84,7 +84,11 @@ export default {
     },
   async refresh(){
     let res = await customerTotal();
-    this.totalInfo = res.data
+    res.data.pending = res.data.pending||0;
+    res.data.own = res.data.own||0;
+    res.data.visit = res.data.visit||0;
+    res.data.all = res.data.all||0;
+    this.totalInfo = res.data;
     console.log(res)
      console.log('refresh')
    }

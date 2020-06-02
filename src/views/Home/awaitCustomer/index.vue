@@ -38,6 +38,30 @@
             ></el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="手机号码" >
+            <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
+        </el-form-item>
+        <el-form-item label="销售员" v-if='filterButton(110)'> 
+            <el-select  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
+                <el-option 
+                v-for="item in saleList"
+                :key="item.id"
+                :label="item.contactName"
+                :value="item.id"
+            ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="销售部门"  v-if='filterButton(110)'> 
+           <el-select class="width280" v-model="search.department" placeholder="请选择销售部门">
+           
+            <el-option 
+                v-for="item in departmentList"
+                :key="item.id"
+                :label="item.description"
+                :value="item.id"
+            ></el-option>
+            </el-select>
+        </el-form-item>
         
        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280"
@@ -151,6 +175,8 @@
             <el-table-column prop="address" label="详细地址">
             </el-table-column>
             <el-table-column prop="personnelName" label="销售员">
+            </el-table-column>
+            <el-table-column prop="disTime" label="分配时间">
             </el-table-column>
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
@@ -440,11 +466,11 @@
              <el-form-item label="是否有效" >
            <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
-                <el-option 
+                 <el-option 
                 v-for="item in valid "
-                 :key="item.key" 
+                 :key="Number(item.key)" 
                 :label="item.label" 
-                :value="item.key">
+                :value="Number(item.key)">
                 </el-option>
                 </el-select>
             </el-form-item>
@@ -522,6 +548,7 @@ import {updateCustomer,
     updataDistribution,
     waiveCustomer
     } from '@/api/custormer'
+      import {departmentList} from '@/api/department'
 import { 
     districtList,
     cityList,
@@ -615,6 +642,7 @@ export default {
             saleList:[],//销售
             platform:[],//平台
             projectList:[],//项目
+            departmentList:[],
             loading:false,
             detailProvince:[],
             detailCity:[],
@@ -641,9 +669,7 @@ export default {
                 telephone:[
                      { required: true, message: '请输入联系方式', trigger: 'blur' },
                 ],
-                isValid:[
-                     { required: true, message: '请输入联系方式', trigger: 'blur' },
-                ],
+              
 
             },
             isSuccess:[
@@ -655,7 +681,8 @@ export default {
             personnel:[],
             total:0,
             waiveVisi:false,
-            ifSuccess:false
+            ifSuccess:false,
+           
         }
     
   },
@@ -765,6 +792,8 @@ export default {
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
+         let department = await departmentList();
+        this.resetList(department.data);
         // if(this.userInfo.role.roleId !=7){
         //      let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
         //     this.personnel = personnel.data;
@@ -773,6 +802,33 @@ export default {
           console.log(this.projectList,21312)
       
     },
+    resetList(arr){
+        // console.log(arr)
+        let pList = [];
+        arr.forEach(item =>{
+         this.departmentList.push(item)
+          if(item.child.length){
+            this.sonsTree(item);
+            // console.log(son,'son')
+           
+          }
+        })
+        
+        // console.log(pList,123123)
+      },
+      sonsTree(obj) {
+        // console.log(obj.name,obj.child.length)
+        // let son  = []
+        console.log(obj,'obj')
+        if(obj.child.length){
+          obj.child.forEach((item)=>{
+           
+           this.departmentList.push(item)
+           
+            this.sonsTree(item)
+          })
+        }
+      }, 
 
      async customerList(){//客户列表
         let res = await customerList(this.search)
@@ -987,8 +1043,9 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        leaveWord,
-                        id
+                        id,
+                        isValid,
+                        leaveWord
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1008,6 +1065,7 @@ export default {
                         sourceLink,
                         type,
                         leaveWord,
+                        isValid:isValid?isValid:isValid == 0?0:'',
                         email
                         };
                         

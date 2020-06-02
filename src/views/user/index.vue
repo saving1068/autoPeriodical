@@ -110,6 +110,7 @@
               
               <div>所属部门</div>
                 <el-tree
+                v-if='userChange'
                  ref="departmentTree"
                     :data="departmentList"
                     show-checkbox :props="departmentProps" node-key="id" 
@@ -119,7 +120,7 @@
                    >
                 </el-tree>
               </div>  
-              <div>
+              <div style=;width:110px;>
                  <div>角色</div>
                 <el-tree
                     v-if="userChange"

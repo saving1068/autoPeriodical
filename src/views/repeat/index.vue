@@ -451,11 +451,11 @@
              <el-form-item label="是否有效" >
            <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
-                <el-option 
+                 <el-option 
                 v-for="item in valid "
-                 :key="item.key" 
+                 :key="Number(item.key)" 
                 :label="item.label" 
-                :value="item.key">
+                :value="Number(item.key)">
                 </el-option>
                 </el-select>
             </el-form-item>
@@ -970,6 +970,7 @@ export default {
      async customerList(){//客户列表
         let res = await reusePhoneList(this.search)
         console.log(res,222222222222)
+        res.data.map(item =>item.telephone = String(item.telephone).substr(item.telephone.length -4))
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;
