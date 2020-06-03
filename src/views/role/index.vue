@@ -153,17 +153,17 @@ let addItemInfo = {
                     try {
                      
                       this.addItemInfo.pids = [];
-                      let list = [];
-                      this.$refs.tree.getCheckedNodes().filter(item => item.pid!=0).forEach((item)=>{
-                        list.push(item.pid)
-                      })
+                      // let list = [];
+                      // this.$refs.tree.getCheckedNodes().filter(item => item.pid!=0).forEach((item)=>{
+                      //   list.push(item.pid)
+                      // })
                       
-                      console.log(list)
+                      // console.log(list)
                       
                       this.$refs.tree.getCheckedNodes().forEach(item =>{
                            this.addItemInfo.pids.push(item.id)
                       })
-                     this.addItemInfo.pids = Array.from(new Set([...list,...this.addItemInfo.pids])) 
+                     this.addItemInfo.pids = Array.from(new Set([...this.addItemInfo.pids])) 
                        console.log(this.addItemInfo.pids,this.addItemInfo.name,this.addItemInfo.description,this.addItemInfo.sort)
                       //   
                      if(this.addItemInfo.pids.length != 0&&this.addItemInfo.name
@@ -237,25 +237,33 @@ let addItemInfo = {
         async addItem(item){
           if(item){
             console.log(item)
-           let res =  await roleDetail({id:item.roleId})
+            try {
+              let res =  await roleDetail({id:item.roleId})
            let perList = [];
           let menuList = [...this.initMenuList];//全部角色
-          let contrastList = [];//选中角色 
+          let contrastList = [];//父角色中的东西
+          let perItem = null;
+          console.log(menuList)
+          console.log(res.data.perList)
           // contrastList = res.data.perList.map(item => item.pid == 0);
-           res.data.perList.forEach(item =>{//当前角色的
-             perList.push(item.id)
-           })
-          //  perList.forEach(item =>{
+           res.data.perList.forEach((item,index) =>{//当前角色的
+            // console.log(index,menuList.length-1,menuList[index])
+            //   perItem = menuList.find(sitem =>sitem.id == item.id);
+            //   console.log(perItem)
+            //   if(item.pid !=0||(item.pid==0&&perItem)){
+                contrastList.push(item.id)
+              // } 
              
-          //    let allFlag = arr.find(sitem =>sitem.pid == item);
-
-          //  })
-
-
-            this.itemPowerList = perList;
+           })
+           console.log(contrastList)
+            this.itemPowerList = contrastList;
             console.log(this.itemPowerList,'itemPowerList')
            console.log(res)
             this.addItemInfo = {...res.data}
+            } catch (error) {
+              console.log(error)
+            }
+           
           }else{
             this.addItemInfo = {...addItemInfo}
            
