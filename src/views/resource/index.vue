@@ -564,8 +564,12 @@
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
               <el-input
+                class="width280" 
+                style="width:510px"
                 type="textarea"
-               
+                disabled
+                autosize
+                resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
                 </el-input>
@@ -1244,7 +1248,7 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        isValid:isValid?isValid:'',
+                        isValid:isValid?isValid:isValid == 0?0:'',
                         keyword,leaveWord
                         };
                         

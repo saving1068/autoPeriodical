@@ -2,30 +2,30 @@
   <div class="warp">
     <el-tabs v-model="activeName" type="card" @tab-click='tabClick'  :before-leave="beforeLeave">
       <el-tab-pane  name="current">
-        <span slot="label"> <p >待跟进客户</p>
-          <i class="el-icon-count">{{totalInfo.pending<100?totalInfo.pending:'99+'}}</i>
+        <span slot="label"> <p class="title">待跟进客户</p>
+          <i class="count">{{totalInfo.pending<100?totalInfo.pending:'99+'}}</i>
         </span>
         <current @succreeRefresh='refresh' v-if="activeName =='current'"></current> 
       </el-tab-pane>
       <el-tab-pane  name="awaitcustomer">
       <span slot="label">  
-      <p >我的客户</p>
-        <i class="el-icon-count">{{totalInfo.own<100?totalInfo.own:'99+'}}</i>
+      <p class="title">我的客户</p>
+        <i class="count">{{totalInfo.own<100? totalInfo.own:'99+'}}</i>
         </span>
         <awaitcustomer v-if="activeName =='awaitcustomer'"></awaitcustomer>
       </el-tab-pane>
      
       <el-tab-pane name="history">
       <span slot="label">  
-      <p >已来访</p>
-        <i class="el-icon-count">{{totalInfo.visit<100?totalInfo.visit:'99+'}}</i>
+      <p class="title">已来访</p>
+        <i class="count">{{totalInfo.visit<100?totalInfo.visit:'99+'}}</i>
         </span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
       <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
         <span slot="label">  
-        <p>全部客户</p>
-        <i class="el-icon-count">{{totalInfo.all<100?totalInfo.all:'99+'}}</i></span>
+        <p class="title">全部客户</p>
+        <i class="count">{{totalInfo.all<100?totalInfo.all:'99+'}}</i></span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
       </el-tab-pane>
       <!-- <el-tab-pane name="untreated">
@@ -101,15 +101,20 @@ export default {
 </script>
 
 <style scoped="scoped" lang="scss">
-  .el-icon-count{
-    width:25px;
-    height:25px;
-    border-radius:50%;
-    background:red;
+  .count{
+    // width:40px;
+    // height:40px;
+    // border-radius:50%;
+    // background:red;
     text-align: center;
-    line-height: 25px;
-    color: #fff;
-    position: absolute;
+    // line-height: 25px;
+    color: red;
+    // position: absolute;
     font-size: 12px;
+  }
+  .title{
+    float: left;
+    padding: 0 20px 0 10px;
+    line-height: 40px;
   }
 </style>

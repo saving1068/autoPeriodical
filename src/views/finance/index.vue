@@ -145,7 +145,7 @@
             <el-table-column prop="getDate" label="获取时间">
             </el-table-column>
             
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="250px">
                 <template slot-scope="scope">
                    <el-popconfirm
                         title="确定成交该数据？"
@@ -539,13 +539,21 @@
                 </el-select>
             </el-form-item>
            
+           <el-form-item label="关键词" >
+                <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
+            </el-form-item>
+           
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
-                 <el-input
+              <el-input
+                class="width280" 
+                style="width:510px"
                 type="textarea"
-               
+                autosize
+                disabled
+                resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
                 </el-input>
@@ -1272,7 +1280,9 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        id
+                        id,
+                        isValid,
+                        keyword,leaveWord
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1291,7 +1301,8 @@ export default {
                         name,
                         sourceLink,
                         type,
-                        email
+                        email,isValid:isValid?isValid:isValid == 0?0:'',
+                        keyword,leaveWord
                         };
                         
                         this.followFlag = false;

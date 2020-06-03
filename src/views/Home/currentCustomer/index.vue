@@ -571,7 +571,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="关键词" >
-                <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
+                <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
             </el-form-item>
            
             <el-form-item label="详细地址" prop="address">
@@ -579,8 +579,12 @@
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
              <el-input
+                class="width280" 
+                style="width:510px"
                 type="textarea"
-               
+                disabled
+                autosize
+                resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
                 </el-input>

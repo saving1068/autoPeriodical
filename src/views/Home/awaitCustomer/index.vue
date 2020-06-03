@@ -475,19 +475,24 @@
                 </el-select>
             </el-form-item>
              <el-form-item label="关键词" >
-                <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
+                <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
+            </el-form-item>
+            
+            <el-form-item label="详细地址" prop="address">
+                <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
              <el-input
+                class="width280" 
+                style="width:510px"
                 type="textarea"
-               
+                autosize
+                disabled
+                resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
                 </el-input>
                 <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
-            </el-form-item>
-            <el-form-item label="详细地址" prop="address">
-                <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
         </el-form>
             </el-tab-pane>
