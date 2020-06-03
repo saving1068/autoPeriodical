@@ -2,26 +2,30 @@
   <div class="warp">
     <el-tabs v-model="activeName" type="card" @tab-click='tabClick'  :before-leave="beforeLeave">
       <el-tab-pane  name="current">
-        <span slot="label"> 待跟进客户 
-          <i class="el-icon-count">{{totalInfo.pending}}</i>
+        <span slot="label"> <p >待跟进客户</p>
+          <i class="el-icon-count">{{totalInfo.pending<100?totalInfo.pending:'99+'}}</i>
         </span>
         <current @succreeRefresh='refresh' v-if="activeName =='current'"></current> 
       </el-tab-pane>
       <el-tab-pane  name="awaitcustomer">
-      <span slot="label"> 我的客户 
-        <i class="el-icon-count">{{totalInfo.own}}</i>
+      <span slot="label">  
+      <p >我的客户</p>
+        <i class="el-icon-count">{{totalInfo.own<100?totalInfo.own:'99+'}}</i>
         </span>
         <awaitcustomer v-if="activeName =='awaitcustomer'"></awaitcustomer>
       </el-tab-pane>
      
       <el-tab-pane name="history">
-      <span slot="label"> 已来访 
-        <i class="el-icon-count">{{totalInfo.visit}}</i>
+      <span slot="label">  
+      <p >已来访</p>
+        <i class="el-icon-count">{{totalInfo.visit<100?totalInfo.visit:'99+'}}</i>
         </span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
       <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
-        <span slot="label"> 全部客户 <i class="el-icon-count">{{totalInfo.all}}</i></span>
+        <span slot="label">  
+        <p>全部客户</p>
+        <i class="el-icon-count">{{totalInfo.all<100?totalInfo.all:'99+'}}</i></span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
       </el-tab-pane>
       <!-- <el-tab-pane name="untreated">
@@ -98,12 +102,12 @@ export default {
 
 <style scoped="scoped" lang="scss">
   .el-icon-count{
-    width:15px;
-    height:15px;
+    width:25px;
+    height:25px;
     border-radius:50%;
     background:red;
     text-align: center;
-    line-height: 15px;
+    line-height: 25px;
     color: #fff;
     position: absolute;
     font-size: 12px;

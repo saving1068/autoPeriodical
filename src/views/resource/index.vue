@@ -555,58 +555,28 @@
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
-                <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input>
+            <el-form-item label="关键词" >
+                <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
             </el-form-item>
+           
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
+             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+              <el-input
+                type="textarea"
+               
+                placeholder="请输入内容"
+                v-model="detail.leaveWord">
+                </el-input>
+                <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
+            </el-form-item>
         </el-form>
-            </el-tab-pane>
-            <el-tab-pane label="跟踪记录" v-if='type != 0' name="second">
-                <div >
-            <div class="title space-between">
-            <!-- <h1 style="font-width:600;font-size:32px">追踪记录</h1> -->
-            <!-- <el-button  type="primary">新增跟进记录</el-button> -->
-            </div>
-            <div class="center">
-                <div class="record" v-if='detail.record.length'>
-                    <el-timeline >
-                        <el-timeline-item
-                        v-for="(item,index) in detail.record" 
-                        :key="index"
-                        size='large'
-                        :timestamp="item.fuTime">
-                        <el-card  >
-                            <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                            <p style="text-align:right">{{item.fupName}}</p>
-                            <el-button  type="text"  @click="delFollowList(item)" slot="reference">删除</el-button>
-                        </el-card>
-                        </el-timeline-item>
-                    </el-timeline>
-                </div>
-                <div v-else>
-                    暂无跟踪记录
-                </div>
-            </div>
-            <div class='center lMessage'>
-                    <el-input
-                        clearable
-                        type="textarea"
-                        autosize
-                        placeholder="请输入内容"
-                        resize='none'
-                        v-model="message">
-                    </el-input>
-                    <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
-                </div>
-        </div>
-            </el-tab-pane>
-        </el-tabs>
-        
+            </el-tab-pane>  
+            </el-tabs>  
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="suerAdd()">确 定</el-button>
+            <el-button type="primary" v-if='type != 1' @click="suerAdd()">确 定</el-button>
         </span>
         </el-dialog>
 
@@ -1253,7 +1223,8 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        id,isValid
+                        id,isValid,
+                        keyword,leaveWord
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1273,7 +1244,8 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        isValid:isValid?isValid:''
+                        isValid:isValid?isValid:'',
+                        keyword,leaveWord
                         };
                         
                     let res = await followList({id:item.id})

@@ -570,11 +570,21 @@
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
-                <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input>
+            <el-form-item label="关键词" >
+                <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
             </el-form-item>
+           
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
+            </el-form-item>
+             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+             <el-input
+                type="textarea"
+               
+                placeholder="请输入内容"
+                v-model="detail.leaveWord">
+                </el-input>
+                <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
             </el-form-item>
         </el-form>
             </el-tab-pane>
@@ -622,7 +632,7 @@
 
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
-            <el-button type="primary" @click="suerAdd()">确 定</el-button>
+            <el-button type="primary" v-if='type != 1' @click="suerAdd()">确 定</el-button>
         </span>
         </el-dialog>
 
@@ -1329,7 +1339,7 @@ export default {
                         type,
                         email,
                         id,isValid,
-                        leaveWord
+                        keyword,leaveWord
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1349,7 +1359,7 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        leaveWord,
+                        keyword,leaveWord,
                         isValid:isValid?isValid:isValid == 0?0:''
                         };
                         
