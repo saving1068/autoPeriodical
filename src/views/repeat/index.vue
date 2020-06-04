@@ -116,12 +116,12 @@
         </div>
     </el-form>
     <div class='table'>
-        <div class='button'>
-            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button> -->
+        <!-- <div class='button'>
+           <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button v-show='filterButton(109)'>导出</el-button>
-        </div>
+        </div> -->
         <el-table
             :data="tableData"
             tooltip-effect="dark"
