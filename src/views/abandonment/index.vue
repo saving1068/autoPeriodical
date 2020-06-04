@@ -1255,6 +1255,7 @@ export default {
                         sourceLink,
                         type,
                         email,
+                        keyword,leaveWord,
                         id
                     } = {...item}
                     
@@ -1274,6 +1275,7 @@ export default {
                         name,
                         sourceLink,
                         type,
+                        keyword,leaveWord,
                         email
                         };
                         
