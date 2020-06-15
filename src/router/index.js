@@ -116,6 +116,23 @@ const routes = [
 				},
 				component:() => import('@/views/repeat'),
 			},
+			{//项目管理
+				path: '/report',
+				name: 'report',
+				meta:{
+					title:'报表'
+				},
+				component:() => import('@/views/report'),
+			},
+			{//项目管理
+				path: '/salesReport',
+				name: 'salesReport',
+				meta:{
+					title:'销售报表'
+				},
+				component:() => import('@/views/salesReport'),
+			},
+			
 			
 			
 			
