@@ -117,25 +117,38 @@ const routes = [
 				component:() => import('@/views/repeat'),
 			},
 			{//项目管理
-				path: '/report',
-				name: 'report',
+				path: '/reportDouble',
+				name: 'reportDouble',
 				meta:{
 					title:'报表'
 				},
-				component:() => import('@/views/report'),
+				component:() => import('@/views/report/double'),
 			},
 			{//项目管理
-				path: '/salesReport',
-				name: 'salesReport',
+				path: '/reportSingle',
+				name: 'reportSingle',
 				meta:{
-					title:'销售报表'
+					title:'报表'
 				},
-				component:() => import('@/views/salesReport'),
+				component:() => import('@/views/report/single'),
 			},
-			
-			
-			
-			
+			{//项目管理
+				path: '/salesReportDouble',
+				name: 'salesReportDouble',
+				meta:{
+					title:'报表'
+				},
+				component:() => import('@/views/salesReport/double'),
+			},
+			{//项目管理
+				path: '/salesReportSingle',
+				name: 'salesReportSingle',
+				meta:{
+					title:'报表'
+				},
+				component:() => import('@/views/salesReport/single'),
+			},
+	
 		]
 	},
 	{

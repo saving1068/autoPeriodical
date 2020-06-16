@@ -47,7 +47,7 @@ const initDate = (item =>{
     }else{
         currentdate = year + seperator1 + month + seperator1 + strDate;
     }
-    console.log(item.name +currentdate)
+   
     return currentdate
 
 })
