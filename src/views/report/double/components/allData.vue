@@ -20,11 +20,11 @@
                 <el-button type="primary" @click="getData">查询</el-button>
             
             
-            <div style="padding-left:100px">
-                <span>接收数据量:{{info.all}}</span>
-                <span>有效数据量:{{info.validAll}}</span>
-                <span>总有效率:{{info.percentage}}</span>
-            </div>
+            <div style="padding-left:100px" class='reportInfo'>
+                <span>接收数据量:<span class='reportNum'>{{info.all}}</span></span>
+                <span>有效数据量:<span class='reportNum'>{{info.validAll}}</span></span>
+                <span>总有效率:<span class='reportNum'>{{info.percentage}}</span></span>
+            </div>   
         </div>
         <div class="table center">
             <el-table

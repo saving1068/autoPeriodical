@@ -12,10 +12,10 @@
         <div class="center" style="padding:20px 0">
             <el-button type="warning" @click="exportReport">导出报表</el-button>
             <el-button type="primary" @click="getData">查询</el-button>
-            <div style="padding-left:100px">
-                <span>总收入:{{info.all}}</span>
-                <span>总前场收入:{{info.bpMoney}}</span>
-                <span>总后场收入:{{info.fpMoney}}</span>
+             <div style="padding-left:100px" class='reportInfo'>
+                <span>总收入:<span class='reportNum'>{{info.all}}</span></span>
+                <span>总前场收入:<span class='reportNum'>{{info.bpMoney}}</span></span>
+                <span>总后场收入:<span class='reportNum'>{{info.fpMoney}}</span></span>
             </div>
         </div>
         <div class="table center">
