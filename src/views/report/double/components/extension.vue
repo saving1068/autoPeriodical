@@ -12,7 +12,7 @@
                 format='yyyy-MM-dd'
                 end-placeholder="结束日期">
             </el-date-picker>
-            <el-select v-model="request.adMan" clearable style="padding:0 20px;" placeholder="请选择广告负责人">
+            <el-select clearable v-model="request.adMan"  style="padding:0 20px;" placeholder="请选择广告负责人">
                 <el-option
                     v-for="item in userList"
                     :key="item.id"

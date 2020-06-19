@@ -12,7 +12,7 @@
             <el-badge :value="notReadNum" :hidden='notReadNum == 0' style="margin:0 35px;">
                 <el-dropdown :hide-on-click="false">
                     <span class="el-dropdown-link">
-                        公告信息<i class="el-icon-arrow-down el-icon--right"></i>
+                        跟进提醒<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item v-for="(item,index) in msg" :key="index">

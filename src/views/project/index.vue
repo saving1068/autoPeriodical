@@ -200,7 +200,7 @@
               <div class="center">
                 <el-form label-width="150px" :rules="addItemInfoRule" :model="addPlatformInfo"  size='mini' ref="addPlatformInfo"  >
                <el-form-item label="项目负责人:" prop="personnel">
-                  <el-select v-model="addPlatformInfo.personnel" placeholder="请选择">
+                  <el-select clearable v-model="addPlatformInfo.personnel" placeholder="请选择">
                         <el-option 
                             v-for="item in userList"
                           :key="item.id"
@@ -212,7 +212,7 @@
                       </el-select>
                </el-form-item>
                 <el-form-item label="项目平台:" prop="platform">
-                  <el-select v-model="addPlatformInfo.platform" placeholder="请选择">
+                  <el-select clearable v-model="addPlatformInfo.platform" placeholder="请选择">
                         <el-option 
                         v-for="item in platform"
                           :key="Number(item.key)"
@@ -224,7 +224,7 @@
                       </el-select>
                </el-form-item> 
                <el-form-item label="资源类别:" prop="resourceType">
-                  <el-select v-model="addPlatformInfo.resourceType" placeholder="请选择">
+                  <el-select clearable v-model="addPlatformInfo.resourceType" placeholder="请选择">
                         <el-option 
                         v-for="item in resourceType"
                           :key="Number(item.key)"
