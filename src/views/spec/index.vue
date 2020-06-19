@@ -2,7 +2,7 @@
 	<div class="warp" v-loading='loading'>
       <div class="btn center">
         <div>
-          <el-button type="primary" @click="addItem()" icon="el-icon-edit">新增</el-button>
+          <el-button type="primary" @click="addItem(0)" icon="el-icon-edit">新增</el-button>
         </div>
           
           <div style="flex:1;" class="center">
@@ -18,33 +18,38 @@
                     align="center"
                     style="width: 100%">
                     <el-table-column
-                      center
+                       align='center'
                         prop="needMessage"
                         label="信息流需求数"
                         >
                     </el-table-column>
                      <el-table-column
+                      align='center'
                         prop="haveMessage"
                         label="已分配信息流需求数"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="needSearch"
                         label="配搜索流需求数"
                         >
                     </el-table-column>
                      <el-table-column
+                      align='center'
                         prop="haveSearch"
                         label="已分配搜索流需求数"
                         >
                     </el-table-column>
                     
                     <el-table-column
+                     align='center'
                         prop="projectName"
                         label="所属项目"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="saleName"
                         label="销售员"
                         >
@@ -62,7 +67,7 @@
                             </el-input>
                         </template> -->
                         <template slot-scope="scope">
-                            <el-button type="primary" @click.stop="addItem(scope.row)" size="mini">修改</el-button>
+                            <el-button type="primary" @click.stop="addItem(1,scope.row)" size="mini">修改</el-button>
                             <el-button type="danger" @click.stop="delteItem(scope.row)" size="mini">删除</el-button>
                            
                         </template>
@@ -82,6 +87,7 @@
         center
       :visible.sync="addSpec"
       :before-close="closeEdit"
+      :close-on-click-modal='false'
     >
     <div class="center">
       <el-form label-width="100px" size="mini" :model="addSpecInfo" :rules='rules'>
@@ -130,9 +136,10 @@
         center
       :visible.sync="select"
       :before-close="closeSelect"
+      :close-on-click-modal='false'
     >
     <div>
-      <el-button type="primary" @click="addItem()" icon="el-icon-edit">新增</el-button>
+      <el-button type="primary" @click="addItem(2)" icon="el-icon-edit">新增</el-button>
       <el-table
                     :data="selectList"
                     fit
@@ -140,6 +147,7 @@
                     style="width: 100%">
                     <el-table-column
                       center
+                       align='center'
                         prop="needMessage"
                         label="信息流需求数"
                         >
@@ -149,6 +157,7 @@
                     </el-table-column>
                      
                     <el-table-column
+                     align='center'
                         prop="needSearch"
                         label="配搜索流需求数"
                         >
@@ -158,6 +167,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="projectName"
                         label="所属项目"
                         >
@@ -173,6 +183,7 @@
                         </template>
                     </el-table-column> 
                     <el-table-column
+                     align='center'
                         prop="saleId"
                         label="销售员"
                         >
@@ -329,6 +340,7 @@ import {projectList} from '@/api/project'
             });
       },
       addSure(type){
+
         if(type == 0){
           let tip = this.addSpecInfo.id?"是否确认修改销售配置?":'是否确认添加销售配置?';
         this.$confirm(tip, '提示', {
@@ -356,7 +368,8 @@ import {projectList} from '@/api/project'
                   
                     let res=  await selectUpdata({list:this.selectList})
                     this.$message.success(res.returnMsg)
-                    this.specList()
+                    this.specList();
+                    this.selectList = [];
                     this.select = false;
                     
                   }).catch((e) => {
@@ -366,20 +379,29 @@ import {projectList} from '@/api/project'
         }
         
       },
-      addItem(item){
+      addItem(type,item){
         if(item){//修改
           this.addSpecInfo = {...item};
           this.addSpec = true;
         }else{//新增
-         
-          let saleSpecInfo = {
+           let saleSpecInfo = {
             needMessage:0,
             needSearch:0,
             project:'',
             saleId:""
           }
+          if(type == 0){
+            if(!this.selectList.length){
+               this.selectList.push(saleSpecInfo)
+            }
+           
+          }else{
+            this.selectList.push(saleSpecInfo)
+          }
+         
            console.log(saleSpecInfo)
-          this.selectList.push(saleSpecInfo);
+          
+          
           this.select = true;
         };
         
@@ -397,13 +419,13 @@ import {projectList} from '@/api/project'
        this.specList()
         console.log(`当前页: ${val}`);
       },
-      delteItem(){
-        this.$confirm('是否确认删除页面?', '提示', {
+      delteItem(item){
+        this.$confirm(`是否确认删除销售员【${item.saleName}】的销售配置?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(async () => {
-                   let res=  await deleteMenu({id:this.muneInfo.id})
+                   let res=  await deleteSpec({id:item.id})
                   this.$message.success(res.returnMsg)
                   this.specList()
                   

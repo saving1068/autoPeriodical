@@ -59,11 +59,13 @@
                     :data="tableData"
                     style="width: 100%">
                      <el-table-column
+                         align='center'
                         prop="userName"
                         label="姓名"
                     >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="isLeaderStr"
                         label="是否部门领导"
                        >

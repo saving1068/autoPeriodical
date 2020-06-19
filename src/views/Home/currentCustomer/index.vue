@@ -135,7 +135,8 @@
          
         
         
-        <div class='center'>
+        <div class='message'>
+            <div style='color:red;width:500px;float:left'>【温馨提示】增加一条跟踪记录，客户会自动进入我的客户列表里。请对每个客户做好是否有效、客户类型标识。客户没有显示姓名，部分可以在留言内容（和客服的聊天内容）里面找到</div>
             <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
         </div>
     </el-form>
@@ -144,7 +145,7 @@
             <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button> -->
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
-            <el-button v-show='filterButton(109)'>导出</el-button>
+            <!-- <el-button v-show='filterButton(109)'>导出</el-button> -->
         </div>
         <el-table
             :data="tableData"
@@ -156,21 +157,21 @@
             type="selection"
             width="55">
             </el-table-column>
-            <el-table-column prop="name" label="客户姓名">
+            <el-table-column prop="name" align='center' label="客户姓名">
             </el-table-column>
-            <el-table-column prop="telephone" label="手机号码">
+            <el-table-column prop="telephone" align='center' label="手机号码">
             </el-table-column>
-            <el-table-column prop="adManName" label="广告负责人">
+            <el-table-column prop="adManName" align='center' label="广告负责人">
             </el-table-column>
-             <el-table-column prop="projectName" label="项目名称">
+             <el-table-column prop="projectName" align='center' label="项目名称">
             </el-table-column>
-            <el-table-column prop="address" label="详细地址">
+            <el-table-column prop="address" align='center' label="详细地址">
             </el-table-column>
-            <el-table-column prop="personnelName" label="销售员">
+            <el-table-column prop="personnelName" align='center' label="销售员">
             </el-table-column>
-            <el-table-column prop="disTime" label="分配时间">
+            <el-table-column prop="disTime" align='center' label="分配时间">
             </el-table-column>
-            <el-table-column prop="getDate" label="获取时间">
+            <el-table-column prop="getDate" align='center' label="获取时间">
             </el-table-column>
             <!-- <el-table-column label="处理状态" prop='overdue'>
             
@@ -189,12 +190,12 @@
                     <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
                     </el-popconfirm> -->
                    <!-- <el-button type="text" >成交</el-button> -->
-                    <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                    <!-- <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>转接给他人</el-button> -->
                     <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
                     <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
-                    <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
+                    <!-- <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>  -->
                                
-                    <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
+                    <!-- <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -245,19 +246,23 @@
             :data="amountList"
             style="width: 100%">
              <el-table-column
+              align='center'
                 prop="payeeName"
                 label="创建人"
                 width="180">
             </el-table-column>
             <el-table-column
+             align='center'
                 prop="money"
                 label="金额(远)">
             </el-table-column>
             <el-table-column
+             align='center'
                 prop="remark"
                 label="备注">
             </el-table-column>
             <el-table-column
+             align='center'
                 prop="colTime"
                 label="创建日期"
                 width="180">
@@ -608,7 +613,7 @@
                         :timestamp="item.fuTime">
                         <el-card  >
                             <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                            <p style="text-align:right">{{item.fupName}}</p>
+                            <p >{{item.fupName}}</p>
                             <el-button  type="text"  @click="delFollowList(item)" slot="reference">删除</el-button>
                         </el-card>
                         </el-timeline-item>
@@ -1433,13 +1438,13 @@ export default {
       handleSelectionChange(value){
           console.log(value)
           let list = [];
-        //   let transferListInfo = [];
+          let transferListInfo = [];
           value.forEach(item=>{
               list.push(item.id)
-            //   transferListInfo.push(item)
+              transferListInfo.push(item)
           })
           this.waiveInfo.ids = list;
-        //   this.transferListInfo.list = transferListInfo;
+          this.transferListInfo.list = transferListInfo;
           
       },
       handleCurrentChange(val) {
@@ -1495,5 +1500,10 @@ export default {
     }
     .manager{
         color: red;
+    }
+    .message{
+        // overflow:hidden;
+       display: flex;
+    align-items: center;
     }
 </style>

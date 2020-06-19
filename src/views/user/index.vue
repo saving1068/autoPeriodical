@@ -13,21 +13,25 @@
                     align="center"
                     style="width: 100%">
                     <el-table-column
+                     align='center'
                         prop="account"
                         label="账号"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="contactName"
                         label="联系人"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="contactPhone"
                         label="手机号码"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="roleName"
                         label="角色"
                         >

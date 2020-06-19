@@ -13,12 +13,14 @@
                     align="center"
                     style="min-width: 300px;">
                     <el-table-column
+                     align='center'
                          width="150px"
                         prop="name"
                         label="名字"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                          width="150px"
                         prop="sign"
                         label="字典"
@@ -67,16 +69,19 @@
                      fit
                     style="width: 100%">
                     <el-table-column
+                     align='center'
                         prop="sign"
                         label="标识"
                        >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="value"
                         label="内容"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="key"
                         label="key">
                     </el-table-column>

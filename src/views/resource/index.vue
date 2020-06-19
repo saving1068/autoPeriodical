@@ -120,7 +120,7 @@
             <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
-            <el-button >导出</el-button>
+            <!-- <el-button >导出</el-button> -->
         </div>
         <el-table
             :data="tableData"
@@ -132,18 +132,20 @@
             type="selection"
             width="55">
             </el-table-column>
-            <el-table-column prop="name" label="客户姓名">
+            <el-table-column prop="name" align='center' label="客户姓名">
             </el-table-column>
-            <el-table-column prop="telephone" label="手机号码">
+            <el-table-column prop="telephone"  align='center' label="手机号码">
             </el-table-column>
-            <el-table-column prop="adManName" label="广告负责人">
+            <el-table-column prop="adManName" align='center' label="广告负责人">
             </el-table-column>
-             <el-table-column prop="projectName" label="项目名称">
+             <el-table-column prop="projectName" align='center' label="项目名称">
             </el-table-column>
-            <el-table-column prop="address" label="详细地址">
+             <el-table-column prop="platformName" align='center' label="来源平台">
+            </el-table-column>
+            <el-table-column prop="address" align='center' label="详细地址">
             </el-table-column>
           
-            <el-table-column prop="getDate" label="获取时间">
+            <el-table-column prop="getDate" align='center' label="获取时间">
             </el-table-column>
             <!-- <el-table-column prop="email" label="电子邮箱">
             </el-table-column>
@@ -158,7 +160,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                   
-                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>分配记录</el-button>
+                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>转接给他人</el-button>
                    <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
     
                    <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
@@ -214,19 +216,23 @@
             :data="amountList"
             style="width: 100%">
              <el-table-column
+                align='center'
                 prop="payeeName"
                 label="创建人"
                 width="180">
             </el-table-column>
             <el-table-column
+             align='center'
                 prop="money"
-                label="金额(远)">
+                label="金额(元)">
             </el-table-column>
             <el-table-column
+             align='center'
                 prop="remark"
                 label="备注">
             </el-table-column>
             <el-table-column
+             align='center'
                 prop="colTime"
                 label="创建日期"
                 width="180">
@@ -382,7 +388,7 @@
             ></el-option>
             </el-select>
              <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="suerAddTransfer">新增分配记录</el-button>
+                <el-button type="primary" @click="suerAddTransfer">新增转接给他人</el-button>
             </span>
         </div>
         </div>
@@ -1016,6 +1022,10 @@ export default {
      async customerList(){//客户列表
         let res = await waitDisList(this.search)
         console.log(res,222222222222)
+        res.data.map(item =>{
+            
+            item.platformName = idChangeStr(this.platform,item.platform)
+        })
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;

@@ -12,16 +12,19 @@
                     align="center"
                     style="width: 100%">
                     <el-table-column
+                     align='center'
                         prop="name"
                         label="名字"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="description"
                         label="描述"
                         >
                     </el-table-column>
                     <el-table-column
+                     align='center'
                         prop="sort"
                         label="排序"
                         >

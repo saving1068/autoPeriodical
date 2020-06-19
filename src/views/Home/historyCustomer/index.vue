@@ -155,9 +155,9 @@
         </div>
     </el-form>
     <div class='table'>
-        <div>
+        <!-- <div>
            <el-button v-show='filterButton(109)'>导出</el-button>
-        </div>
+        </div> -->
         <el-table
             :data="tableData"
             tooltip-effect="dark"
@@ -168,23 +168,23 @@
             type="selection"
             width="55">
             </el-table-column>
-            <el-table-column prop="name" label="客户姓名">
+            <el-table-column prop="name"  align='center' label="客户姓名">
             </el-table-column>
-            <el-table-column prop="telephone" label="手机号码">
+            <el-table-column prop="telephone" align='center' label="手机号码">
             </el-table-column>
-            <el-table-column prop="adManName" label="广告负责人">
+            <el-table-column prop="adManName" align='center' label="广告负责人">
             </el-table-column>
-             <el-table-column prop="projectName" label="项目名称">
+             <el-table-column prop="projectName" align='center' label="项目名称">
             </el-table-column>
-            <el-table-column prop="address" label="详细地址">
+            <el-table-column prop="address" align='center' label="详细地址">
             </el-table-column>
-            <el-table-column prop="personnelName" label="销售员">
+            <el-table-column prop="personnelName" align='center' label="销售员">
             </el-table-column>
-            <el-table-column prop="disTime" label="分配时间">
+            <el-table-column prop="disTime" align='center' label="分配时间">
             </el-table-column>
-            <el-table-column prop="getDate" label="获取时间">
+            <el-table-column prop="getDate" align='center' label="获取时间">
             </el-table-column>
-            <el-table-column label="是否已成交" prop='isSuccessStr'>
+            <el-table-column label="是否已成交" align='center' prop='isSuccessStr'>
             
             </el-table-column>
             
@@ -503,7 +503,7 @@
                         :timestamp="item.fuTime">
                         <el-card  >
                             <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                            <p style="text-align:right">{{item.fupName}}</p>
+                            <p>{{item.fupName}}</p>
                             <el-button  type="text"  @click="delFollowList(item)" slot="reference">删除</el-button>
                         </el-card>
                         </el-timeline-item>
