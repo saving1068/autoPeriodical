@@ -12,7 +12,7 @@
                 format='yyyy-MM-dd'
                 end-placeholder="结束日期">
             </el-date-picker>
-            <el-select v-model="request.saleId" clearable style="padding:0 20px;" placeholder="请选择销售员">
+            <el-select clearable v-model="request.saleId"  style="padding:0 20px;" placeholder="请选择销售员">
                             <el-option 
                                 
                                 v-for="item in saleList"

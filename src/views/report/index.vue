@@ -23,7 +23,7 @@
                         </el-date-picker>
                     </div>
                     <div class="deta" v-if="item.type == 2" >
-                        <el-select v-model="item.platform " placeholder="请选择平台">
+                        <el-select clearable v-model="item.platform " placeholder="请选择平台">
                             <el-option
                             v-for="item in platform"
                 :key="Number(item.key)"
@@ -33,7 +33,7 @@
                         </el-select>
                     </div>
                     <div class="deta" v-if="item.type == 1">
-                      <el-select v-model="item.dpId"  placeholder="请选择部门">
+                      <el-select clearable v-model="item.dpId"  placeholder="请选择部门">
                             <el-option
                             v-for="item in departmentList"
                 :key="item.id"
@@ -43,7 +43,7 @@
                         </el-select>
                     </div>
                      <div class="deta"  v-if="item.type == 7">
-                      <el-select v-model="item.adMan " placeholder="请选择广告负责人">
+                      <el-select clearable v-model="item.adMan " placeholder="请选择广告负责人">
                             <el-option
                              v-for="item in userList"
                             :key="item.id"
@@ -54,7 +54,7 @@
                         </el-select>
                     </div>
                      <div class="deta"  v-if="item.type == 8" >
-                      <el-select v-model="item.saleId" placeholder="请选择销售员">
+                      <el-select clearable v-model="item.saleId" placeholder="请选择销售员">
                             <el-option 
                                 v-for="item in saleList"
                                 :key="item.id"

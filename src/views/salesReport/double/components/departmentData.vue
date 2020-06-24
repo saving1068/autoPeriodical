@@ -12,7 +12,7 @@
                 format='yyyy-MM-dd'
                 end-placeholder="结束日期">
             </el-date-picker>
-            <el-select v-model="request.dpId" clearable style="padding:0 20px;" placeholder="请选择部门">
+            <el-select clearable v-model="request.dpId"  style="padding:0 20px;" placeholder="请选择部门">
                 <el-option
                 v-for="item in departmentList"
                 :key="item.id"

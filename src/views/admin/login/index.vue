@@ -96,6 +96,8 @@
 				tabIndex:0,
 				ifgetCode:false,
 				codeImage:process.env.NODE_ENV === 'production' ? 'http://wearewwx.com:8001/user/kaptcha': '/api/user/kaptcha',
+				// codeImage:process.env.NODE_ENV === 'production' ? 'http://211.149.157.83:8889/user/kaptcha': '/api/user/kaptcha',
+				
 				seconds:60,
 				info: '',
 				loginForm: {
@@ -216,6 +218,7 @@
 
 				 let random = '0.'+Math.floor(Math.random()*10000000000)
 				 this.codeImage =process.env.NODE_ENV === 'production' ? 'http://wearewwx.com:8001'+'/user/kaptcha?' +random : '/api/'+'user/kaptcha?' +random
+				// this.codeImage =process.env.NODE_ENV === 'production' ? 'http://211.149.157.83:8889/user/kaptcha?' +random : '/api/'+'user/kaptcha?' +random
 				// let res = await kaptcha();
 				// console.log(res)
 				// this.codeImage = 

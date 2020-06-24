@@ -98,7 +98,7 @@
               <el-input  v-model="addSpecInfo.needSearch"></el-input>
           </el-form-item>
           <el-form-item label="所属项目:">
-              <el-select  v-model="addSpecInfo.project" placeholder="请选择所属项目">
+              <el-select clearable  v-model="addSpecInfo.project" placeholder="请选择所属项目">
                 <el-option 
                     v-for="item in projectArr"
                     :key="item.id"
@@ -108,7 +108,7 @@
                 </el-select>
           </el-form-item>
           <el-form-item label="销售员:">
-              <el-select  v-model="addSpecInfo.saleId" placeholder="请选择销售员">
+              <el-select clearable  v-model="addSpecInfo.saleId" placeholder="请选择销售员">
                 <el-option 
                     v-for="item in saleArr"
                     :key="item.id"
@@ -172,7 +172,7 @@
                         label="所属项目"
                         >
                          <template slot-scope="scope">
-                           <el-select  v-model="scope.row.project" placeholder="请选择广告负责人">
+                           <el-select clearable  v-model="scope.row.project" placeholder="请选择广告负责人">
                             <el-option 
                                 v-for="item in projectArr"
                                 :key="item.id"
@@ -188,7 +188,7 @@
                         label="销售员"
                         >
                          <template slot-scope="scope">
-                           <el-select  v-model="scope.row.saleId" placeholder="请选择销售员">
+                           <el-select clearable  v-model="scope.row.saleId" placeholder="请选择销售员">
                             <el-option 
                                 v-for="item in saleArr"
                                 :key="item.id"

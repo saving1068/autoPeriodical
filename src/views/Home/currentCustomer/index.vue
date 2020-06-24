@@ -5,7 +5,7 @@
            <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" >
-            <el-select class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
+            <el-select clearable class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
             <el-option 
                     v-for="item in userList"
                     :key="item.id"
@@ -16,7 +16,7 @@
         </el-form-item>
        
         <el-form-item label="平台" >
-           <el-select class="width280" v-model="search.platform" placeholder="请选择平台">
+           <el-select clearable class="width280" v-model="search.platform" placeholder="请选择平台">
            <el-option 
                 v-for="item in platform"
                 :key="Number(item.key)"
@@ -29,7 +29,7 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="search.email"></el-input>
         </el-form-item>
         <el-form-item label="项目">
-           <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
+           <el-select clearable  class="width280" v-model="search.project" placeholder="请选择项目">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -42,7 +42,7 @@
             <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
         </el-form-item>
         <el-form-item label="销售员" v-if='filterButton(110)'> 
-            <el-select  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
+            <el-select clearable  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
                 <el-option 
                 v-for="item in saleList"
                 :key="item.id"
@@ -52,7 +52,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="销售部门"  v-if='filterButton(110)'> 
-           <el-select class="width280" v-model="search.department" placeholder="请选择销售部门">
+           <el-select clearable class="width280" v-model="search.department" placeholder="请选择销售部门">
            
             <el-option 
                 v-for="item in departmentList"
@@ -73,13 +73,13 @@
         </el-form-item> -->
          <!--
         <el-form-item label="所属人员" > 经理
-           <el-select class="width280" v-model="search.personnel" placeholder="活动区域">
+           <el-select clearable class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="所属部门" > 经理 
-           <el-select class="width280" v-model="search.department" placeholder="活动区域">
+           <el-select clearable class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -88,7 +88,7 @@
             <el-input class="width280" placeholder="请输入QQ号码" v-model="search.qq"></el-input>
         </el-form-item>
         <el-form-item label="所属省份">
-               <el-select v-model="search.province" @change="provinceChange" placeholder="请选择所属省份">
+               <el-select clearable v-model="search.province" @change="provinceChange" placeholder="请选择所属省份">
                 <el-option 
                 v-for="(item,index) in province " :key="index" 
                 :label="item.pname" 
@@ -98,7 +98,7 @@
                 </el-select>
             </el-form-item>
         <el-form-item label="所属城市">
-           <el-select v-model="search.city" @change="cityChange" placeholder="请选择所属城市">
+           <el-select clearable v-model="search.city" @change="cityChange" placeholder="请选择所属城市">
                 <el-option 
                 v-for="(item,index) in city " :key="index" 
                 :label="item.cname" 
@@ -108,7 +108,7 @@
             </el-form-item>
          
             <el-form-item label="所属地区">
-               <el-select v-model="search.district"  placeholder="请选择所属地区">
+               <el-select clearable v-model="search.district"  placeholder="请选择所属地区">
                 <el-option 
                 v-for="(item,index) in district " :key="index" 
                 :label="item.dname" 
@@ -309,7 +309,7 @@
         center
     >
         <div class="center">
-             <el-select v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
+             <el-select clearable v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
                 <el-option 
                 v-for="item in saleList"
                 :key="item.id"
@@ -407,7 +407,7 @@
         <div class=" divider" >
             <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
             <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
-            <el-select v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
+            <el-select clearable v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
                 <el-option 
                 v-for="item in saleList"
                 :key="item.id"
@@ -443,7 +443,7 @@
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
-            <!-- <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <!-- <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -459,7 +459,7 @@
         </el-form-item>
        
         <el-form-item label="平台" prop="platform">
-           <el-select class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
+           <el-select clearable class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
            <el-option 
                 v-for="item in platform"
                 :key="item.key"
@@ -472,7 +472,7 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project">
-           <!-- <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+           <!-- <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -508,7 +508,7 @@
             <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
         <el-form-item label="客户类型" prop="type">
-            <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+            <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in currentType"
                 :key="String(item.key)"
@@ -519,7 +519,7 @@
             </el-select>
         </el-form-item>
         <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
-            <el-select  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in personnel"
                     :key="item.id"
@@ -531,7 +531,7 @@
         </el-form-item> -->
         <!-- <el-form-item label="所属省份">
   
-               <el-select class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
+               <el-select clearable class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
                    
                     <el-option 
                     v-for="item in province "
@@ -542,7 +542,7 @@
                 </el-select>
             </el-form-item>
         <el-form-item label="所属城市">
-           <el-select class="width280" v-model="detail.city" @change="detailCityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
+           <el-select clearable class="width280" v-model="detail.city" @change="detailCityChange" placeholder="请选择所属城市" :disabled="type == 1?true:false">
                
                 <el-option 
                 v-for="item in detailCity "
@@ -554,7 +554,7 @@
             </el-form-item>
             <el-form-item label="所属地区">
                 
-               <el-select class="width280" v-model="detail.district"  placeholder="请选择所属地区" :disabled="type == 1?true:false">
+               <el-select clearable class="width280" v-model="detail.district"  placeholder="请选择所属地区" :disabled="type == 1?true:false">
                 <el-option 
                 v-for="item in detailDistrict " 
                 :key="item.did" 
@@ -564,7 +564,7 @@
                 </el-select>
             </el-form-item> -->
              <el-form-item label="是否有效" prop="isValid">
-           <el-select class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
+           <el-select clearable class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
                  <el-option 
                 v-for="item in valid "

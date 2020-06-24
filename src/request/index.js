@@ -10,6 +10,7 @@ let token = sessionStorage.getItem('token');
 
 // 创建axios实例
 const service = axios.create({
+    // http://211.149.157.83:8889 http://wearewwx.com:8001
     baseURL:process.env.NODE_ENV === 'production' ? 'http://wearewwx.com:8001' : '/api/', // api的base_url
     timeout: 30000, // 请求超时时间,
     withCredentials:true,
