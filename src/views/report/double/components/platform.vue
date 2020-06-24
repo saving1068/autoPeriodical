@@ -35,7 +35,7 @@
                 :data="tableData"
                 fit
                 style="width: 100%">
-                <
+                <el-table-column
                     align='center'
                     prop="disDate"
                     label="日期"

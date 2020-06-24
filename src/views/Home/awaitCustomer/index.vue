@@ -135,12 +135,11 @@
             v-model="time"
             type="daterange"
             range-separator="至"
-            format='yyyy-MM-DD'
             @change='deteChange'
-            value-format='yyyy-MM-DD'
+            value-format='yyyy-MM-dd'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
-            </el-date-picker>
+        </el-date-picker>
         </el-form-item>
          
         
@@ -186,7 +185,7 @@
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-popconfirm
+                    <!-- <el-popconfirm
                         v-show='filterButton(101)&&scope.row.isSuccess == 0' 
                         title="确定成交该数据？"
                         @onConfirm='sureSuccess(scope.row)'
@@ -195,7 +194,7 @@
                         :tabindex='99'
                     >
                     <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
-                    </el-popconfirm>
+                    </el-popconfirm> -->
                    <!-- <el-button type="text" >成交</el-button> -->
                     <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>转接给他人</el-button>
                     <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
@@ -407,7 +406,7 @@
         <el-form-item label="来源连接" prop="sourceLink">
             <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
-        <el-form-item label="客户类型" >
+        <el-form-item label="客户类型" prop='type'>
             <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in currentType"
@@ -473,6 +472,9 @@
                 :value="Number(item.key)">
                 </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="无效原因" v-if='detail.isValid == 0'>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
             </el-form-item>
              <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -673,6 +675,9 @@ export default {
                 ],
                 sourceLink:[
                      { required: true, message: '请输入来源连接', trigger: 'blur' },
+                ],
+                type:[
+                     { required: true, message: '请输入客户类型', trigger: 'blur' },
                 ],
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },

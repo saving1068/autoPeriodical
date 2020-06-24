@@ -101,12 +101,11 @@
             v-model="time"
             type="daterange"
             range-separator="至"
-            format='yyyy-MM-DD'
             @change='deteChange'
-            value-format='yyyy-MM-DD'
+            value-format='yyyy-MM-dd'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
-            </el-date-picker>
+        </el-date-picker>
         </el-form-item>
          
         

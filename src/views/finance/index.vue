@@ -157,7 +157,8 @@
                     <el-button style="margin-right:10px" type="text"  slot="reference">成交</el-button>
                     </el-popconfirm>
                    <el-button type="text"  @click.native='amount(scope.row,0)'>前场金额</el-button>
-                   <el-button type="text" @click.native='amount(scope.row,1)'>后场金额</el-button>               
+                   <el-button type="text" @click.native='amount(scope.row,1)'>后场金额</el-button>
+                   <el-button type="text"  @click.native='amount(scope.row,2)'>其他收入金额</el-button>               
                    <el-button type="text"  @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
                 </template>
             </el-table-column>
@@ -217,7 +218,7 @@
             <el-table-column
              align='center'
                 prop="money"
-                label="金额(远)">
+                label="金额(元)">
             </el-table-column>
             <el-table-column
              align='center'
@@ -852,10 +853,12 @@ export default {
           if(this.amountType == 0){//前
                  res = await deleteFrontPaid({id:item.id})
                 list = await frontPaidList(obj)
-            }else{//后
+            }else if(this.amountType == 1){//后
                 res = await deleteBackcourtPaid({id:item.id})
-                list = await  await backcourtPaidList(obj)
-            } 
+                list = await backcourtPaidList(obj)
+            }else{
+                
+            }
             this.amountList = list.data;
             this.$message({
                     type: 'success',
@@ -885,10 +888,12 @@ export default {
             if(this.amountType == 0){//前
                 res = await updataFrontPaid(this.amountInfo)
                 list = await frontPaidList(obj)
-            }else{//后
+            }else if(this.amountType == 1){//后
                 res = await updataBackcourtPaid(this.amountInfo)
-                list = await  await backcourtPaidList(obj)
-            } 
+                list =  await backcourtPaidList(obj)
+            }else{
+
+            }
              this.amountList = list.data;
              this.amountInfoVisi = false;
              this.amountInfo ={}
@@ -922,7 +927,8 @@ export default {
             this.$loading.show();
             this.amountList =[];
             this.amountType = type;
-            this.amountTitle = type == 0?'前场金额':"后场金额";
+            let strArr = ['前场金额',"后场金额",'其他收入金额']
+            this.amountTitle = strArr[type]
             this.amountVisi = true;
             this.ctId = item.id;
             let obj = {
@@ -931,8 +937,10 @@ export default {
             let res = {};
             if(type == 0){
                 res = await frontPaidList(obj)
-            }else{
+            }else if(type == 1){
                  res = await backcourtPaidList(obj)
+            }else{
+
             }
             this.amountList = res.data;
             console.log(this.amountTitle)

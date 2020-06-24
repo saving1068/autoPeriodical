@@ -125,12 +125,11 @@
             v-model="time"
             type="daterange"
             range-separator="至"
-            format='yyyy-MM-DD'
             @change='deteChange'
-            value-format='yyyy-MM-DD'
+            value-format='yyyy-MM-dd'
             start-placeholder="开始日期"
             end-placeholder="结束日期">
-            </el-date-picker>
+        </el-date-picker>
         </el-form-item>
          
         
@@ -508,7 +507,7 @@
         <el-form-item label="来源连接" prop="sourceLink">
             <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
-        <el-form-item label="客户类型" >
+        <el-form-item label="客户类型" prop="type">
             <el-select  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in currentType"
@@ -574,6 +573,9 @@
                 :value="Number(item.key)">
                 </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="无效原因" v-if='detail.isValid == 0'>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
             </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -736,6 +738,24 @@ export default {
         ifTransfer:true,
         ifAbandoned:false,
         detail:{
+            adMan:'',//广告负责人
+            department:"",//所属部门
+            platform:"",//逾期
+            project:'',//项目
+            qq:'',//有效
+            personnel:"",//所属人员
+            nextFollowUpDate:'',//下次跟进时间
+            province:'',//省
+            city:"",//市
+            district:'',//区
+            address:"",
+            telephone:"",
+            wechat:'',
+            name:'',
+            sourceLink:"",
+            type:"",
+            email:'',
+            isValid:''
         },
         message:'',
         customerInfo:{},
@@ -784,6 +804,9 @@ export default {
                 ],
                 sourceLink:[
                      { required: true, message: '请输入来源连接', trigger: 'blur' },
+                ],
+                type:[
+                     { required: true, message: '请输入客户类型', trigger: 'blur' },
                 ],
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },
@@ -1263,6 +1286,7 @@ export default {
        handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
+              this.$refs['detail'].resetFields
             this.detailFlag =  false;
           })
           .catch(_ => {});
@@ -1294,6 +1318,7 @@ export default {
                     let res = await updateCustomer(this.detail);
                     this.$message.success(res.returnMsg)
                         this.customerList()
+                         this.$refs['detail'].resetFields
                         this.detailFlag =  false;
                 })
           } else {
