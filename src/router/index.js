@@ -148,6 +148,14 @@ const routes = [
 				},
 				component:() => import('@/views/salesReport/single'),
 			},
+			{//项目管理
+				path: '/adLive',
+				name: 'adLive',
+				meta:{
+					title:'广告实况'
+				},
+				component:() => import('@/views/adLive'),
+			},
 	
 		]
 	},
@@ -178,7 +186,13 @@ const routes = [
 			    component: () => import('@/views/admin/findPasswords'),
 			}
         ]
-    }
+    },{
+		
+			path: '*',
+			meta: {title: '404'},
+			component: () => import('@/views/404')
+		
+	}
 ]
 
 

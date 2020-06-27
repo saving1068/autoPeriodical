@@ -17,8 +17,8 @@
                     </el-table-column>
                     <el-table-column
                     align="center"
-                        prop="personnelName"
-                        label="项目负责人"
+                        prop="id"
+                        label="项目ID"
                         >
                     </el-table-column>
                     

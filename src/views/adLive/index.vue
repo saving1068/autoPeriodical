@@ -4,7 +4,7 @@
         <el-form-item label="客户姓名" width='100%' >
            <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
         </el-form-item>
-        <el-form-item label="广告负责人" >
+        <el-form-item label="广告负责人" v-if="showAdMan">
             <el-select class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
             <el-option 
                     v-for="item in userList"
@@ -25,87 +25,7 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="手机号码" >
-            <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
-        </el-form-item>
-        <el-form-item label="项目">
-           <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
-            <el-option
-                v-for="item in projectList"
-                :key="Number(item.id)"
-                :label="item.name"
-                :value="Number(item.id)"
-            ></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="销售员" v-if='filterButton(110)'> 
-            <el-select  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
-                <el-option 
-                v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
-            ></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="销售部门"  v-if='filterButton(110)'> 
-           <el-select class="width280" v-model="search.department" placeholder="请选择销售部门">
-           
-            <el-option 
-                v-for="item in departmentList"
-                :key="item.id"
-                :label="item.description"
-                :value="item.id"
-            ></el-option>
-            </el-select>
-        </el-form-item>
         
-        <!-- <el-form-item label="下次跟进时间" >
-            <el-date-picker class="width280"
-                v-model="search.nextFollowUpDate"
-                type="date"
-                value-format='yyyy-MM-DD'
-                placeholder="选择日期">
-                </el-date-picker>
-        </el-form-item> -->
-         <!--
-        
-        <el-form-item label="QQ号码" >
-            <el-input class="width280" placeholder="请输入QQ号码" v-model="search.qq"></el-input>
-        </el-form-item>
-        <el-form-item label="所属省份">
-               <el-select v-model="search.province" @change="provinceChange" placeholder="请选择所属省份">
-                <el-option 
-                v-for="(item,index) in province " :key="index" 
-                :label="item.pname" 
-                :value="item.pid">
-                </el-option>
-                
-                </el-select>
-            </el-form-item>
-        <el-form-item label="所属城市">
-           <el-select v-model="search.city" @change="cityChange" placeholder="请选择所属城市">
-                <el-option 
-                v-for="(item,index) in city " :key="index" 
-                :label="item.cname" 
-                :value="item.cid">
-                </el-option>
-                </el-select>
-            </el-form-item>
-         
-            <el-form-item label="所属地区">
-               <el-select v-model="search.district"  placeholder="请选择所属地区">
-                <el-option 
-                v-for="(item,index) in district " :key="index" 
-                :label="item.dname" 
-                :value="item.did">
-                </el-option>
-                </el-select>
-            </el-form-item>
-        -->
-        <el-form-item label="关键词" >
-            <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
-        </el-form-item>
         <el-form-item label="是否已成交">
            <el-select  class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
             <el-option
@@ -116,31 +36,12 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="获取时间" >
-        <el-date-picker
-            v-model="time"
-            type="daterange"
-            range-separator="至"
-            @change='deteChange'
-            value-format='yyyy-MM-dd'
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-        </el-date-picker>
-        </el-form-item>
-         
-        
-        
         <div class='center'>
             <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
         </div>
     </el-form>
     <div class='table'>
-        <div class='button'>
-            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
-            <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
-            <el-button type="warning" @click="getTransferList">批量转移</el-button> -->
-            <!-- <el-button v-show='filterButton(109)'>导出</el-button> -->
-        </div>
+        
         <el-table
             :data="tableData"
             tooltip-effect="dark"
@@ -188,229 +89,7 @@
         </el-pagination>
     </div>
 
-    <!-- 新增已付金额管理 -->
-    <el-dialog
-        title='新增已付金额管理'
-        :visible.sync="amountInfoVisi"
-        width="30%"
-        center
-    >
-        <el-form  >
-            <el-form-item label="金额">
-                <el-input v-model="amountInfo.money" placeholder="审批人"></el-input>
-            </el-form-item>
-            <el-form-item label="备注">
-                <el-input v-model="amountInfo.remark" placeholder="审批人"></el-input>
-            </el-form-item>
-         </el-form >
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="amountInfoVisi = false">取 消</el-button>
-             <el-button type="primary" @click="sureAddAmount">确 认</el-button>
-        </span>
-    </el-dialog> 
-
-
-
-<!-- 已付金额管理 -->
-     <el-dialog
-        :title='amountTitle'
-        :visible.sync="amountVisi"
-        width="80%"
-        center
-    >
-        <div>
-            <el-button type="primary" @click="addAmountList()">新增已付金额管理</el-button>
-        </div>
-        <div class="center">
-           <el-table
-            :data="amountList"
-            style="width: 100%">
-             <el-table-column
-              align='center'
-                prop="payeeName"
-                label="创建人"
-                width="180">
-            </el-table-column>
-            <el-table-column
-             align='center'
-                prop="money"
-                label="金额(远)">
-            </el-table-column>
-            <el-table-column
-             align='center'
-                prop="remark"
-                label="备注">
-            </el-table-column>
-            <el-table-column
-             align='center'
-                prop="colTime"
-                label="创建日期"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                >
-                 <template slot-scope="scope">
-                   <el-button style="margin:0 10px" type="primary" @click="addAmountList(scope.row)">修改</el-button>
-                  <el-button  @click="delAmountList(scope.row)" type="danger">删除</el-button>
-                   
-                </template>
-            </el-table-column>
-                
-            </el-table>
-        </div>
-       
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="amountVisi = false">取 消</el-button>
-        </span>
-    </el-dialog>  
-
-
-
-
-
-    <!-- 放弃 -->
-    <el-dialog
-        title='批量放弃'
-        :visible.sync="waiveVisi"
-        width="30%"
-        center
-    >
-        <div class="center">
-            <el-input v-model="waiveInfo.invalidCause" placeholder="请输入放弃原因"></el-input>
-        </div>
-       
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="waiveVisi = false">取 消</el-button>
-            <el-button type="primary" @click="sureWaiveVisi">确 定</el-button>
-        </span>
-    </el-dialog>  
-
-     <!-- 批量转移 -->
-     <el-dialog
-        title='批量转移'
-        :visible.sync="transferListVisi"
-        width="30%"
-        center
-    >
-        <div class="center">
-             <el-select v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
-                <el-option 
-                v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
-            ></el-option>
-            </el-select>
-            <el-input v-model="transferListInfo.remark" placeholder="请输入转移原因"></el-input>
-        </div>
-       
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="transferListVisi = false">取 消</el-button>
-            <el-button type="primary" @click="sureTransferListInfo">确 定</el-button>
-        </span>
-    </el-dialog>  
-
-
-
-
-
-    <!-- 来访 -->
-    <el-dialog
-        title='来访记录'
-        :visible.sync="visit"
-        width="80%"
-        center
-        
-    >
-    <div class="center">
-         <el-timeline style="width:50%" v-if="visitList.length">
-            <el-timeline-item
-                
-                v-for="(item, index) in visitList"
-                :key="index"
-                :timestamp="item.visitingTime">
-                <el-card  >
-                        <h4>{{item.remark}}</h4>
-                        <p style="text-align:right">创建人:{{item.receiverName}}</p>
-                    </el-card>
-            </el-timeline-item>
-            
-        </el-timeline>
-        <div v-else>暂无记录</div>
-        <div class=" divider" >
-            <el-input placeholder="请输入备注" style='width:220px'  v-model="visitInfo.remark"></el-input>
-            <el-date-picker
-             style="padding:20px 0;"
-             v-model="visitInfo.visitingTime"
-             value-format='yyyy-MM-dd'
-            type="date"
-            placeholder="选择日期">
-            </el-date-picker>
-            <!-- <el-date-picker class="width280"
-                v-model="visitInfo.visitingTime"
-                style="padding:20px 0;"
-                type="date"
-                @change="test"
-                value-format='yyyy-MM-DD'
-                placeholder="选择日期">
-                </el-date-picker> -->
-             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
-            </span>
-        </div>
-        
-    </div>
-       
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="visit = false">取 消</el-button>
-            <el-button type="primary" @click="visit = false">确 定</el-button>
-        </span>
-    </el-dialog>   
-
-
-
-    <!-- 移交 -->
-    <el-dialog
-        title='分配记录'
-        :visible.sync="transferVisible"
-        width="80%"
-        center
-        :before-close="transferClose" 
-    >
-    <div class="center">
-         <el-timeline style="width:50%" v-if="transferList.length">
-            <el-timeline-item
-                v-for="(item, index) in transferList"
-                :key="index"
-                :timestamp="item.disTime">
-                       
-                <p>{{item.dispName?item.dispName+'分配':item.remark}}至--{{item.receiverName}}</p>
-            </el-timeline-item>
-        </el-timeline>
-        <div v-else>暂无记录</div>
-        <div class="divider" >
-            <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
-            <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
-            <el-select v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
-                <el-option 
-                v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
-            ></el-option>
-            </el-select>
-             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="suerAddTransfer">新增分配记录</el-button>
-            </span>
-        </div>
-        </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="transferClose">取 消</el-button>
-            <el-button type="primary" @click="transferVisible = false">确 定</el-button>
-        </span>
-    </el-dialog>   
- 
+  
 
     <!-- //详情 -->
     <el-dialog 
@@ -810,16 +489,23 @@ export default {
             amountInfo:{},
             delAmount:false,
             choiseItem:{},
-            total:0
+            total:0,
+            showAdMan:true
         }
     
   },
   async  created(){
       this.userInfo =JSON.parse(sessionStorage.getItem("userInfo")) 
-       if(this.userInfo.role.roleId !=7){
-             let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
-            this.personnel = personnel.data;
-        }
+      if(this.userInfo.role.roleId == 1||this.userInfo.role.roleId == 3||this.userInfo.role.roleId == 6){
+          this.showAdMan = true
+      }else{
+          this.showAdMan = false
+      }
+      
+    //    if(this.userInfo.role.roleId !=7){
+    //          let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
+    //         this.personnel = personnel.data;
+    //     }
       
   },
    async mounted() {

@@ -2,6 +2,14 @@
 	<div class="warp"  v-loading='loading'>
      <div class="btn">
           <el-button type="primary" @click="addItem()" icon="el-icon-edit">新增</el-button>
+          <el-select style="padding:0 20px;" clearable v-model="search.roleId" @change="serchRole" placeholder="请选择角色">
+           <el-option 
+                v-for="item in roleListSelect"
+                :key="item.roleId"
+                :label="item.name"
+                :value="item.roleId"
+            ></el-option>
+            </el-select>
       </div>
       <div class="data space-between">
         <div class="table">
@@ -16,6 +24,12 @@
                      align='center'
                         prop="account"
                         label="账号"
+                        >
+                    </el-table-column>
+                     <el-table-column
+                     align='center'
+                        prop="id"
+                        label="用户ID"
                         >
                     </el-table-column>
                     <el-table-column
@@ -175,11 +189,19 @@ let addItemInfo = {
       this.loading = true;
      await this.getList(this.search)
      await this.getDepartmentList()
-    
+    await this.getAllRole()
     //  await this.roleList()
       this.loading = false;
     },
     methods: {
+      serchRole(){
+        this.search.page = 1;
+        this.getList(this.search)
+      },
+      async getAllRole(){
+        let res = await roleList({});
+        this.roleListSelect =res.data;
+      },
       sonCheck(data){
           this.addItemInfo.dur.did = data.id;
           this.$refs.departmentTree.setCheckedKeys([data.id]);
@@ -492,7 +514,8 @@ let addItemInfo = {
           page:1,
           limit:10
         },
-        total:0
+        total:0,
+        roleListSelect:[]
       };
     }
   };

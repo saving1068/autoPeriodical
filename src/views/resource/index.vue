@@ -120,6 +120,17 @@
             <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
+            <el-upload
+                class="upload-demo"
+                action="http://wearewwx.com:8001/customer/importData"
+                :headers='headers'
+                :on-success='onSuccess'
+                multiple
+                :on-preview="handlePreview"
+                :file-list="fileList">
+                <el-button size="small" type="primary">批量导入</el-button>
+                <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+            </el-upload>
             <!-- <el-button >导出</el-button> -->
         </div>
         <el-table
@@ -430,16 +441,19 @@
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
-            <!-- <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
-            <el-option 
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
-            ></el-option>
-            
-            </el-select> -->
-             <div class="width280">
+            <div v-if="type == 0">
+                <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+                    <el-option 
+                        v-for="item in userList"
+                        :key="item.id"
+                        :label="item.contactName"
+                        :value="item.id"
+                    ></el-option>
+                
+                </el-select>
+            </div>
+           
+             <div class="width280" v-else>
                {{detail.adManName||'--'}}
             </div>
              
@@ -459,29 +473,32 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project">
-           <!-- <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
-            <el-option
-                v-for="item in projectList"
-                :key="Number(item.id)"
-                :label="item.name"
-                :value="Number(item.id)"
-            ></el-option>
+            <div v-if="type == 0">
+                <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+                <el-option
+                    v-for="item in projectList"
+                    :key="Number(item.id)"
+                    :label="item.name"
+                    :value="Number(item.id)"
+                ></el-option>
+            
+                </el-select>
+            </div>
            
-            </el-select> -->
-            <div class="width280">
+            <div class="width280" v-else>
                 {{detail.projectName||'--'}}
             </div>
             
         </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
+        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
                 type="date"
                 value-format='yyyy-MM-DD'
                 placeholder="选择日期">
                 </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="QQ号码" >
             <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
@@ -494,7 +511,7 @@
         <el-form-item label="来源连接" prop="sourceLink">
             <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
-        <el-form-item label="客户类型" >
+        <!-- <el-form-item label="客户类型" >
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in currentType"
@@ -504,7 +521,7 @@
             ></el-option>
            
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
             <el-select clearable  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
                 <el-option
@@ -550,7 +567,7 @@
                 </el-option>
                 </el-select>
             </el-form-item> -->
-             <el-form-item label="是否有效" >
+             <!-- <el-form-item label="是否有效" >
            <el-select clearable class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
                 <el-option 
@@ -560,7 +577,7 @@
                 :value="item.key">
                 </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
             </el-form-item>
@@ -760,7 +777,11 @@ export default {
             amountInfo:{},
             delAmount:false,
             choiseItem:{},
-            total:0
+            total:0,
+            fileList:[],
+            headers:{
+                token:window.sessionStorage.getItem('token')
+            }
         }
     
   },
@@ -790,7 +811,20 @@ export default {
     //   },
   },
   methods: {
-
+      onSuccess(response, file, fileList){
+          console.log(response, file, fileList)
+          if(response.returnCode != 200){
+              if(this.fileList.length){
+                  this.fileList.pop()
+              }else{
+                  this.fileList = [];
+                  this.$message.warning('上传失败')
+              }
+          }
+      },
+      handlePreview(file){
+          console.log(file)
+      },
     async delAmountList(item){
         let res,list;
         let obj = {
@@ -1371,7 +1405,11 @@ export default {
     .table{
         
         .button{
+            display: flex;
             padding:20px 0;
+            .upload-demo{
+                margin-left: 10px;
+            }
         }
     }
     .title{

@@ -43,6 +43,36 @@ const updataBackcourtPaid =  (params) => { //分配记录
     });
 }
 
+
+const deleteOtherPaid =  (params) => { //其他删除
+    return request({
+        url: '/otherPaid/delete',
+        method: 'DELETE',
+        params
+    });
+}
+const otherPaidList  =  (params) => { //其他金额收入
+    return request({
+        url: '/otherPaid/list',
+        method: 'POST',
+        data:params
+    });
+}
+const updataOtherPaid =  (params) => { //其他金额收入修改
+    return request({
+        url: '/otherPaid/update',
+        method: 'POST',
+        data:params
+    });
+}
+const customerSuccess =  (params) => { //客户成就
+    return request({
+        url: '/customer/success',
+        method: 'POST',
+        data:params
+    });
+}
+
 export {updataBackcourtPaid,backcourtPaidList,deleteBackcourtPaid,
-    updataFrontPaid,frontPaidList,deleteFrontPaid
+    updataFrontPaid,frontPaidList,deleteFrontPaid,deleteOtherPaid,otherPaidList,updataOtherPaid,customerSuccess
 }

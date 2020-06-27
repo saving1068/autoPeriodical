@@ -977,10 +977,12 @@ export default {
         this.$loading.hide()
       },
       async suerAddTransfer(){
-            this.$loading.show()
+             this.$loading.show()
             try {
                 console.log(this.transferInfo)
-                let res = await updataVisitList(this.transferInfo)
+                let list = [this.transferInfo]
+                console.log(list)
+                let res = await updataDistribution({list})
                 this.$message.success(res.returnMsg)
                 let resList = await distributionList({id:this.transferInfo.ctId})
                 this.transferList = resList.data;
