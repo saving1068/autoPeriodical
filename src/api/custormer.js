@@ -152,6 +152,13 @@ const deleteReusePhone =  (params) => { //来访记录
         params
     });
 }
+const customerLive = (params) => { //客户资源列表
+    return request({
+        url: '/customer/live',
+        method: 'POST',
+        data:params
+    });
+}
 
 
 export {
@@ -174,5 +181,6 @@ export {
     customerTotal,
     customerSuccess,
     reusePhoneList,
-    deleteReusePhone
+    deleteReusePhone,
+    customerLive
 }

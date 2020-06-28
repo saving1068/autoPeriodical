@@ -360,7 +360,7 @@ import {updateCustomer,
     distributionList,
     waiveCustomer,
     updataDistribution,
-    customerList
+    customerLive
     } from '@/api/custormer'
 import { 
     districtList,
@@ -830,7 +830,7 @@ export default {
 
      async customerList(){//客户列表
         this.loading= true;
-        let res = await customerList(this.search)
+        let res = await customerLive(this.search)
         console.log(res,222222222222)
          res.data.map(item =>{
             item.isSuccessStr = idChangeStr(this.isSuccess,item.isSuccess)

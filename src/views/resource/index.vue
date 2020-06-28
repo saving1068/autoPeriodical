@@ -121,12 +121,13 @@
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button type="primary" @click='exportModel'>导入模版</el-button>
+            <!-- http://211.149.157.83:8889 -->
             <el-upload
                 class="upload-demo"
-                action="http://wearewwx.com:8001/customer/importData"
+                action="http://211.149.157.83:8889/customer/importData"
                 :headers='headers'
                 :on-success='onSuccess'
-               
+                :show-file-list='false'
                 multiple
                 :on-preview="handlePreview"
                 :file-list="fileList">
