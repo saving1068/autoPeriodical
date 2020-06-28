@@ -490,8 +490,10 @@
         <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
-                type="date"
-                value-format='yyyy-MM-DD'
+                type="datetime"
+                :picker-options='limitDate'
+                format='yyyy-MM-dd HH:mm'
+                value-format='yyyy-MM-dd HH:mm'
                 placeholder="选择日期">
                 </el-date-picker>
         </el-form-item>
@@ -575,7 +577,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="无效原因" v-if='detail.isValid == 0'>
-                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -848,6 +850,11 @@ export default {
             choiseItem:{},
             total:0,
             followFlag:false,
+            limitDate:{
+                disabledDate(time){
+                    return time.getTime()<Date.now() -24*60*60*1000
+                }
+            }
         }
     
   },
@@ -1296,8 +1303,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 
@@ -1373,7 +1380,7 @@ export default {
                         type,
                         email,
                         id,isValid,
-                        keyword,leaveWord
+                        keyword,leaveWord,invalidCause
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1394,7 +1401,7 @@ export default {
                         type,
                         email,
                         keyword,leaveWord,
-                        isValid:isValid?isValid:isValid == 0?0:''
+                        isValid:isValid?isValid:isValid == 0?0:'',invalidCause
                         };
                         
                         this.followFlag = false;

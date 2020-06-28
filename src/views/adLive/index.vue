@@ -5,7 +5,7 @@
            <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" v-if="showAdMan">
-            <el-select class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
+            <el-select clearable class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
             <el-option 
                     v-for="item in userList"
                     :key="item.id"
@@ -16,7 +16,7 @@
         </el-form-item>
        
         <el-form-item label="平台" >
-           <el-select class="width280" v-model="search.platform" placeholder="请选择平台">
+           <el-select clearable class="width280" v-model="search.platform" placeholder="请选择平台">
            <el-option 
                 v-for="item in platform"
                 :key="Number(item.key)"
@@ -27,7 +27,7 @@
         </el-form-item>
         
         <el-form-item label="是否已成交">
-           <el-select  class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
+           <el-select clearable class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
             <el-option
                 v-for="item in isSuccess"
                 :key="item.index"
@@ -35,6 +35,38 @@
                 :value="item.key"
             ></el-option>
             </el-select>
+        </el-form-item>
+        <el-form-item label="是否已来访">
+           <el-select clearable class="width280" v-model="search.visit" placeholder="请选择是否已来访">
+            <el-option
+                v-for="item in visitSelect"
+                :key="item.index"
+                :label="item.value"
+                :value="item.key"
+            ></el-option>
+            </el-select>
+        </el-form-item>
+        
+        <el-form-item label="客户类型">
+           <el-select clearable  class="width280" v-model="search.type" placeholder="请选择客户类型">
+            <el-option
+                v-for="item in currentType"
+                :key="String(item.key)"
+                :label="item.value"
+                :value="String(item.key)"
+            ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="获取时间" >
+        <el-date-picker
+            v-model="time"
+            type="daterange"
+            range-separator="至"
+            @change='deteChange'
+            value-format='yyyy-MM-dd'
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+        </el-date-picker>
         </el-form-item>
         <div class='center'>
             <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
@@ -237,7 +269,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="无效原因" v-if='detail.isValid == 0'>
-                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -379,6 +411,16 @@ export default {
             label:"无效"
         }
         ],
+        visitSelect:[{
+            key:1,
+            label:"是"
+        },
+        {
+            key:0,
+            label:"否"
+        }
+        ],
+        
          isSuccess:[
                 {value:'是',key:1},
                 {value:'否',key:0},
@@ -423,6 +465,7 @@ export default {
             district:'',//区
             keyword:"",
             isSuccess:'',
+            visit:'',
             page:1,
             limit:10
         },
@@ -786,6 +829,7 @@ export default {
       },  
 
      async customerList(){//客户列表
+        this.loading= true;
         let res = await customerList(this.search)
         console.log(res,222222222222)
          res.data.map(item =>{
@@ -927,8 +971,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 

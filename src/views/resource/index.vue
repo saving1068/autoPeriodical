@@ -120,17 +120,20 @@
             <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
+            <el-button type="primary" @click='exportModel'>导入模版</el-button>
             <el-upload
                 class="upload-demo"
                 action="http://wearewwx.com:8001/customer/importData"
                 :headers='headers'
                 :on-success='onSuccess'
+               
                 multiple
                 :on-preview="handlePreview"
                 :file-list="fileList">
                 <el-button size="small" type="primary">批量导入</el-button>
-                <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                <!-- <div slot="tip" class="el-upload__tip">请使用导入模版进行批量导入</div> -->
             </el-upload>
+            <div style='margin-top: 12px;padding-left:10px;color:red;' class="el-upload__tip">请使用导入模版进行批量导入</div>
             <!-- <el-button >导出</el-button> -->
         </div>
         <el-table
@@ -441,7 +444,7 @@
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
-            <div v-if="type == 0">
+            <!-- <div v-if="type == 0"> -->
                 <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
                     <el-option 
                         v-for="item in userList"
@@ -451,11 +454,11 @@
                     ></el-option>
                 
                 </el-select>
-            </div>
+            <!-- </div> -->
            
-             <div class="width280" v-else>
+             <!-- <div class="width280" v-else>
                {{detail.adManName||'--'}}
-            </div>
+            </div> -->
              
         </el-form-item>
        
@@ -473,7 +476,7 @@
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="项目" prop="project">
-            <div v-if="type == 0">
+            <!-- <div v-if="type == 0"> -->
                 <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in projectList"
@@ -483,11 +486,11 @@
                 ></el-option>
             
                 </el-select>
-            </div>
+            <!-- </div> -->
            
-            <div class="width280" v-else>
+            <!-- <div class="width280" v-else>
                 {{detail.projectName||'--'}}
-            </div>
+            </div> -->
             
         </el-form-item>
         
@@ -636,7 +639,7 @@ import {
 } from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
-import { dictApi ,idChangeStr,filterButton} from "@/utils";
+import { dictApi ,idChangeStr,filterButton,downFile} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -811,6 +814,11 @@ export default {
     //   },
   },
   methods: {
+     
+      exportModel(){
+        let url =`customer/importTemplate`;
+        downFile(url)
+      },
       onSuccess(response, file, fileList){
           console.log(response, file, fileList)
           if(response.returnCode != 200){
@@ -1196,8 +1204,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 

@@ -123,7 +123,7 @@ export default {
              this.getData()
       },
         exportReport(){
-              let url =`http://wearewwx.com:8001/customerStatement/dpd?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&saleId=${this.request.saleId}`;
+              let url =`customerStatement/dpd?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&saleId=${this.request.saleId}`;
              downFile(url)
         },
         dataChange(value){

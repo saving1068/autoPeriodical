@@ -112,12 +112,12 @@
         },
         methods:{
             exportRepot(item){
-                let url ='http://wearewwx.com:8001';
+                let url ;
                 console.log(url)
                switch(item.type){
                 case 0:
                     
-                    url += `/customerStatement/dad?date=${item.date}`
+                    url = `/customerStatement/dad?date=${item.date}`
                     downFile(url)
                 //TODO
                 break;
@@ -125,7 +125,7 @@
                     if(!item.dpId){
                        return this.$message.warning("请选择部门")
                     }
-                     url += `/customerStatement/dbddd?date=${item.date}&&dpId=${item.dpId}`
+                     url = `/customerStatement/dbddd?date=${item.date}&&dpId=${item.dpId}`
                     downFile(url)
                 //TODO
                 break;
@@ -133,28 +133,28 @@
                       if(!item.platform){
                        return this.$message.warning("请选择平台")
                     }
-                      url += `/customerStatement/dpd?date=${item.date}&&platform=${item.platform}`
+                      url = `/customerStatement/dpd?date=${item.date}&&platform=${item.platform}`
                     downFile(url)
                 //TODO
                 break;
                  case 3:
                      
-                     url += `/customerStatement/dpopd?date=${item.date}`
+                     url = `/customerStatement/dpopd?date=${item.date}`
                     downFile(url)
                 //TODO
                 break;
                  case 4:
-                     url += `/customerStatement/dsopd?date=${item.date}`
+                     url = `/customerStatement/dsopd?date=${item.date}`
                     downFile(url)
                 //TODO
                 break;
                  case 5:
-                      url += `/customerStatement/oddd?date=${item.date}`
+                      url = `/customerStatement/oddd?date=${item.date}`
                     downFile(url)
                 //TODO
                 break;
                  case 6:
-                      url += `/customerStatement/odpd?date=${item.date}`
+                      url = `/customerStatement/odpd?date=${item.date}`
                     downFile(url)
                 //TODO
                 break;
@@ -162,7 +162,7 @@
                      if(!item.adMan){
                        return this.$message.warning("请选择广告负责人")
                     }
-                       url += `/customerStatement/ppdodb?date=${item.date}&&adMan=${item.adMan}`
+                       url = `/customerStatement/ppdodb?date=${item.date}&&adMan=${item.adMan}`
                     downFile(url)
                      
                 //TODO
@@ -171,7 +171,7 @@
                      if(!item.saleId){
                        return this.$message.warning("请选择销售员")
                     }
-                        url += `/customerStatement/spdbd?date=${item.date}&&saleId=${item.saleId}`
+                        url = `/customerStatement/spdbd?date=${item.date}&&saleId=${item.saleId}`
                     downFile(url)
                 //TODO
                 break;

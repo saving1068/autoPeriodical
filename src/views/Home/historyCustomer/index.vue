@@ -466,7 +466,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="无效原因" v-if='detail.isValid == 0'>
-                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -940,8 +940,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 

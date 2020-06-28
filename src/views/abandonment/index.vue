@@ -453,8 +453,9 @@
         <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
-                type="date"
-                value-format='yyyy-MM-DD'
+                type="datetime"
+                format='yyyy-MM-dd HH:mm'
+                value-format='yyyy-MM-dd HH:mm'
                 placeholder="选择日期">
                 </el-date-picker>
         </el-form-item>
@@ -537,6 +538,9 @@
                 </el-option>
                 </el-select>
             </el-form-item> -->
+            <el-form-item label="无效原因" >
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
+            </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" disabled placeholder="请输入关键词" v-model="detail.keyword"></el-input>
             </el-form-item>
@@ -1186,8 +1190,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 
@@ -1260,7 +1264,7 @@ export default {
                         sourceLink,
                         type,
                         email,
-                        keyword,leaveWord,
+                        keyword,leaveWord,invalidCause,
                         id
                     } = {...item}
                     
@@ -1280,7 +1284,7 @@ export default {
                         name,
                         sourceLink,
                         type,
-                        keyword,leaveWord,
+                        keyword,leaveWord,invalidCause,
                         email
                         };
                         

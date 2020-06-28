@@ -122,7 +122,7 @@ export default {
             if(!this.tableData.length){
                 return this.$message.warning("暂无数据")
             }
-             let url =`http://wearewwx.com:8001/saleroomStatement/ppdodb?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&adMan=${this.request.adMan}`;
+             let url =`saleroomStatement/ppdodb?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&adMan=${this.request.adMan}`;
              downFile(url)
         },
         dataChange(value){

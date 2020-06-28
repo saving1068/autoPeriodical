@@ -124,7 +124,7 @@ export default {
             if(!this.tableData.length){
                 return this.$message.warning("暂无数据")
             }
-             let url =`http://wearewwx.com:8001/saleroomStatement/dbddd?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&dpId=${this.request.dpId}`;
+             let url =`saleroomStatement/dbddd?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&dpId=${this.request.dpId}`;
              downFile(url)
         },
         dataChange(value){

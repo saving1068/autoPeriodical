@@ -59,10 +59,12 @@ const initDate = (item =>{
 
 const downFile = ((url)=>{
     try {
-        console.log(url)
+        
+        let request = 'http://wearewwx.com:8001/' +url
+        console.log(request)
         let aLink = document.createElement("a");
              aLink.style.display = "none";
-             aLink.href = url;
+             aLink.href = request;
              document.body.appendChild(aLink);
              aLink.click();
              document.body.removeChild(aLink); 

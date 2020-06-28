@@ -121,7 +121,7 @@ export default {
              this.getData()
       },
         exportReport(){
-              let url =`http://wearewwx.com:8001/saleroomStatement/dpd?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&saleId=${this.request.saleId}`;
+              let url =`saleroomStatement/dpd?queryDateBegin=${this.request.queryDateBegin}&&queryDateEnd=${this.request.queryDateEnd}&&saleId=${this.request.saleId}`;
              downFile(url)
         },
         dataChange(value){

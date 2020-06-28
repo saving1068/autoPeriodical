@@ -5,7 +5,7 @@
            <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
         </el-form-item>
         <el-form-item label="广告负责人" >
-            <el-select class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
+            <el-select clearable class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
             <el-option 
                     v-for="item in userList"
                     :key="item.id"
@@ -16,7 +16,7 @@
         </el-form-item>
        
         <el-form-item label="平台" >
-           <el-select class="width280" v-model="search.platform" placeholder="请选择平台">
+           <el-select clearable class="width280" v-model="search.platform" placeholder="请选择平台">
            <el-option 
                 v-for="item in platform"
                 :key="Number(item.key)"
@@ -29,7 +29,7 @@
             <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
         </el-form-item>
         <el-form-item label="项目">
-           <el-select  class="width280" v-model="search.project" placeholder="请选择项目">
+           <el-select clearable class="width280" v-model="search.project" placeholder="请选择项目">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -39,7 +39,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="销售员" v-if='filterButton(110)'> 
-            <el-select  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
+            <el-select clearable  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
                 <el-option 
                 v-for="item in saleList"
                 :key="item.id"
@@ -49,7 +49,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="销售部门"  v-if='filterButton(110)'> 
-           <el-select class="width280" v-model="search.department" placeholder="请选择销售部门">
+           <el-select clearable class="width280" v-model="search.department" placeholder="请选择销售部门">
            
             <el-option 
                 v-for="item in departmentList"
@@ -107,7 +107,7 @@
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
         <el-form-item label="是否已成交">
-           <el-select  class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
+           <el-select clearable  class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
             <el-option
                 v-for="item in isSuccess"
                 :key="item.index"
@@ -473,8 +473,9 @@
         <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
-                type="date"
-                value-format='yyyy-MM-DD'
+                type="datetime"
+                format='yyyy-MM-dd HH:mm'
+                value-format='yyyy-MM-dd HH:mm'
                 placeholder="选择日期">
                 </el-date-picker>
         </el-form-item>
@@ -558,7 +559,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="无效原因" v-if='detail.isValid == 0'>
-                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -681,7 +682,8 @@ let customerInfo = {
         name:'',
         sourceLink:"",
         type:"",
-        email:''
+        email:'',
+        invalidCause:''
     }
     let amountInfo = {
         remark:'',
@@ -785,7 +787,9 @@ export default {
                 telephone:[
                      { required: true, message: '请输入联系方式', trigger: 'blur' },
                 ],
-
+                invalidCause:[
+                    
+                ]
             },
             currentType:[],
             userInfo:{},
@@ -1100,6 +1104,7 @@ export default {
       },  
 
      async customerList(){//客户列表
+     this.loading= true;
         let res = await customerList(this.search)
         console.log(res,222222222222)
          res.data.map(item =>{
@@ -1241,8 +1246,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 
@@ -1319,7 +1324,7 @@ export default {
                         email,
                         id,
                         isValid,
-                        keyword,leaveWord
+                        keyword,leaveWord,invalidCause
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1340,9 +1345,9 @@ export default {
                         type,
                         email,
                         isValid:isValid?isValid:isValid == 0?0:'',
-                        keyword,leaveWord
+                        keyword,leaveWord,invalidCause
                         };
-                        
+                        console.log(this.detail)
                     let res = await followList({id:item.id})
                     
                     

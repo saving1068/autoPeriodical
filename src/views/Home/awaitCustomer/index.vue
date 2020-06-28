@@ -217,7 +217,7 @@
                     </el-popconfirm> -->
                    <!-- <el-button type="text" >成交</el-button> -->
                     <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>转接给他人</el-button>
-                    <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
+                    <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button>
                     <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
                     <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button> 
                                
@@ -409,8 +409,9 @@
         <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
-                type="date"
-                value-format='yyyy-MM-DD'
+                type="datetime"
+                format='yyyy-MM-dd HH:mm'
+                value-format='yyyy-MM-dd HH:mm'
                 placeholder="选择日期">
                 </el-date-picker>
         </el-form-item>
@@ -494,7 +495,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="无效原因" v-if='detail.isValid == 0'>
-                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.not"></el-input>
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
              <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
@@ -1018,8 +1019,8 @@ export default {
               this.search.getDateBegin = value[0];
               this.search.getDateEnd = value[1];
           }else{
-              this.search.beginTime = '';
-              this.search.endTime = '';
+              this.search.getDateBegin = '';
+              this.search.getDateEnd = '';
           }
       },
 
@@ -1094,7 +1095,8 @@ export default {
                         email,
                         id,
                         isValid,
-                        keyword,leaveWord
+                        keyword,leaveWord,invalidCause
+                       
                     } = {...item}
                     
                     this.detail = { adMan,
@@ -1115,7 +1117,7 @@ export default {
                         type,
                         keyword,leaveWord,
                         isValid:isValid?isValid:isValid == 0?0:'',
-                        email
+                        email,invalidCause
                         };
                         
                     let res = await followList({id:item.id})

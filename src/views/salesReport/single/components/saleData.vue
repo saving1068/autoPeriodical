@@ -103,7 +103,7 @@ export default {
             if(!this.tableData.length){
                 return this.$message.warning("暂无数据")
             }
-             let url =`http://wearewwx.com:8001//saleroomStatement/dsopd?queryDate=${this.request.queryDate}`;
+             let url =`saleroomStatement/dsopd?queryDate=${this.request.queryDate}`;
              downFile(url)
         },
         dataChange(value){
