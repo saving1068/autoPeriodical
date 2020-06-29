@@ -489,7 +489,7 @@ export default {
             district:'',//区
             keyword:"",
             isSuccess:'',
-            isVisit:'',
+            isVisit:"",
             isValid:"",
             page:1,
             limit:10

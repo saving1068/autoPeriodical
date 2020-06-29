@@ -130,6 +130,16 @@
             ></el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="是否已来访">
+           <el-select clearable class="width280" disabled v-model="search.isVisit" placeholder="请选择是否已来访">
+            <el-option
+                v-for="item in visitSelect"
+                :key="item.index"
+                :label="item.lable"
+                :value="item.key"
+            ></el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="是否当天跟进客户">
            <el-select clearable  class="width280" v-model="nowDate" placeholder="请选择是否当天跟进客户">
             <el-option
@@ -668,6 +678,15 @@ export default {
         message:'',
         customerInfo:{},
         type:0,
+        visitSelect:[{
+            key:1,
+            lable:"是"
+        },
+        {
+            key:0,
+            lable:"否"
+        }
+        ],
         search:{
             adMan:'',//广告负责人
             department:"",//所属部门
@@ -687,6 +706,7 @@ export default {
             isSuccess:"",
             keyword:"",
             nextFollowUpDate:"",
+            isVisit:0,
             page:1,
             limit:10,
             type:""
