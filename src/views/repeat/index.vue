@@ -108,7 +108,17 @@
             end-placeholder="结束日期">
             </el-date-picker>
         </el-form-item>
-         
+         <el-form-item label="分配时间" >
+            <el-date-picker
+                v-model="disTime"
+                type="daterange"
+                range-separator="至"
+                @change='disTimeChange'
+                value-format='yyyy-MM-dd'
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+        </el-form-item>
         
         
         <div class='center'>
@@ -196,11 +206,11 @@
     >
         <div class="center">
              <el-select clearable v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
-                <el-option 
+                 <el-option 
                 v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
             ></el-option>
             </el-select>
             <el-input v-model="transferListInfo.remark" placeholder="请输入转移原因"></el-input>
@@ -294,11 +304,11 @@
             <div class="el-dialog__title" style="padding-bottom:10px">客户移交</div>
             <el-input placeholder="请输入备注" v-model="transferInfo.remark"></el-input>
             <el-select clearable v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
-                <el-option 
+                 <el-option 
                 v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
             ></el-option>
             </el-select>
              <span slot="footer" class="dialog-footer">
@@ -542,6 +552,7 @@ import {
 } from '@/api/region'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
+  import {userDepartmentList} from '@/api/department'
 import { dictApi ,idChangeStr,filterButton} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
@@ -570,6 +581,7 @@ let customerInfo = {
 export default {
   data() {
     return {
+        disTime:'',
         activeName:"first",
         valid:[{
             key:1,
@@ -615,6 +627,8 @@ export default {
             qq:'',//有效
             getDateBegin:'',
             getDateEnd:"",
+            disTimeBegin:'',
+            disTimeEnd:'',
             personnel:"",//所属人员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
@@ -971,7 +985,13 @@ export default {
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
         this.userList = userList.data;
-        let saleList = await accountList({roleId:7});
+        // let saleList = await accountList({roleId:7});
+        // this.saleList = saleList.data;
+        let departObj = {
+            id:this.userInfo.did,
+            viewSale:1
+        }
+        let saleList = await userDepartmentList(departObj);
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
@@ -1121,6 +1141,15 @@ export default {
             this.detailFlag =  false;
           })
           .catch(_ => {});
+      },
+      disTimeChange(value){
+          if(value){
+              this.search.disTimeBegin = value[0];
+              this.search.disTimeEnd = value[1];
+          }else{
+              this.search.disTimeBegin = '';
+              this.search.disTimeEnd = '';
+          }
       },
       deteChange(value){
           if(value){

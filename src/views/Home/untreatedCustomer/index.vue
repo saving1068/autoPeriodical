@@ -323,17 +323,11 @@
              style="padding:20px 0;"
              v-model="visitInfo.visitingTime"
              value-format='yyyy-MM-dd'
+             :picker-options='limitDate'
             type="date"
             placeholder="选择日期">
             </el-date-picker>
-            <!-- <el-date-picker class="width280"
-                v-model="visitInfo.visitingTime"
-                style="padding:20px 0;"
-                type="date"
-                @change="test"
-                value-format='yyyy-MM-DD'
-                placeholder="选择日期">
-                </el-date-picker> -->
+            
              <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
             </span>
@@ -616,6 +610,11 @@ let customerInfo = {
 export default {
   data() {
     return {
+        limitDate:{
+                disabledDate(time){
+                    return time.getTime()<Date.now() -24*60*60*1000
+                }
+            },
         filterButton:filterButton,
         visitTime:'',
         time:'',

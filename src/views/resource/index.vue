@@ -108,6 +108,17 @@
             end-placeholder="结束日期">
             </el-date-picker>
         </el-form-item>
+        <el-form-item label="分配时间" >
+            <el-date-picker
+                v-model="disTime"
+                type="daterange"
+                range-separator="至"
+                @change='disTimeChange'
+                value-format='yyyy-MM-dd'
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+        </el-form-item>
          
         
         
@@ -121,17 +132,17 @@
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
             <el-button type="warning" @click="getTransferList">批量转移</el-button>
             <el-button type="primary" @click='exportModel'>导入模版</el-button>
-            <!-- http://211.149.157.83:8889 -->
+            <!-- http://211.149.157.83:8889 http://wearewwx.com:8001-->
             <el-upload
                 class="upload-demo"
-                action="http://211.149.157.83:8889/customer/importData"
+                action="http://wearewwx.com:8001/customer/importData"
                 :headers='headers'
                 :on-success='onSuccess'
                 :show-file-list='false'
                 multiple
                 :on-preview="handlePreview"
                 :file-list="fileList">
-                <el-button size="small" type="primary">批量导入</el-button>
+                <el-button size="small" @click='clickTest' type="primary">批量导入</el-button>
                 <!-- <div slot="tip" class="el-upload__tip">请使用导入模版进行批量导入</div> -->
             </el-upload>
             <div style='margin-top: 12px;padding-left:10px;color:red;' class="el-upload__tip">请使用导入模版进行批量导入</div>
@@ -299,9 +310,9 @@
              <el-select clearable v-model="transferListInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
                 <el-option 
                 v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
             ></el-option>
             </el-select>
             <el-input v-model="transferListInfo.remark" placeholder="请输入转移原因"></el-input>
@@ -318,7 +329,7 @@
 
 
     <!-- 来访 -->
-    <el-dialog
+    <!-- <el-dialog
         title='来访记录'
         :visible.sync="visit"
         width="80%"
@@ -327,7 +338,7 @@
     >
     <div class="center">
          <el-timeline style="width:50%" v-if="visitList.length">
-            <el-timeline-item
+           <el-timeline-item
                 
                 v-for="(item, index) in visitList"
                 :key="index"
@@ -349,14 +360,7 @@
             type="date"
             placeholder="选择日期">
             </el-date-picker>
-            <!-- <el-date-picker class="width280"
-                v-model="visitInfo.visitingTime"
-                style="padding:20px 0;"
-                type="date"
-                @change="test"
-                value-format='yyyy-MM-DD'
-                placeholder="选择日期">
-                </el-date-picker> -->
+            
              <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
             </span>
@@ -368,7 +372,7 @@
             <el-button @click="visit = false">取 消</el-button>
             <el-button type="primary" @click="visit = false">确 定</el-button>
         </span>
-    </el-dialog>   
+    </el-dialog>     -->
 
 
 
@@ -397,9 +401,9 @@
             <el-select clearable v-model="transferInfo.receiver "  style="padding:20px 0;" placeholder="请选择销售员">
                 <el-option 
                 v-for="item in saleList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
             ></el-option>
             </el-select>
              <span slot="footer" class="dialog-footer">
@@ -640,6 +644,7 @@ import {
 } from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
+  import {userDepartmentList} from '@/api/department'
 import { dictApi ,idChangeStr,filterButton,downFile} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
@@ -668,6 +673,7 @@ let customerInfo = {
 export default {
   data() {
     return {
+        disTime:'',
         activeName:"first",
          valid:[{
             key:1,
@@ -712,6 +718,8 @@ export default {
             qq:'',//有效
             getDateBegin:'',
             getDateEnd:"",
+            disTimeBegin:'',
+            disTimeEnd:'',
             personnel:"",//所属人员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
@@ -815,7 +823,10 @@ export default {
     //   },
   },
   methods: {
-     
+     clickTest(){
+         alert('请使用导入模版导入')
+         console.log(1)
+     },
       exportModel(){
         let url =`customer/importTemplate`;
         downFile(url)
@@ -1049,7 +1060,13 @@ export default {
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
         this.userList = userList.data;
-        let saleList = await accountList({roleId:7});
+        // let saleList = await accountList({roleId:7});
+        // this.saleList = saleList.data;
+        let departObj = {
+            id:this.userInfo.did,
+            viewSale:1
+        }
+        let saleList = await userDepartmentList(departObj);
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
@@ -1199,6 +1216,15 @@ export default {
             this.detailFlag =  false;
           })
           .catch(_ => {});
+      },
+      disTimeChange(value){
+          if(value){
+              this.search.disTimeBegin = value[0];
+              this.search.disTimeEnd = value[1];
+          }else{
+              this.search.disTimeBegin = '';
+              this.search.disTimeEnd = '';
+          }
       },
       deteChange(value){
           if(value){

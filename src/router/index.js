@@ -17,9 +17,17 @@ const routes = [
 		name: 'layout',
 		component:() => import('@/views/layout'),
 		redirect:{
-			name:'home'
+			name:'welcome'
 		},
 		children:[
+			{
+				path: '/welcome',//首页
+				name: 'welcome',
+				meta:{
+					title:'欢迎首页'
+				},
+				component:() => import('@/views/welcome'),
+			},
 			{
 				path: '/home',//首页
 				name: 'home',

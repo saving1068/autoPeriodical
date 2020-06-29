@@ -112,7 +112,8 @@
         },
         methods:{
             exportRepot(item){
-                let url ='http://211.149.157.83:8889';
+                // http://wearewwx.com:8001
+                let url ='http://wearewwx.com:8001';
                 console.log(url)
                switch(item.type){
                 case 0:

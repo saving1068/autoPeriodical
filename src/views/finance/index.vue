@@ -108,6 +108,17 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
+      <el-form-item label="分配时间" >
+            <el-date-picker
+                v-model="disTime"
+                type="daterange"
+                range-separator="至"
+                @change='disTimeChange'
+                value-format='yyyy-MM-dd'
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
+        </el-form-item>
 
       <div class="center">
         <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
@@ -254,7 +265,7 @@
     </el-dialog>
 
     <!-- 来访 -->
-    <el-dialog title="来访记录" :visible.sync="visit" width="80%" center>
+    <!-- <el-dialog title="来访记录" :visible.sync="visit" width="80%" center>
       <div class="center">
         <el-timeline style="width:50%" v-if="visitList.length">
           <el-timeline-item
@@ -278,14 +289,7 @@
             type="date"
             placeholder="选择日期"
           ></el-date-picker>
-          <!-- <el-date-picker class="width280"
-                v-model="visitInfo.visitingTime"
-                style="padding:20px 0;"
-                type="date"
-                @change="test"
-                value-format='yyyy-MM-DD'
-                placeholder="选择日期">
-          </el-date-picker>-->
+         
           <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="suerAddVisi">新增来访记录</el-button>
           </span>
@@ -296,7 +300,7 @@
         <el-button @click="visit = false">取 消</el-button>
         <el-button type="primary" @click="visit = false">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <!-- 移交 -->
     <el-dialog
@@ -326,11 +330,11 @@
             style="padding:20px 0;"
             placeholder="请选择销售员"
           >
-            <el-option
-              v-for="item in saleList"
-              :key="item.id"
-              :label="item.contactName"
-              :value="item.id"
+             <el-option 
+                v-for="item in saleList"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
             ></el-option>
           </el-select>
           <span slot="footer" class="dialog-footer">
@@ -643,6 +647,7 @@ import {
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr,filterButton} from "@/utils";
+  import {userDepartmentList} from '@/api/department'
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -669,6 +674,7 @@ let customerInfo = {
 export default {
   data() {
     return {
+      disTime:"",
         activeName:"first",
          valid:[{
             key:1,
@@ -713,6 +719,8 @@ export default {
             qq:'',//有效
             getDateBegin:'',
             getDateEnd:"",
+            disTimeBegin:'',
+            disTimeEnd:'',
             personnel:"",//所属人员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
@@ -1075,7 +1083,13 @@ export default {
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
         this.userList = userList.data;
-        let saleList = await accountList({roleId:7});
+        // let saleList = await accountList({roleId:7});
+        // this.saleList = saleList.data;
+        let departObj = {
+            id:this.userInfo.did,
+            viewSale:1
+        }
+        let saleList = await userDepartmentList(departObj);
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
@@ -1234,6 +1248,15 @@ export default {
             this.detailFlag =  false;
           })
           .catch(_ => {});
+      },
+      disTimeChange(value){
+          if(value){
+              this.search.disTimeBegin = value[0];
+              this.search.disTimeEnd = value[1];
+          }else{
+              this.search.disTimeBegin = '';
+              this.search.disTimeEnd = '';
+          }
       },
       deteChange(value){
           if(value){

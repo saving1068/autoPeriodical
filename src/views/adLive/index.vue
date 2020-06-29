@@ -37,11 +37,21 @@
             </el-select>
         </el-form-item>
         <el-form-item label="是否已来访">
-           <el-select clearable class="width280" v-model="search.visit" placeholder="请选择是否已来访">
+           <el-select clearable class="width280" v-model="search.isVisit" placeholder="请选择是否已来访">
             <el-option
                 v-for="item in visitSelect"
                 :key="item.index"
-                :label="item.value"
+                :label="item.lable"
+                :value="item.key"
+            ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="是否有效">
+           <el-select clearable class="width280" v-model="search.isValid" placeholder="请选择是否有效">
+            <el-option
+                v-for="item in valid"
+                :key="item.index"
+                :label="item.lable"
                 :value="item.key"
             ></el-option>
             </el-select>
@@ -67,6 +77,17 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
         </el-date-picker>
+        </el-form-item>
+        <el-form-item label="分配时间" >
+            <el-date-picker
+                v-model="disTime"
+                type="daterange"
+                range-separator="至"
+                @change='disTimeChange'
+                value-format='yyyy-MM-dd'
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+            </el-date-picker>
         </el-form-item>
         <div class='center'>
             <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
@@ -401,23 +422,24 @@ let customerInfo = {
 export default {
   data() {
     return {
+        disTime:"",
         activeName:"first",
         valid:[{
             key:1,
-            label:"有效"
+            lable:"有效"
         },
         {
             key:0,
-            label:"无效"
+            lable:"无效"
         }
         ],
         visitSelect:[{
             key:1,
-            label:"是"
+            lable:"是"
         },
         {
             key:0,
-            label:"否"
+            lable:"否"
         }
         ],
         
@@ -458,6 +480,8 @@ export default {
             qq:'',//有效
             getDateBegin:'',
             getDateEnd:"",
+            disTimeBegin:'',
+            disTimeEnd:'',
             personnel:"",//所属人员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
@@ -465,7 +489,8 @@ export default {
             district:'',//区
             keyword:"",
             isSuccess:'',
-            visit:'',
+            isVisit:'',
+            isValid:"",
             page:1,
             limit:10
         },
@@ -785,8 +810,14 @@ export default {
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
         this.userList = userList.data;
-        let saleList = await accountList({roleId:7});
-        this.saleList = saleList.data;
+        // let saleList = await accountList({roleId:7});
+        // this.saleList = saleList.data;
+        // let departObj = {
+        //     id:this.userInfo.did,
+        //     viewSale:1
+        // }
+        // let saleList = await userDepartmentList(departObj);
+        // this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
         let department = await departmentList();
@@ -829,7 +860,8 @@ export default {
       },  
 
      async customerList(){//客户列表
-        this.loading= true;
+     try {
+         this.loading= true;
         let res = await customerLive(this.search)
         console.log(res,222222222222)
          res.data.map(item =>{
@@ -838,6 +870,10 @@ export default {
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;
+     } catch (error) {
+         this.loading= false;
+     }
+        
       },
     async provinceChange(value){
           if(value){
@@ -965,6 +1001,15 @@ export default {
             this.detailFlag =  false;
           })
           .catch(_ => {});
+      },
+      disTimeChange(value){
+          if(value){
+              this.search.disTimeBegin = value[0];
+              this.search.disTimeEnd = value[1];
+          }else{
+              this.search.disTimeBegin = '';
+              this.search.disTimeEnd = '';
+          }
       },
       deteChange(value){
           if(value){

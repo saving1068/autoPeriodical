@@ -22,12 +22,12 @@
         </span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
-      <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
+      <!-- <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
         <span slot="label">  
         <p class="title">全部客户</p>
         <i class="count">{{totalInfo.all<100?totalInfo.all:'99+'}}</i></span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <!-- <el-tab-pane name="untreated">
         <span slot="label"> 废弃池 
         
