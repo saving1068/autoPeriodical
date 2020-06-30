@@ -135,7 +135,7 @@
             <!-- http://211.149.157.83:8889 http://wearewwx.com:8001-->
             <el-upload
                 class="upload-demo"
-                action="http://wearewwx.com:8001/customer/importData"
+                action="http://211.149.157.83:8889/customer/importData"
                 :headers='headers'
                 :on-success='onSuccess'
                 :show-file-list='false'

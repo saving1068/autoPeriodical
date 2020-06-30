@@ -275,7 +275,7 @@
     </el-dialog>  
 
      <!-- 批量转移 -->
-     <!-- <el-dialog
+     <el-dialog
         title='批量转移'
         :visible.sync="transferListVisi"
         width="30%"
@@ -297,7 +297,7 @@
             <el-button @click="transferListVisi = false">取 消</el-button>
             <el-button type="primary" @click="sureTransferListInfo">确 定</el-button>
         </span>
-    </el-dialog>   -->
+    </el-dialog>  
 
 
 
@@ -642,6 +642,7 @@ import {
     updataFrontPaid,frontPaidList,deleteFrontPaid
 } from '@/api/amount'
 import {projectList} from '@/api/project'
+  import {userDepartmentList} from '@/api/department'
 import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr,filterButton} from "@/utils";
 let customerInfo = {
@@ -1040,6 +1041,12 @@ export default {
         this.userList = userList.data;
         // let saleList = await accountList({roleId:7});
         // this.saleList = saleList.data;
+         let departObj = {
+            id:this.userInfo.did,
+            viewSale:1
+        }
+        let saleList = await userDepartmentList(departObj);
+        this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
         // if(this.userInfo.role.roleId !=7){
