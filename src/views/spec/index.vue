@@ -469,7 +469,8 @@ import {projectList} from '@/api/project'
     .btn{
         text-align: left;
         .title{
-          width: 200px;
+          // width: 200px;
+          padding: 0 10px;
           height: 100px;
           text-align: center;
           line-height: 100px;
