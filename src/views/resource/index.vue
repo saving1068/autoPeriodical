@@ -600,6 +600,8 @@
                 type="textarea"
                 disabled
                 autosize
+                show-word-limit
+                        maxlength="1000"
                 resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
@@ -838,8 +840,10 @@ export default {
                   this.fileList.pop()
               }else{
                   this.fileList = [];
-                  this.$message.warning('上传失败')
+                  this.$message.warning('上传失败,请下载导入模版进行导入')
               }
+          }else{
+              this.$message.success(response.returnMsg||'导入成功')
           }
       },
       handlePreview(file){

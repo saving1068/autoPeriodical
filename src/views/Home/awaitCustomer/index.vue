@@ -523,6 +523,8 @@
                 class="width280" 
                 style="width:510px"
                 type="textarea"
+                show-word-limit
+                        maxlength="1000"
                 autosize
                 disabled
                 resize='none'
@@ -563,6 +565,8 @@
                     <el-input
                         clearable
                         type="textarea"
+                        show-word-limit
+                        maxlength="1000"
                         autosize
                         placeholder="请输入内容"
                         resize='none'

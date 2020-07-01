@@ -579,6 +579,8 @@
                 type="textarea"
                 autosize
                 disabled
+                show-word-limit
+                        maxlength="1000"
                 resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
@@ -620,6 +622,8 @@
                         autosize
                         placeholder="请输入内容"
                         resize='none'
+                        show-word-limit
+                        maxlength="1000"
                         v-model="message">
                     </el-input>
                     <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>

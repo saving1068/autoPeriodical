@@ -19,17 +19,32 @@ export default {
     
     data(){
         return{
-            nowDate:""
+            nowDate:"",
+            timer:null,
         }
     },
     created(){
         // 
         // console.log(this.nowDate)
         console.log(this);
-        this.nowDate = parseDate(new Date())
+      this.update()
     },
     methods:{
+        update(){
+           this.timer = setInterval(() => {
+                this.nowDate = parseDate(new Date())
+                console.log(this.nowDate)
+            }, 1000);
+            
+        }
+    },
+    berforeDestroy(){
+        console.log('clearInterval')
         
+    },
+    destroyed(){
+        clearInterval(this.timer)
+        console.log('destroyed')
     }
 }
 </script>

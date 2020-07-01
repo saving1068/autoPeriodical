@@ -539,6 +539,8 @@
                     clearable
                     type="textarea"
                     autosize
+                    show-word-limit
+                        maxlength="1000"
                     placeholder="请输入内容"
                     resize='none'
                     v-model="message">

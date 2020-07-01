@@ -482,6 +482,8 @@
                 style="width:510px"
                 type="textarea"
                 autosize
+                show-word-limit
+                        maxlength="1000"
                 disabled
                 resize='none'
                 placeholder="请输入内容"
@@ -522,6 +524,8 @@
                         clearable
                         type="textarea"
                         autosize
+                        show-word-limit
+                        maxlength="1000"
                         placeholder="请输入内容"
                         resize='none'
                         v-model="message">
