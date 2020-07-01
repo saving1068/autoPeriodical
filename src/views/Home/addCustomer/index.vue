@@ -506,17 +506,14 @@
            
             </el-select>
         </el-form-item>
-        <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
-            <el-select  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
-                <el-option
-                    v-for="item in personnel"
-                    :key="item.id"
-                    :label="item.contactName"
-                    :value="item.id"
-                ></el-option>
-           
-            </el-select>
-        </el-form-item> -->
+        <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
+            
+            <el-input v-model="detail.departmentName" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="所属人员">
+           <el-input v-model="detail.personnelName" disabled></el-input>
+        </el-form-item>
+        
         <!-- <el-form-item label="所属省份">
   
                <el-select class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
@@ -577,7 +574,7 @@
                 class="width280" 
                 style="width:510px"
                 type="textarea"
-                autosize
+                
                 disabled
                 show-word-limit
                         maxlength="1000"
@@ -615,18 +612,19 @@
                     暂无跟踪记录
                 </div>
             </div>
+            <el-button @click="updataFollowList" type="primary">保存记录</el-button>
             <div class='center lMessage'>
                     <el-input
                         clearable
                         type="textarea"
-                        autosize
+                        
                         placeholder="请输入内容"
                         resize='none'
                         show-word-limit
                         maxlength="1000"
                         v-model="message">
                     </el-input>
-                    <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
+                  
                 </div>
         </div>
             </el-tab-pane>
@@ -785,7 +783,7 @@ export default {
                      { required: true, message: '请输入详细地址', trigger: 'blur' },
                 ],
                 sourceLink:[
-                     { required: true, message: '请输入来源连接', trigger: 'blur' },
+                     { required: false, message: '请输入来源连接', trigger: 'blur' },
                 ],
                 type:[
                      { required: true, message: '请输入客户类型', trigger: 'blur' },
@@ -1353,6 +1351,8 @@ export default {
                         email,
                         id,
                         isValid,
+                        personnelName,
+                        departmentName,
                         keyword,leaveWord,invalidCause
                     } = {...item}
                     
@@ -1373,6 +1373,8 @@ export default {
                         sourceLink,
                         type,
                         email,
+                        personnelName,
+                        departmentName,
                         isValid:isValid?isValid:isValid == 0?0:'',
                         keyword,leaveWord,invalidCause
                         };
@@ -1454,24 +1456,7 @@ export default {
 };
 </script>
 <style lang='scss'>
-    .lMessage{
-         position:relative;
-         padding-top:20px;
-        .lMessageSure{
-                position:absolute;
-                right:0;
-                bottom:0;
-                padding:0 20px  10px 10px;
-            }
-        .el-textarea{
-           
-            
-            .el-textarea__inner{
-                padding-right: 60px;
-            }
-        }
-        
-    }
+    
 </style>
 
 <style scoped="scoped" lang="scss">

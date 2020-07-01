@@ -538,7 +538,7 @@
                  <el-input
                     clearable
                     type="textarea"
-                    autosize
+                    
                     show-word-limit
                         maxlength="1000"
                     placeholder="请输入内容"
@@ -684,7 +684,7 @@ export default {
                      { required: true, message: '请输入详细地址', trigger: 'blur' },
                 ],
                 sourceLink:[
-                     { required: true, message: '请输入来源连接', trigger: 'blur' },
+                     { required: false, message: '请输入来源连接', trigger: 'blur' },
                 ],
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },

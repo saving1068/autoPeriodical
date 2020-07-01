@@ -519,24 +519,24 @@
         <el-form-item label="来源连接" prop="sourceLink">
             <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="客户类型" >
-            <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+        <!-- <el-form-item label="所属部门" v-if='type == 0'>
+            <el-select clearable  class="width280" v-model="detail.department" placeholder="请选择所属部门" :disabled="type == 1?true:false">
             <el-option
-                v-for="item in currentType"
-                :key="String(item.key)"
-                :label="item.value"
-                :value="String(item.key)"
+                v-for="item in departmentList"
+                :key="String(item.id)"
+                :label="item.description"
+                :value="String(item.id)"
             ></el-option>
            
             </el-select>
         </el-form-item> -->
-        <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
-            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+        <!-- <el-form-item label="所属人员" v-if="userInfo.role.roleId !=7" >
+            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="所属部门人员" :disabled="type == 1?true:false">
                 <el-option
-                    v-for="item in personnel"
-                    :key="item.id"
-                    :label="item.contactName"
-                    :value="item.id"
+                    v-for="item in saleList"
+                    :key="item.userId"
+                    :label="item.userName"
+                    :value="item.userId"
                 ></el-option>
            
             </el-select>
@@ -599,7 +599,7 @@
                 style="width:510px"
                 type="textarea"
                 disabled
-                autosize
+                
                 show-word-limit
                         maxlength="1000"
                 resize='none'
@@ -646,7 +646,7 @@ import {
 } from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
-  import {userDepartmentList} from '@/api/department'
+  import {userDepartmentList,departmentList} from '@/api/department'
 import { dictApi ,idChangeStr,filterButton,downFile} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
@@ -708,6 +708,7 @@ export default {
         ifTransfer:true,
         ifAbandoned:false,
         detail:{
+            record:[],
         },
         message:'',
         customerInfo:{},
@@ -755,7 +756,7 @@ export default {
                      { required: true, message: '请输入详细地址', trigger: 'blur' },
                 ],
                 sourceLink:[
-                     { required: true, message: '请输入来源连接', trigger: 'blur' },
+                     { required: false, message: '请输入来源连接', trigger: 'blur' },
                 ],
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },
@@ -795,7 +796,8 @@ export default {
             fileList:[],
             headers:{
                 token:window.sessionStorage.getItem('token')
-            }
+            },
+            departmentList:[]
         }
     
   },
@@ -1078,10 +1080,42 @@ export default {
         //      let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
         //     this.personnel = personnel.data;
         // }
-       
-          console.log(this.projectList,21312)
+        // let department = {
+
+        // }
+        // let department = await departmentList();
+        // this.resetList(department.data);
+        // console.log(this.departmentList,'11')
+
       
     },
+    resetList(arr){
+        // console.log(arr)
+        let pList = [];
+        arr.forEach(item =>{
+         this.departmentList.push(item)
+          if(item.child.length){
+            this.sonsTree(item);
+            // console.log(son,'son')
+           
+          }
+        })
+        
+        // console.log(pList,123123)
+      },
+      sonsTree(obj) {
+        // console.log(obj.name,obj.child.length)
+        // let son  = []
+        console.log(obj,'obj')
+        if(obj.child.length){
+          obj.child.forEach((item)=>{
+           
+           this.departmentList.push(item)
+           
+            this.sonsTree(item)
+          })
+        }
+      },
 
      async customerList(){//客户列表
         let res = await waitDisList(this.search)

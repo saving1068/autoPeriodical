@@ -167,6 +167,26 @@ div:focus{
         height: 100%;
     }
 }
+.lMessage{
+    position:relative;
+    padding-top:20px;
+   .lMessageSure{
+           position:absolute;
+           right:0;
+           bottom:15px !important;
+           padding:0 20px  10px 10px;
+       }
+   .el-textarea{
+     
+       .el-textarea__inner{
+           padding-right: 60px;
+       }
+   }
+   
+}
+textarea{
+    min-height: 70px !important;
+}
 .center{
 	display: flex;
 	justify-content: center;

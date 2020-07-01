@@ -554,7 +554,7 @@
                 class="width280" 
                 style="width:510px"
                 type="textarea"
-                autosize
+                
                 disabled
                 show-word-limit
                 maxlength="1000"
@@ -593,18 +593,19 @@
                     暂无跟踪记录
                 </div>
             </div>
+            <el-button @click="updataFollowList" type="primary">保存记录</el-button>
             <div class='center lMessage'>
                     <el-input
                         clearable
                         type="textarea"
-                        autosize
+                        
                         show-word-limit
                         maxlength="1000"
                         placeholder="请输入内容"
                         resize='none'
                         v-model="message">
                     </el-input>
-                    <el-button class='lMessageSure' @click="updataFollowList" type="text">确定</el-button>
+                    
                 </div>
         </div>
             </el-tab-pane>
@@ -698,6 +699,7 @@ export default {
         ifTransfer:true,
         ifAbandoned:false,
         detail:{
+            record:[],
         },
         message:'',
         customerInfo:{},
@@ -746,7 +748,7 @@ export default {
                      { required: true, message: '请输入详细地址', trigger: 'blur' },
                 ],
                 sourceLink:[
-                     { required: true, message: '请输入来源连接', trigger: 'blur' },
+                     { required: false, message: '请输入来源连接', trigger: 'blur' },
                 ],
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },

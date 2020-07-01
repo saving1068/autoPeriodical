@@ -3,14 +3,14 @@
     <el-tabs v-model="activeName" type="card" @tab-click='tabClick'  :before-leave="beforeLeave">
       <el-tab-pane  name="current">
         <span slot="label"> <p class="title">待跟进客户</p>
-          <i class="count">{{totalInfo.pending<100?totalInfo.pending:'99+'}}</i>
+          <i class="count">{{totalInfo.pending<10000?totalInfo.pending:'9999+'}}</i>
         </span>
         <current @succreeRefresh='refresh' v-if="activeName =='current'"></current> 
       </el-tab-pane>
       <el-tab-pane  name="awaitcustomer">
       <span slot="label">  
       <p class="title">我的客户</p>
-        <i class="count">{{totalInfo.own<100? totalInfo.own:'99+'}}</i>
+        <i class="count">{{totalInfo.own<10000? totalInfo.own:'9999+'}}</i>
         </span>
         <awaitcustomer v-if="activeName =='awaitcustomer'"></awaitcustomer>
       </el-tab-pane>
@@ -18,14 +18,14 @@
       <el-tab-pane name="history">
       <span slot="label">  
       <p class="title">已来访</p>
-        <i class="count">{{totalInfo.visit<100?totalInfo.visit:'99+'}}</i>
+        <i class="count">{{totalInfo.visit<10000?totalInfo.visit:'9999+'}}</i>
         </span>
         <history v-if="activeName =='history'"></history>
       </el-tab-pane>
       <!-- <el-tab-pane  name="addcustomer" v-if='filterButton(201)' >
         <span slot="label">  
         <p class="title">全部客户</p>
-        <i class="count">{{totalInfo.all<100?totalInfo.all:'99+'}}</i></span>
+        <i class="count">{{totalInfo.all<10000?totalInfo.all:'9999+'}}</i></span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
       </el-tab-pane> -->
       <!-- <el-tab-pane name="untreated">
