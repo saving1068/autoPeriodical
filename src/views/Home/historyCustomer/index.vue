@@ -38,9 +38,9 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <!-- <el-form-item label="手机号码" >
+        <el-form-item label="手机号码" >
             <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="销售员" v-if='filterButton(110)'> 
             <el-select clearable  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
                  <el-option 

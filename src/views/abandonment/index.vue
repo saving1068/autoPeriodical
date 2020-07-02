@@ -348,10 +348,10 @@
             <el-button type="primary" @click="visit = false">确 定</el-button>
         </span>
     </el-dialog>   
+  -->
 
 
-
-    <!-- 移交 
+    <!-- 移交  -->
     <el-dialog
         title='分配记录'
         :visible.sync="transferVisible"
@@ -390,7 +390,7 @@
             <el-button @click="transferClose">取 消</el-button>
             <el-button type="primary" @click="transferVisible = false">确 定</el-button>
         </span>
-    </el-dialog>    -->
+    </el-dialog>   
 
 
     <!-- //详情 -->

@@ -14,7 +14,9 @@
           ></el-option>
         </el-select>
       </el-form-item>
-
+      <el-form-item label="手机号码" >
+            <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
+        </el-form-item>
       <el-form-item label="平台">
         <el-select clearable class="width280" v-model="search.platform" placeholder="请选择平台">
           <el-option
@@ -731,6 +733,7 @@ export default {
             province:'',//省
             city:"",//市
             district:'',//区
+            telephone:"",
             keyword:"",
             page:1,
             limit:10

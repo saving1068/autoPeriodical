@@ -25,9 +25,9 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <!-- <el-form-item label="手机号码" >
+        <el-form-item label="手机号码" >
             <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="项目">
            <el-select clearable class="width280" v-model="search.project" placeholder="请选择项目">
             <el-option

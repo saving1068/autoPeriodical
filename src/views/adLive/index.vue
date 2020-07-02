@@ -25,7 +25,9 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        
+        <el-form-item label="手机号码" >
+            <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
+        </el-form-item>
         <el-form-item label="是否已成交">
            <el-select clearable class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
             <el-option
@@ -495,6 +497,7 @@ export default {
             city:"",//市
             district:'',//区
             keyword:"",
+            telephone:'',
             isSuccess:'',
             isVisit:"",
             isValid:"",

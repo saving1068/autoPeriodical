@@ -14,7 +14,9 @@
                 ></el-option>
             </el-select>
         </el-form-item>
-       
+       <el-form-item label="手机号码" >
+            <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
+        </el-form-item>
         <el-form-item label="平台" >
            <el-select clearable class="width280" v-model="search.platform" placeholder="请选择平台">
            <el-option 
@@ -133,7 +135,7 @@
             </el-table-column>
             <el-table-column prop="name" align='center' label="客户姓名">
             </el-table-column>
-            <el-table-column prop="telephone"  align='center'label="手机号码">
+            <el-table-column prop="telephone"  align='center' label="手机号码">
             </el-table-column>
             <el-table-column prop="adManName" align='center' label="广告负责人">
             </el-table-column>
@@ -658,6 +660,7 @@ export default {
             isSuccess:0,
             isValid:1,
             keyword:"",
+            telephone:'',
             page:1,
             limit:10
         },
