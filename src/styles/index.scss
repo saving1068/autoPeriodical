@@ -146,6 +146,13 @@ div:focus{
        
     }
     .reportInfo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // flex: 3;
+        div{
+            padding:0 10px;
+        }
         .reportNum{
             color: red;
         }
@@ -157,6 +164,18 @@ div:focus{
         }
     }
 }
+.formCenter{
+    display: flex;
+    .title{
+        padding: 20px 0;
+        font-weight: 600;
+        font-size: 22px;
+    }
+    .formContenView{
+        width: 50%;
+    }
+}
+
 
 .el-aside{
     overflow: hidden;

@@ -417,26 +417,26 @@ let addPlatformInfo = {
       },
       
       addPlatformClose(){
-         this.$confirm('取消新增, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+        //  this.$confirm('取消新增, 是否继续?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
           this.platformInfoChange = false;
-        }).catch(() => {
+        // }).catch(() => {
                 
-        });
+        // });
       },
       addClose(){
-        this.$confirm('取消新增, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+        // this.$confirm('取消新增, 是否继续?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
           this.costChange = false;
-        }).catch(() => {
+        // }).catch(() => {
                 
-        });
+        // });
       },
       addSure(){
         let tips = this.addItemInfo.id?'是否确认修改项目?':'是否确认新增项目?';

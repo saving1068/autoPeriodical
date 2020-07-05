@@ -95,6 +95,27 @@
                 </el-select>
             </el-form-item>
       -->
+      <el-form-item label="销售员"> 
+            <el-select clearable  class="width280"  v-model="search.personnel" placeholder="请选择销售员">
+                <el-option 
+                v-for="item in saleList"
+                :key="item.userId"
+                :label="item.userName"
+                :value="item.userId"
+            ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="销售部门" >
+           <el-select clearable class="width280"  v-model="search.department" placeholder="请选择销售部门">
+           
+            <el-option 
+                v-for="item in departmentList"
+                :key="item.id"
+                :label="item.description"
+                :value="item.id"
+            ></el-option>
+            </el-select>
+        </el-form-item>
       <el-form-item label="关键词">
         <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
       </el-form-item>
@@ -141,11 +162,16 @@
         <el-table-column align="center" prop="name" label="客户姓名"></el-table-column>
         <el-table-column align="center" prop="telephone" label="手机号码"></el-table-column>
         <el-table-column align="center" prop="adManName" label="广告负责人"></el-table-column>
-        <el-table-column align="center" prop="projectName" label="项目名称"></el-table-column>
+        <!-- <el-table-column align="center" prop="projectName" label="项目名称"></el-table-column> -->
         <el-table-column align="center" prop="address" label="详细地址"></el-table-column>
         <el-table-column align="center" prop="personnelName" label="销售员"></el-table-column>
+        <el-table-column align="center" prop="departmentName" label="销售部"></el-table-column>
+        <el-table-column align="center" prop="bpMoney" label="前场收入(元)"></el-table-column>
+        <el-table-column align="center" prop="opMoney" label="后场收入(元)"></el-table-column>
+        <el-table-column align="center" prop="opMoney" label="其他收入(元)"></el-table-column>
+        <el-table-column align="center" prop="money" label="合同金额(元)"></el-table-column>
+        <el-table-column align="center" prop="allMoney" label="合计收入(元)"></el-table-column>
         <el-table-column align="center" prop="getDate" label="获取时间"></el-table-column>
-
         <el-table-column label="操作" width="250px">
           <template slot-scope="scope">
             <!-- <el-popconfirm
@@ -358,8 +384,9 @@
       center
       :before-close="handleClose"
     >
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="基本信息" name="first">
+    <div class="formCenter">
+        <div class="formContenView">
+          <div class="title">基本信息</div>
           <el-form
             inline
             class="form-inline"
@@ -547,7 +574,25 @@
             </el-form-item>
 
             <el-form-item label="关键词">
-              <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
+              <el-input class="width280" placeholder="请输入关键词" disabled v-model="detail.keyword"></el-input>
+            </el-form-item>
+            <el-form-item label="所属部门">
+              <el-input class="width280" placeholder="请输入所属部门" disabled v-model="detail.departmentName"></el-input>
+            </el-form-item>
+            <el-form-item label="合同金额">
+              <el-input class="width280" placeholder="请输入合同金额" disabled v-model="detail.money"></el-input>
+            </el-form-item>
+            <el-form-item label="前场金额">
+              <el-input class="width280" placeholder="请输入前场金额" disabled v-model="detail.bpMoney"></el-input>
+            </el-form-item>
+            <el-form-item label="后场金额">
+              <el-input class="width280" placeholder="请输入后场金额" disabled v-model="detail.fpMoney"></el-input>
+            </el-form-item>
+             <el-form-item label="其他金额">
+              <el-input class="width280" placeholder="请输入后场金额" disabled v-model="detail.opMoney"></el-input>
+            </el-form-item>
+            <el-form-item label="合计收入">
+              <el-input class="width280" placeholder="请输入合计收入" disabled v-model="detail.allMoney"></el-input>
             </el-form-item>
 
             <el-form-item label="详细地址" prop="address">
@@ -557,6 +602,9 @@
                 v-model="detail.address"
                 :disabled="type == 1?true:false"
               ></el-input>
+            </el-form-item>
+            <el-form-item label="分配时间" prop="disTime">
+              <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
               <el-input
@@ -574,13 +622,10 @@
               <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
             </el-form-item>
           </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="跟踪记录" v-if="type != 0" name="second">
+        </div>
+        <div class="formContenView" v-if="type != 0">
           <div>
-            <div class="title space-between">
-              <!-- <h1 style="font-width:600;font-size:32px">追踪记录</h1> -->
-              <!-- <el-button  type="primary">新增跟进记录</el-button> -->
-            </div>
+            <div class="title">跟踪记录</div>
             <div class="center">
               <div class="record" v-if="detail.record.length">
                 <el-timeline>
@@ -605,18 +650,16 @@
               <el-input
                 clearable
                 type="textarea"
-                
                 show-word-limit
-                        maxlength="1000"
+                maxlength="1000"
                 placeholder="请输入内容"
                 resize="none"
                 v-model="message"
               ></el-input>
-             
             </div>
           </div>
-        </el-tab-pane>
-      </el-tabs>
+        </div>
+      </div>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -653,8 +696,8 @@ import {
 } from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
-import { dictApi ,idChangeStr,filterButton} from "@/utils";
-  import {userDepartmentList} from '@/api/department'
+import { dictApi ,idChangeStr,filterButton,encryptionTel} from "@/utils";
+  import {userDepartmentList,departmentList} from '@/api/department'
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -729,6 +772,7 @@ export default {
             disTimeBegin:'',
             disTimeEnd:'',
             personnel:"",//所属人员
+            department:'',
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
             city:"",//市
@@ -744,6 +788,7 @@ export default {
             district:[],
             userList:[],//广告人
             saleList:[],//销售
+            departmentList:[],
             platform:[],//平台
             projectList:[],//项目
             loading:false,
@@ -1101,15 +1146,51 @@ export default {
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
-       
+       let department = await departmentList();
+        this.resetList(department.data);
        
           console.log(this.projectList,21312)
       
     },
+    resetList(arr){
+        // console.log(arr)
+        let pList = [];
+        arr.forEach(item =>{
+         this.departmentList.push(item)
+          if(item.child.length){
+            this.sonsTree(item);
+            // console.log(son,'son')
+           
+          }
+        })
+        
+        // console.log(pList,123123)
+      },
+      sonsTree(obj) {
+        // console.log(obj.name,obj.child.length)
+        // let son  = []
+        console.log(obj,'obj')
+        if(obj.child.length){
+          obj.child.forEach((item)=>{
+           
+           this.departmentList.push(item)
+           
+            this.sonsTree(item)
+          })
+        }
+      }, 
 
      async customerList(){//客户列表
         let res = await customerList(this.search)
         console.log(res,222222222222)
+        res.data.map(item => {
+          item.allMoney = Number(item.bpMoney)+Number(item.fpMoney)+Number(item.opMoney)
+          // item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.split('?')[0];
+          if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
+            item.telephone = encryptionTel(item.telephone)
+          }
+          
+        });
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;
@@ -1237,11 +1318,11 @@ export default {
          this.$loading.hide()
       },
       transferClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+          // this.$confirm('确认关闭？')
+          // .then(_ => {
             this.transferVisible =  false;
-          })
-          .catch(_ => {});
+          // })
+          // .catch(_ => {});
       },
       addClose(){
           this.$confirm('确认关闭？')
@@ -1251,11 +1332,11 @@ export default {
           .catch(_ => {});
       },
        handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
+        // this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.detailFlag =  false;
-          })
-          .catch(_ => {});
+          // })
+          // .catch(_ => {});
       },
       disTimeChange(value){
           if(value){
@@ -1348,10 +1429,11 @@ export default {
                         type,
                         email,
                         id,
+                        disTime,
                         isValid,
-                        keyword,leaveWord
+                        keyword,leaveWord,departmentName,bpMoney,fpMoney,opMoney,money
                     } = {...item}
-                    
+                    let allMoney = (Number(bpMoney)+Number(fpMoney)+Number(opMoney)).toFixed(2)
                     this.detail = { adMan,
                          department,
                         platform,
@@ -1367,9 +1449,10 @@ export default {
                         wechat,
                         name,
                         sourceLink,
+                        disTime,
                         type,
                         email,isValid:isValid?isValid:isValid == 0?0:'',
-                        keyword,leaveWord
+                        keyword,leaveWord,departmentName,bpMoney,fpMoney,opMoney,money,allMoney
                         };
                         
                         this.followFlag = false;

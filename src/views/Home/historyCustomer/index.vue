@@ -4,7 +4,7 @@
         <el-form-item label="客户姓名" width='100%' >
            <el-input class="width280" v-model='search.name' placeholder='请输入客户姓名'></el-input>
         </el-form-item>
-        <el-form-item label="广告负责人" >
+        <!-- <el-form-item label="广告负责人" >
             <el-select clearable class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
             <el-option 
                     v-for="item in userList"
@@ -37,7 +37,7 @@
                 :value="Number(item.id)"
             ></el-option>
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="手机号码" >
             <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
         </el-form-item>
@@ -122,7 +122,7 @@
                 </el-option>
                 </el-select>
             </el-form-item> -->
-        <el-form-item label="关键词" >
+        <!-- <el-form-item label="关键词" >
             <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
         </el-form-item>
         <el-form-item label="是否已成交">
@@ -145,7 +145,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
         </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
          <el-form-item label="分配时间" >
             <el-date-picker
                 v-model="disTime"
@@ -194,11 +194,11 @@
             </el-table-column>
             <el-table-column prop="disTime" align='center' label="分配时间">
             </el-table-column>
-            <el-table-column prop="getDate" align='center' label="获取时间">
+            <!-- <el-table-column prop="getDate" align='center' label="获取时间">
             </el-table-column>
             <el-table-column label="是否已成交" align='center' prop='isSuccessStr'>
             
-            </el-table-column>
+            </el-table-column> -->
             
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -340,15 +340,15 @@
        
         center
         :before-close="handleClose">
-        
-        <el-tabs v-model="activeName">
-            <el-tab-pane label="基本信息" name="first">
-                <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
+        <div class="formCenter">
+        <div class="formContenView">
+          <div class="title">基本信息</div>
+          <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
             <el-form-item label="客户姓名" width='100%' prop="name">
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
-        <el-form-item label="广告负责人" prop="adMan">
-            <!-- <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+        <!-- <el-form-item label="广告负责人" prop="adMan">
+            <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -356,14 +356,14 @@
                 :value="item.id"
             ></el-option>
             
-            </el-select> -->
+            </el-select>
              <div class="width280">
                {{detail.adManName||'--'}}
             </div>
              
-        </el-form-item>
+        </el-form-item> -->
        
-        <el-form-item label="平台" prop="platform">
+        <!-- <el-form-item label="平台" prop="platform">
            <el-select clearable class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
            <el-option 
                 v-for="item in platform"
@@ -375,7 +375,7 @@
         </el-form-item>
         <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="项目" prop="project">
            <!-- <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
@@ -423,11 +423,11 @@
            
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
+        <el-form-item label="销售部" v-if="userInfo.role.roleId !=7" >
             
             <el-input v-model="detail.departmentName" disabled></el-input>
         </el-form-item>
-        <el-form-item label="所属人员">
+        <el-form-item label="销售员">
            <el-input v-model="detail.personnelName" disabled></el-input>
         </el-form-item>
        
@@ -479,11 +479,14 @@
             <el-form-item label="无效原因" v-if='detail.isValid == 0'>
                 <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
-            <el-form-item label="关键词" >
+            <!-- <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
+            </el-form-item>
+            <el-form-item label="分配时间" prop="disTime">
+              <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
                  <el-input
@@ -501,50 +504,44 @@
                 <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
             </el-form-item>
         </el-form>
-            </el-tab-pane>
-            <el-tab-pane label="跟踪记录" v-if='type != 0' name="second">
-                <div >
-            <div class="title space-between">
-            <!-- <h1 style="font-width:600;font-size:32px">追踪记录</h1> -->
-            <!-- <el-button  type="primary">新增跟进记录</el-button> -->
-            </div>
+        </div>
+        <div class="formContenView" v-if="type != 0">
+          <div>
+            <div class="title">跟踪记录</div>
             <div class="center">
-                <div class="record" v-if='detail.record.length'>
-                    <el-timeline >
-                        <el-timeline-item
-                        v-for="(item,index) in detail.record" 
-                        :key="index"
-                        size='large'
-                        :timestamp="item.fuTime">
-                        <el-card  >
-                            <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                            <p>{{item.fupName}}</p>
-                            <el-button  type="text"  @click="delFollowList(item)" slot="reference">删除</el-button>
-                        </el-card>
-                        </el-timeline-item>
-                    </el-timeline>
-                </div>
-                <div v-else>
-                    暂无跟踪记录
-                </div>
+              <div class="record" v-if="detail.record.length">
+                <el-timeline>
+                  <el-timeline-item
+                    v-for="(item,index) in detail.record"
+                    :key="index"
+                    size="large"
+                    :timestamp="item.fuTime"
+                  >
+                    <el-card>
+                      <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                      <p>{{item.fupName}}</p>
+                      <el-button type="text" @click="delFollowList(item)" slot="reference">删除</el-button>
+                    </el-card>
+                  </el-timeline-item>
+                </el-timeline>
+              </div>
+              <div v-else>暂无跟踪记录</div>
             </div>
             <el-button @click="updataFollowList" type="primary">保存记录</el-button>
-            <div class='center lMessage'>
-                    <el-input
-                        clearable
-                        type="textarea"
-                        
-                        show-word-limit
-                        maxlength="1000"
-                        placeholder="请输入内容"
-                        resize='none'
-                        v-model="message">
-                    </el-input>
-                   
-                </div>
+            <div class="center lMessage">
+              <el-input
+                clearable
+                type="textarea"
+                show-word-limit
+                maxlength="1000"
+                placeholder="请输入内容"
+                resize="none"
+                v-model="message"
+              ></el-input>
+            </div>
+          </div>
         </div>
-            </el-tab-pane>
-        </el-tabs>
+      </div>
         
         
 
@@ -582,7 +579,7 @@ import {projectList} from '@/api/project'
 import { roleList} from '@/api/role'
 import {accountList} from '@/api/user'
   import {userDepartmentList} from '@/api/department'
-import { dictApi ,idChangeStr,filterButton} from "@/utils";
+import { dictApi ,idChangeStr,filterButton,encryptionTel} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -817,9 +814,14 @@ export default {
         try {
             let res = await customerList(this.search)
         console.log(res,222222222222)
-        res.data.map(item =>{
-            item.isSuccessStr = idChangeStr(this.isSuccess,item.isSuccess)
-        })
+        res.data.map(item => {
+          item.isSuccessStr = idChangeStr(this.isSuccess, item.isSuccess);
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.split('?')[0];
+          if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
+            item.telephone = encryptionTel(item.telephone)
+          }
+          
+        });
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;
@@ -948,25 +950,25 @@ export default {
          this.$loading.hide()
       },
       transferClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+        //   this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.transferVisible =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
       addClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+        //   this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.addVisible =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
        handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
+        // this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.detailFlag =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
       disTimeChange(value){
           if(value){
@@ -1056,6 +1058,7 @@ export default {
                         sourceLink,
                         type,
                         email,
+                        disTime,
                         id,
                         personnelName,
                         departmentName,
@@ -1075,6 +1078,7 @@ export default {
                         district,//区
                         address,
                         telephone,
+                        disTime,
                         wechat,
                         name,
                         sourceLink,

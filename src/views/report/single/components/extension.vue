@@ -9,12 +9,26 @@
         </el-date-picker>
         </div>
         <div class="center" style="padding:20px 0">
-            <el-button type="warning" @click="exportReport">导出报表</el-button>
-            <el-button type="primary" @click="getData">查询</el-button>
-            <div style="padding-left:100px" class='reportInfo'>
-                <span>接收数据量:<span class='reportNum'>{{info.all}}</span></span>
-                <span>有效数据量:<span class='reportNum'>{{info.validAll}}</span></span>
-                <span>总有效率:<span class='reportNum'>{{info.percentage}}</span></span>
+           <div style="flex:1;">
+                <el-button type="warning" @click="exportReport">导出报表</el-button>
+                <el-button type="primary" @click="getData">查询</el-button>
+            </div>
+            
+            <div  class='reportInfo'>
+               
+                 <div>
+                    <span>接收数据量:<span class='reportNum'>{{info.sumTotal}}</span></span>
+                    <span>有效数据量:<span class='reportNum'>{{info.sumValidTotal}}</span></span>
+                    <span>总有效率:<span class='reportNum'>{{info.sumValidTotalRate}}</span></span>
+                 </div>
+                <div>
+                    <span>来访总数(来访时间):<span class='reportNum'>{{info.sumVisTotal}}</span></span>
+                    <span>来访总效率(来访时间):<span class='reportNum'>{{info.sumVisTotalRate}}</span></span>
+                </div>
+                <div>
+                    <span>来访总数(分配时间):<span class='reportNum'>{{info.sumDisVisTotal}}</span></span>
+                    <span>来访总效率(分配时间):<span class='reportNum'>{{info.sumDisVisTotalRate}}</span></span>
+                </div>
             </div>   
         </div>
         <div class="table center">
@@ -48,6 +62,26 @@
                 align='center'
                     prop="valid"
                     label="有效率(%)">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                    prop="visTotal"
+                    label="来访量(分配时间)">
+                </el-table-column>
+                 <el-table-column
+                 align='center'
+                    prop="visTotalRate"
+                    label="来访率(%)(分配时间)">
+                </el-table-column>
+                <el-table-column
+                align='center'
+                    prop="disVisTotal"
+                    label="来访量(来访时间)">
+                </el-table-column>
+                 <el-table-column
+                 align='center'
+                    prop="disVisTotalRate"
+                    label="来访率(%)(来访时间)">
                 </el-table-column>
                 </el-table>
                 <el-pagination
@@ -124,16 +158,25 @@ export default {
               
             
             let res = await extensionSingleData(this.request)
-             let all = 0;
-            let validAll = 0;
+            let sumTotal =res.sumTotal;//总数
+            let sumVisTotal =res.sumVisTotal;//来访总数（来访时间）
+            let sumValidTotal = res.sumValidTotal;//有效总数
+            let sumDisVisTotal = res.sumDisVisTotal;//来访总数（分配时间）
+            // let visTotalRate = 0;
             res.data.map(item =>{
-                item.valid =(Number(item.validTotal)/Number(item.total)*100).toFixed(2)+"(%)"
-                all+=Number(item.total);
-                validAll+=Number(item.validTotal);
+                item.visTotalRate =(Number(item.visTotal)/Number(item.total)*100).toFixed(2)+"(%)";
+                item.disVisTotalRate = (Number(item.disVisTotal)/Number(item.total)*100).toFixed(2)+"(%)";
+                item.valid = (Number(item.validTotal)/Number(item.total)*100).toFixed(2)+"(%)";
+               
             })
-            let percentage =!isNaN((validAll/all).toFixed(2))?(validAll/all).toFixed(2)+"(%)":'0(%)';
+           
+            let sumVisTotalRate = !isNaN((sumVisTotal/sumTotal).toFixed(2))?(sumVisTotal/sumTotal).toFixed(2)*100+"(%)":'0(%)';
+            let sumValidTotalRate = !isNaN((sumValidTotal/sumTotal).toFixed(2))?(sumValidTotal/sumTotal).toFixed(2)*100+"(%)":'0(%)';
+            let sumDisVisTotalRate = !isNaN((sumDisVisTotal/sumTotal).toFixed(2))?(sumDisVisTotal/sumTotal).toFixed(2)*100+"(%)":'0(%)';
             this.info = {
-                all,validAll,percentage
+                sumTotal,sumVisTotal,sumValidTotal,sumDisVisTotal,
+                
+                sumVisTotalRate,sumValidTotalRate,sumDisVisTotalRate
             }
             this.tableData = res.data;
             this.total =res.total;

@@ -587,7 +587,7 @@ import {
 } from '@/api/amount'
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
-import { dictApi ,idChangeStr,filterButton} from "@/utils";
+import { dictApi ,idChangeStr,filterButton,encryptionTel} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -999,6 +999,14 @@ export default {
 
      async customerList(){//客户列表
         let res = await customerList(this.search)
+        res.data.map(item => {
+          
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.split('?')[0];
+          if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
+            item.telephone = encryptionTel(item.telephone)
+          }
+          
+        });
         console.log(res,222222222222)
         this.tableData = res.data;
         this.total =res.total;
@@ -1116,25 +1124,25 @@ export default {
          this.$loading.hide()
       },
       transferClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+        //   this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.transferVisible =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
       addClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+        //   this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.addVisible =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
        handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
+        // this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.detailFlag =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
       deteChange(value){
           if(value){

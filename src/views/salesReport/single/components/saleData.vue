@@ -15,6 +15,7 @@
                 <span>总收入:<span class='reportNum'>{{info.all}}</span></span>
                 <span>总前场收入:<span class='reportNum'>{{info.bpMoney}}</span></span>
                 <span>总后场收入:<span class='reportNum'>{{info.fpMoney}}</span></span>
+                <span>总其他收入:<span class='reportNum'>{{info.opMoney}}</span></span>
             </div>
         </div>
         <div class="table center">
@@ -22,7 +23,7 @@
                 :data="tableData"
                 fit
                 style="width: 100%">
-                <
+                <el-table-column
                     align='center'
                     prop="disDate"
                     label="日期"
@@ -43,6 +44,11 @@
                  align='center'
                     prop="bpMoney"
                     label="后场收入(元)">
+                </el-table-column>
+                <el-table-column
+                 align='center'
+                    prop="opMoney"
+                    label="其他收入(元)">
                 </el-table-column>
                 <el-table-column
                 align='center'
@@ -122,20 +128,20 @@ export default {
               
             
             let res = await saleSingleData(this.request)
-            let all = 0;
-            let bpMoney = 0;
-            let fpMoney =0;
+            let all = (Number(res.sumBpMoney)+Number(res.sumFpMoney)+Number(res.sumOpMoney));
+            let bpMoney = res.sumBpMoney;
+            let fpMoney =res.sumFpMoney;
+            let opMoney = res.sumOpMoney;
             res.data.map(item =>{
-                item.all =(Number(item.bpMoney)+Number(item.fpMoney));
-                all += item.all
-                bpMoney+=Number(item.bpMoney)
-                fpMoney+=Number(item.fpMoney)
+                item.all =(Number(item.bpMoney)+Number(item.fpMoney)+Number(item.opMoney));
             })
-            // all = all.toFixed(2);
-            // bpMoney = bpMoney.toFixed(2);
-            // fpMoney = fpMoney.toFixed(2);
+
+            all = all.toFixed(2);
+            bpMoney = bpMoney.toFixed(2);
+            fpMoney = fpMoney.toFixed(2);
+            opMoney = opMoney.toFixed(2);
             this.info = {
-                all,bpMoney,fpMoney
+                all,bpMoney,fpMoney,opMoney
             }
             this.tableData = res.data;
             this.total =res.total;

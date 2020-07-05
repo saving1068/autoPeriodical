@@ -97,7 +97,7 @@ const parseDate = (rawDate) => {
 
 const downFile = ((url)=>{
     try {
-        // http://wearewwx.com:8001
+        // http://wearewwx.com:8001 http://wearewwx.com:8001
         let request = 'http://211.149.157.83:8889/' +url
         console.log(request)
         let aLink = document.createElement("a");
@@ -112,5 +112,10 @@ const downFile = ((url)=>{
     }
 })
 
+const encryptionTel = ((tel)=>{
+    var dh=tel.substr(0,3)+"******"+tel.substr(8);
+    return dh;
+})
 
-export {dictApi,idChangeStr,downFile,filterButton,initDate,parseDate}
+
+export {dictApi,idChangeStr,downFile,filterButton,initDate,parseDate,encryptionTel}

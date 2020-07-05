@@ -74,6 +74,12 @@
                         
                     </el-table-column>
                     </el-table>
+                    <div class="space-between" style="padding:20px 400px">
+                      <div>信息流需求总数:<span style="color:red">{{specInfoValue.needMessageTotal}}</span></div>
+                      <div>已分配搜索流需求总数:<span style="color:red">{{specInfoValue.haveMessageTotal}}</span></div>
+                      <div>需配搜索流需求总数:<span style="color:red">{{specInfoValue.needSearchTotal}}</span></div>
+                      <div>已分配搜索流需求总数:<span style="color:red">{{specInfoValue.haveSearchTotal}}</span></div>
+                    </div>
                     <el-pagination
                     style=" padding:20px;"
                         @current-change="handleCurrentChange"
@@ -283,8 +289,9 @@ import {projectList} from '@/api/project'
         try {
           this.loading = true;
           let res = await specList(this.search);
-          this.list = res.data;
-          this.total = res.total
+          this.specInfoValue = res.data;
+          this.list = res.data.sqList;
+          this.total = res.data.total;
         } catch (error) {
           console.log(error)
         }
@@ -312,32 +319,32 @@ import {projectList} from '@/api/project'
        
       },
       closeSelect(){
-         this.$confirm('取消新增, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-                }).then(() => {
+        //  this.$confirm('取消新增, 是否继续?', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //         }).then(() => {
                           this.select = false;
-                }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
+            //     }).catch(() => {
+            //     this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //     });          
+            // });
       },
       closeEdit(){
-        this.$confirm('取消新增, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-                }).then(() => {
+        // this.$confirm('取消新增, 是否继续?', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //         }).then(() => {
                 this.addSpec = false;
-                }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
+            //     }).catch(() => {
+            //     this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //     });          
+            // });
       },
       addSure(type){
 
@@ -454,6 +461,7 @@ import {projectList} from '@/api/project'
         },
         selectList:[],
         select:false,
+        specInfoValue:{},
         search:{
           limit:10,
           page:1

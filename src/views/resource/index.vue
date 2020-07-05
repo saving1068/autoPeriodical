@@ -443,10 +443,10 @@
        
         center
         :before-close="handleClose">
-        
-        <el-tabs v-model="activeName">
-            <el-tab-pane label="基本信息" name="first">
-                <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
+        <div class="formCenter">
+        <div class="formContenView">
+          <div class="title">基本信息</div>
+          <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
             <el-form-item label="客户姓名" width='100%' prop="name">
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
@@ -595,6 +595,9 @@
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
+            <el-form-item label="分配时间" prop="disTime">
+              <el-input class="width280" v-model="detail.disTime" disabled></el-input>
+            </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
               <el-input
                 class="width280" 
@@ -611,8 +614,44 @@
                 <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
             </el-form-item>
         </el-form>
-            </el-tab-pane>  
-            </el-tabs>  
+        </div>
+        <div class="formContenView" v-if="type != 0">
+          <div>
+            <div class="title">跟踪记录</div>
+            <div class="center">
+              <div class="record" v-if="detail.record.length">
+                <el-timeline>
+                  <el-timeline-item
+                    v-for="(item,index) in detail.record"
+                    :key="index"
+                    size="large"
+                    :timestamp="item.fuTime"
+                  >
+                    <el-card>
+                      <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                      <p>{{item.fupName}}</p>
+                      <el-button type="text" @click="delFollowList(item)" slot="reference">删除</el-button>
+                    </el-card>
+                  </el-timeline-item>
+                </el-timeline>
+              </div>
+              <div v-else>暂无跟踪记录</div>
+            </div>
+            <el-button @click="updataFollowList" type="primary">保存记录</el-button>
+            <div class="center lMessage">
+              <el-input
+                clearable
+                type="textarea"
+                show-word-limit
+                maxlength="1000"
+                placeholder="请输入内容"
+                resize="none"
+                v-model="message"
+              ></el-input>
+            </div>
+          </div>
+        </div>
+      </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
             <el-button type="primary" v-if='type != 1' @click="suerAdd()">确 定</el-button>
@@ -649,7 +688,7 @@ import {
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
   import {userDepartmentList,departmentList} from '@/api/department'
-import { dictApi ,idChangeStr,filterButton,downFile} from "@/utils";
+import { dictApi ,idChangeStr,filterButton,downFile,encryptionTel} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//所属部门
@@ -1122,10 +1161,15 @@ export default {
      async customerList(){//客户列表
         let res = await waitDisList(this.search)
         console.log(res,222222222222)
-        res.data.map(item =>{
-            
-            item.platformName = idChangeStr(this.platform,item.platform)
-        })
+        res.data.map(item => {
+          item.platformName = idChangeStr(this.platform,item.platform)
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.split('?')[0];
+          if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
+            item.telephone = encryptionTel(item.telephone)
+          }
+          
+        });
+        
         this.tableData = res.data;
         this.total =res.total||0;
          this.loading= false;
@@ -1237,25 +1281,25 @@ export default {
          this.$loading.hide()
       },
       transferClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+        //   this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.transferVisible =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
       addClose(){
-          this.$confirm('确认关闭？')
-          .then(_ => {
+        //   this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.addVisible =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
        handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
+        // this.$confirm('确认关闭？')
+        //   .then(_ => {
             this.detailFlag =  false;
-          })
-          .catch(_ => {});
+        //   })
+        //   .catch(_ => {});
       },
       disTimeChange(value){
           if(value){
@@ -1276,7 +1320,7 @@ export default {
           }
       },
 
-     async suerAdd(){
+     async (){
           try {
         this.$refs['detail'].validate((valid) => {
           if (valid) {
@@ -1345,6 +1389,7 @@ export default {
                         name,
                         sourceLink,
                         type,
+                        disTime,
                         email,
                         id,isValid,
                         keyword,leaveWord
@@ -1364,6 +1409,7 @@ export default {
                         telephone,
                         wechat,
                         name,
+                        disTime,
                         sourceLink,
                         type,
                         email,

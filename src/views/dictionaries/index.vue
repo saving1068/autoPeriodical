@@ -282,18 +282,18 @@ export default {
                 });
         },
         itemAddClose(){
-            this.$confirm('取消新增, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-                }).then(() => {
+            // this.$confirm('取消新增, 是否继续?', '提示', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     type: 'warning'
+            //     }).then(() => {
                 this.ifItemAdd = false;
-                }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
+            //     }).catch(() => {
+            //     this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //     });          
+            // });
         },
         addItemList(){
 
@@ -360,18 +360,18 @@ export default {
 
         },
         addClose(){
-         this.$confirm('取消新增, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+        //  this.$confirm('取消新增, 是否继续?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
          this.parentChange = false;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消删除'
+        //   });          
+        // });
         },
         delteItem(item){
              let tips = '是否确认删除字典';

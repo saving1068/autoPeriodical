@@ -221,18 +221,18 @@ let buttonInfo = {
           return obj;
       },
       closeEdit(){
-        this.$confirm('取消新增, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-                }).then(() => {
+        // this.$confirm('取消新增, 是否继续?', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //         }).then(() => {
                 this.addMune = false;
-                }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
+            //     }).catch(() => {
+            //     this.$message({
+            //         type: 'info',
+            //         message: '已取消删除'
+            //     });          
+            // });
       },
       addSure(type){
         let tip = type == 0?'是否确认添加页面?':"是否确认修改页面?";
