@@ -169,10 +169,10 @@
             </el-table-column>
             <el-table-column prop="name" align='center' label="客户姓名">
             </el-table-column>
-            <el-table-column prop="telephone" align='center' label="手机号码">
+            <!-- <el-table-column prop="telephone" align='center' label="手机号码">
             </el-table-column>
             <el-table-column prop="adManName" align='center' label="广告负责人">
-            </el-table-column>
+            </el-table-column> -->
              <el-table-column prop="projectName" align='center' label="项目名称">
             </el-table-column>
             <el-table-column prop="address" align='center' label="详细地址">
@@ -232,7 +232,7 @@
                 <el-input v-model="amountInfo.money" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="备注">
-                <el-input v-model="amountInfo.remark" placeholder="审批人"></el-input>
+                <el-input v-model="amountInfo.remark" placeholder="备注"></el-input>
             </el-form-item>
          </el-form >
         <span slot="footer" class="dialog-footer">
@@ -514,7 +514,8 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input>
+            <a :href="detail.sourceLink" v-if="type == 1"></a>
+            <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
         </el-form-item>
         <el-form-item label="客户类型" prop="type">
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -1180,9 +1181,10 @@ export default {
 
      async customerList(){//客户列表
         let res = await customerList(this.search)
-        res.data.map(item => {
+        try {
+            res.data.map(item => {
          
-          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.split('?')[0];
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
@@ -1191,6 +1193,11 @@ export default {
         console.log(res,222222222222)
         this.tableData = res.data;
         this.total =res.total||0;
+        } catch (error) {
+            console.log(error)
+            this.loading= false;
+        }
+        
          this.loading= false;
       },
     async provinceChange(value){

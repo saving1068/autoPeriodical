@@ -408,7 +408,7 @@
              
         </el-form-item>
         -->
-        <el-form-item label="平台" prop="platform">
+        <!-- <el-form-item label="平台" prop="platform">
            <el-select clearable class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
            <el-option 
                 v-for="item in platform"
@@ -420,9 +420,9 @@
         </el-form-item>
         <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
-        </el-form-item>
-        <el-form-item label="项目" prop="project">
-           <!-- <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+        </el-form-item> -->
+        <!-- <el-form-item label="项目" prop="project">
+           <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -430,12 +430,12 @@
                 :value="Number(item.id)"
             ></el-option>
            
-            </el-select> -->
+            </el-select>
             <div class="width280">
                 {{detail.projectName||'--'}}
             </div>
             
-        </el-form-item>
+        </el-form-item> -->
         
         <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
@@ -446,9 +446,9 @@
                 placeholder="选择日期">
                 </el-date-picker>
         </el-form-item>
-        <el-form-item label="QQ号码" >
+        <!-- <el-form-item label="QQ号码" >
             <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="手机号" prop="telephone" >
             <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
@@ -949,7 +949,7 @@ export default {
         console.log(res,222222222222)
         res.data.map(item => {
           item.isSuccessStr = idChangeStr(this.isSuccess, item.isSuccess);
-          
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }

@@ -104,11 +104,13 @@
         <el-table-column prop="adManName" align="center" label="广告负责人"></el-table-column>
         <el-table-column prop="projectName" align="center" label="项目名称"></el-table-column>
         <el-table-column prop="address" align="center" label="详细地址"></el-table-column>
+        <el-table-column prop="sourceLink" align="center" label="来源连接"></el-table-column>
+        <el-table-column prop="platformStr" align="center" label="平台"></el-table-column>
         <el-table-column prop="personnelName" align="center" label="销售员"></el-table-column>
         <el-table-column prop="disTime" align="center" label="分配时间"></el-table-column>
         <el-table-column prop="getDate" align="center" label="获取时间"></el-table-column>
-        <el-table-column label="是否有效" align="center" prop="isSuccessStr">
-          <template slot-scope="scope">{{scope.row.isValid == 0?'无效':'有效'}}</template>
+        <el-table-column label="是否有效" align="center" prop="isValidStr">
+          <!-- <template slot-scope="scope">{{scope.row.isValid == 0?'无效':'有效'}}</template> -->
         </el-table-column>
         <el-table-column label="是否已成交" align="center" prop="isSuccessStr"></el-table-column>
 
@@ -116,7 +118,7 @@
           <template slot-scope="scope">
             <el-button
               type="text"
-              v-show="filterButton(106)"
+              
               @click.native="rowDblclic(scope.row,1)"
             >详情</el-button>
           </template>
@@ -158,8 +160,8 @@
                 :disabled="type == 1?true:false"
               ></el-input>
             </el-form-item>
-            <el-form-item label="广告负责人" prop="adMan">
-              <!-- <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <!-- <el-form-item label="广告负责人" prop="adMan">
+              <el-select class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -167,11 +169,11 @@
                 :value="item.id"
             ></el-option>
             
-              </el-select>-->
+              </el-select>
               <div class="width280">{{detail.adManName||'--'}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
-            <el-form-item label="平台" prop="platform">
+            <!-- <el-form-item label="平台" prop="platform">
               <el-select
                 class="width280"
                 v-model="detail.platform"
@@ -193,9 +195,9 @@
                 v-model="detail.email"
                 :disabled="type == 1?true:false"
               ></el-input>
-            </el-form-item>
-            <el-form-item label="项目" prop="project">
-              <!-- <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+            </el-form-item> -->
+            <!-- <el-form-item label="项目" prop="project">
+              <el-select  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -203,9 +205,9 @@
                 :value="Number(item.id)"
             ></el-option>
            
-              </el-select>-->
+              </el-select>
               <div class="width280">{{detail.projectName||'--'}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="下次跟进时间">
               <el-date-picker
@@ -217,14 +219,14 @@
                 placeholder="选择日期"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="QQ号码">
+            <!-- <el-form-item label="QQ号码">
               <el-input
                 class="width280"
                 placeholder="请输入QQ号码"
                 v-model="detail.qq"
                 :disabled="type == 1?true:false"
               ></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="手机号" prop="telephone">
               <el-input
                 class="width280"
@@ -242,12 +244,8 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <el-input
-                class="width280"
-                placeholder="请输入来源连接"
-                v-model="detail.sourceLink "
-                :disabled="type != 0?true:false"
-              ></el-input>
+              <a :href="detail.sourceLink">{{detail.sourceLink}}</a>
+              
             </el-form-item>
             <el-form-item label="客户类型" prop="type">
               <el-select
@@ -310,6 +308,7 @@
                 </el-select>
             </el-form-item>-->
             <el-form-item label="是否有效">
+              
               <el-select
                 class="width280"
                 v-model="detail.isValid"
@@ -906,7 +905,9 @@ export default {
         console.log(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1,'console.log(this.userInfo.role.roleId)')
         res.data.map(item => {
           item.isSuccessStr = idChangeStr(this.isSuccess, item.isSuccess);
-          
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+          item.platformStr = idChangeStr(this.platform, item.platform);
+          console.log(item.sourceLink)
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
@@ -1139,7 +1140,10 @@ export default {
             keyword,
             leaveWord
           } = { ...item };
-
+          let isValidStr;
+          if(isValid !=''){
+            isValidStr = isValid == 0?'无效':'有效'
+          }
           this.detail = {
             adMan,
             department,
@@ -1160,7 +1164,8 @@ export default {
             disTime,
             email,
             invalidCause,
-            isValid: isValid ? isValid : isValid == 0 ? 0 : "",
+            isValid,
+            isValidStr,
             keyword,
             leaveWord
           };

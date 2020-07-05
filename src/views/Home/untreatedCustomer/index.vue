@@ -455,7 +455,8 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type == 1?true:false"></el-input>
+            <a :href="detail.sourceLink" v-if="type == 1"></a>
+            <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
         </el-form-item>
         <el-form-item label="客户类型" >
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -1001,7 +1002,7 @@ export default {
         let res = await customerList(this.search)
         res.data.map(item => {
           
-          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.split('?')[0];
+          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
