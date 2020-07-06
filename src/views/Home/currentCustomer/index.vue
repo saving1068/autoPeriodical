@@ -170,7 +170,7 @@
             </el-table-column>
             <el-table-column prop="name" align='center' label="客户姓名">
                 <template slot-scope="scope">
-                    <el-popover trigger="hover"  @show="contentDetail(scope.row)"  placement="top">
+                    <el-popover trigger="hover"  @show="contentDetail(scope.row)"  placement="right">
                     <el-timeline v-if='recordList.length'>
                         <el-timeline-item
                             v-for="(item,index) in recordList"
@@ -539,7 +539,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
+            <a target="_blank" style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
         </el-form-item>
         <el-form-item label="客户类型" prop="type">
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -1554,7 +1554,7 @@ export default {
                         keyword,leaveWord,
                         personnelName,
                         departmentName,
-                        isValid:isValid?isValid:isValid == 0?0:'',invalidCause
+                        isValid:isValid?isValid:isValid == 0?0:'',invalidCause,record:[]
                         };
                         
                         this.followFlag = false;

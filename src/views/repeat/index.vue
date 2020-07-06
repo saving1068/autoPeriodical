@@ -405,7 +405,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
+            <a target="_blank" style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
         </el-form-item>
         <el-form-item label="客户类型" >
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -418,7 +418,7 @@
            
             </el-select>
         </el-form-item>
-        <!-- <el-form-item label="销售部人员" v-if="userInfo.role.roleId !=7" >
+        <el-form-item label="销售部人员" v-if="userInfo.role.roleId !=7" >
             <el-select clearable  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in personnel"
@@ -428,7 +428,7 @@
                 ></el-option>
            
             </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <!-- <el-form-item label="所属省份">
   
                <el-select clearable class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">

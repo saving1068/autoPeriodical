@@ -487,7 +487,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
+              <a target="_blank" style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
             </el-form-item>
             <el-form-item label="客户类型" prop="type">
               <el-select

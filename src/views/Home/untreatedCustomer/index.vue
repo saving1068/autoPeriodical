@@ -200,6 +200,7 @@
     </el-form>
     <div class='table'>
         <div class='button'>
+            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button> -->
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
              <!-- <el-button v-show='filterButton(109)'>导出</el-button> -->
         </div>
@@ -409,36 +410,32 @@
         center
         :before-close="handleClose">
         <div class="formCenter">
-        <div class="formContenView">
+        <div :class="[type != 1?'formContenView100':'formContenView']">
           <div class="title">基本信息</div>
-          <el-form
-            inline
-            class="form-inline"
-            label-width="100px"
-            :rules="detailRules"
-            :model="detail"
-            ref="detail"
-          >
+          <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
             <el-form-item label="客户姓名" width='100%' prop="name">
            <el-input class="width280" v-model='detail.name' placeholder='请输入客户姓名' :disabled="type == 1?true:false"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="广告负责人" prop="adMan">
-            <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
-            <el-option 
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.contactName"
-                :value="item.id"
-            ></el-option>
-            
-            </el-select>
-             <div class="width280">
+        <el-form-item label="广告负责人" prop="adMan">
+            <!-- <div v-if="type == 0"> -->
+                <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+                    <el-option 
+                        v-for="item in userList"
+                        :key="item.id"
+                        :label="item.contactName"
+                        :value="item.id"
+                    ></el-option>
+                
+                </el-select>
+            <!-- </div> -->
+           
+             <!-- <div class="width280" v-else>
                {{detail.adManName||'--'}}
-            </div>
+            </div> -->
              
         </el-form-item>
-        -->
-        <!-- <el-form-item label="平台" prop="platform">
+       
+        <el-form-item label="平台" prop="platform">
            <el-select clearable class="width280" v-model="detail.platform" placeholder="请选择平台" :disabled="type != 0?true:false">
            <el-option 
                 v-for="item in platform"
@@ -450,35 +447,37 @@
         </el-form-item>
         <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="项目" prop="project">
-           <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
-            <el-option
-                v-for="item in projectList"
-                :key="Number(item.id)"
-                :label="item.name"
-                :value="Number(item.id)"
-            ></el-option>
-           
-            </el-select>
-            <div class="width280">
-                {{detail.projectName||'--'}}
-            </div>
+        </el-form-item>
+        <el-form-item label="项目" prop="project">
+            <!-- <div v-if="type == 0"> -->
+                <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+                <el-option
+                    v-for="item in projectList"
+                    :key="Number(item.id)"
+                    :label="item.name"
+                    :value="Number(item.id)"
+                ></el-option>
             
-        </el-form-item> -->
+                </el-select>
+            <!-- </div> -->
+           
+            <!-- <div class="width280" v-else>
+                {{detail.projectName||'--'}}
+            </div> -->
+            
+        </el-form-item>
         
-        <el-form-item label="下次跟进时间" >
+        <!-- <el-form-item label="下次跟进时间" >
             <el-date-picker class="width280" :disabled="type == 1?true:false"
                 v-model="detail.nextFollowUpDate"
-                type="datetime"
-                format='yyyy-MM-dd HH:mm'
-                value-format='yyyy-MM-dd HH:mm'
+                type="date"
+                value-format='yyyy-MM-DD'
                 placeholder="选择日期">
                 </el-date-picker>
-        </el-form-item>
-        <!-- <el-form-item label="QQ号码" >
-            <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
         </el-form-item> -->
+        <el-form-item label="QQ号码" >
+            <el-input class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
         <el-form-item label="手机号" prop="telephone" >
             <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
@@ -486,31 +485,31 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-          
-            <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
-            
-            <!-- <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input> -->
-            <!-- <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input> -->
+            <a target="_blank" style='display:block;height:28px;width:280px' v-if="type==1" :href="detail.sourceLink">{{detail.sourceLink}}</a>
+            <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
         </el-form-item>
-        <el-form-item label="客户类型" prop='type'>
-            <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+        <!-- <el-form-item label="销售部" v-if='type == 0'>
+            <el-select clearable  class="width280" v-model="detail.department" placeholder="请选择销售部" :disabled="type == 1?true:false">
             <el-option
-                v-for="item in currentType"
-                :key="String(item.key)"
-                :label="item.value"
-                :value="String(item.key)"
+                v-for="item in departmentList"
+                :key="String(item.id)"
+                :label="item.description"
+                :value="String(item.id)"
             ></el-option>
            
             </el-select>
-        </el-form-item>
-        <el-form-item label="销售部" v-if="userInfo.role.roleId !=7" >
-            
-            <el-input v-model="detail.departmentName" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="销售员">
-           <el-input v-model="detail.personnelName" disabled></el-input>
-        </el-form-item>
-       
+        </el-form-item> -->
+        <!-- <el-form-item label="销售员" v-if="userInfo.role.roleId !=7" >
+            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="销售部人员" :disabled="type == 1?true:false">
+                <el-option
+                    v-for="item in saleList"
+                    :key="item.userId"
+                    :label="item.userName"
+                    :value="item.userId"
+                ></el-option>
+           
+            </el-select>
+        </el-form-item> -->
         <!-- <el-form-item label="所属省份">
   
                <el-select clearable class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
@@ -545,39 +544,36 @@
                 </el-option>
                 </el-select>
             </el-form-item> -->
-             <el-form-item label="是否有效" prop="isValid">
+             <!-- <el-form-item label="是否有效" >
            <el-select clearable class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
-                 <el-option 
+                <el-option 
                 v-for="item in valid "
-                 :key="Number(item.key)" 
+                 :key="item.key" 
                 :label="item.label" 
-                :value="Number(item.key)">
+                :value="item.key">
                 </el-option>
                 </el-select>
+            </el-form-item> -->
+            <el-form-item label="关键词" >
+                <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
             </el-form-item>
-            <el-form-item label="无效原因" v-if='detail.isValid == 0' prop="invalidCause">
-                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
-            </el-form-item>
-             <el-form-item label="关键词" >
-                <el-input class="width280" placeholder="请输入关键词" :disabled="type == 1?true:false" v-model="detail.keyword"></el-input>
-            </el-form-item>
-            
+           
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
-            <el-form-item label="分配时间" prop="disTime">
-              <el-input class="width280" v-model="detail.disTime" disabled></el-input>
+            <el-form-item label="分配时间" prop="disTime" v-if='type ==1'>
+              <el-input class="width280"  v-model="detail.disTime" disabled></el-input>
             </el-form-item>
-            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
-             <el-input
+             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+              <el-input
                 class="width280" 
                 style="width:510px"
                 type="textarea"
+                disabled
+                
                 show-word-limit
                         maxlength="1000"
-                
-                disabled
                 resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
@@ -1317,7 +1313,7 @@ export default {
                         type,
                         keyword,leaveWord,
                         isValid:isValid?isValid:isValid == 0?0:'',
-                        email,invalidCause
+                        email,invalidCause,record:[]
                         };
                         
                     let res = await followList({id:item.id})
@@ -1416,6 +1412,9 @@ export default {
         padding: 20px 0;
     }
     .record{
+        width: 100%;
+    }
+    .formContenView100{
         width: 100%;
     }
     .manager{

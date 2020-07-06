@@ -245,7 +245,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
+              <a  style='display:block;height:28px;width:280px' target="_blank" :href="detail.sourceLink">{{detail.sourceLink}}</a>
               
             </el-form-item>
             <el-form-item label="客户类型" prop="type">
@@ -911,7 +911,7 @@ export default {
          }
          let isValidStr;
           if(item.isValid !=''){
-            isValidStr = isValid == 0?'无效':'有效'
+            isValidStr = item.isValid == 0?'无效':'有效'
           }else{
             isValidStr = '空'
           }
@@ -929,6 +929,7 @@ export default {
         this.total = res.total || 0;
         this.loading = false;
       } catch (error) {
+        console.log(error)
         this.loading = false;
       }
     },

@@ -487,7 +487,7 @@
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
           
-            <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
+            <a target="_blank" style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
             
             <!-- <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input> -->
             <!-- <el-input class="width280" placeholder="请输入来源连接" v-model="detail.sourceLink " :disabled="type != 0?true:false"></el-input> -->
@@ -1327,7 +1327,7 @@ export default {
                         type,
                         keyword,leaveWord,
                         isValid:isValid?isValid:isValid == 0?0:'',
-                        email,invalidCause
+                        email,invalidCause,record:[]
                         };
                         
                     let res = await followList({id:item.id})

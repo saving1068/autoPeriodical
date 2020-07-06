@@ -434,7 +434,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink||'空'}}</a>
+            <a target="_blank" style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink||'空'}}</a>
         </el-form-item>
         <el-form-item label="客户类型" prop='type'>
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -1182,7 +1182,7 @@ export default {
                         personnelName,
                         departmentName,
                         keyword,leaveWord,
-                        isValid:isValid?isValid:isValid == 0?0:'',
+                        isValid:isValid?isValid:isValid == 0?0:'',record:[],
                         email
                         };
                         

@@ -522,7 +522,7 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <a style='display:block;height:28px;width:280px' v-if="type==1" :href="detail.sourceLink">{{detail.sourceLink}}</a>
+            <a target="_blank" style='display:block;height:28px;width:280px' v-if="type==1" :href="detail.sourceLink">{{detail.sourceLink}}</a>
             <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
         </el-form-item>
         <!-- <el-form-item label="销售部" v-if='type == 0'>
@@ -536,7 +536,7 @@
            
             </el-select>
         </el-form-item> -->
-        <!-- <el-form-item label="销售员" v-if="userInfo.role.roleId !=7" >
+        <el-form-item label="销售员" v-if="userInfo.role.roleId !=7" >
             <el-select clearable  class="width280" v-model="detail.personnel" placeholder="销售部人员" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in saleList"
@@ -546,7 +546,7 @@
                 ></el-option>
            
             </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <!-- <el-form-item label="所属省份">
   
                <el-select clearable class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
@@ -1034,6 +1034,38 @@ export default {
             this.waiveVisi = true;
 
      },
+    async suerAdd(){
+          try {
+        this.$refs['detail'].validate((valid) => {
+          if (valid) {
+              let tips = this.type == 2?'是否确认修改客户':'是否确认新增客户';
+                this.$confirm(tips, "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(async()=>{
+                    this.detail.department = this.userInfo.did;
+                    if(this.userInfo.role.roleId == 7){
+                        this.detail.personnel = this.userInfo.id;
+                    }
+                    let res = await updateCustomer(this.detail);
+                    this.$message.success(res.returnMsg)
+                        this.customerList()
+                        this.detailFlag =  false;
+                })
+          } else {
+            this.$message.warning("请填写所需信息")
+            return false;
+          }
+        });
+              
+          
+         
+        } catch (error) {
+            console.log(error)
+        }
+        
+      },
     async sureWaiveVisi(){
          this.$confirm('此操作将客户放入废弃池, 是否继续?', '提示', {//废弃
           confirmButtonText: '确定',

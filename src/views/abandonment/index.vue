@@ -544,7 +544,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <a style='display:block;height:28px;width:280px' v-if="type==1" :href="detail.sourceLink">{{detail.sourceLink}}</a>
+              <a target="_blank" style='display:block;height:28px;width:280px' v-if="type==1" :href="detail.sourceLink">{{detail.sourceLink}}</a>
             <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
             </el-form-item>
             <el-form-item label="客户类型">
