@@ -50,13 +50,13 @@
                 </el-date-picker>
       </el-form-item>-->
       <!--
-        <el-form-item label="所属人员" > 经理
+        <el-form-item label="销售员" > 经理
            <el-select clearable class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" > 经理 
+        <el-form-item label="销售部" > 经理 
            <el-select clearable class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -403,8 +403,8 @@
                 :disabled="type == 1?true:false"
               ></el-input>
             </el-form-item>
-            <el-form-item label="广告负责人" prop="adMan">
-              <!-- <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+            <!-- <el-form-item label="广告负责人" prop="adMan">
+              <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
             <el-option 
                 v-for="item in userList"
                 :key="item.id"
@@ -412,9 +412,9 @@
                 :value="item.id"
             ></el-option>
             
-              </el-select>-->
+              </el-select>
               <div class="width280">{{detail.adManName||'--'}}</div>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="平台" prop="platform">
               <el-select
@@ -432,16 +432,16 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="电子邮箱">
+            <!-- <el-form-item label="电子邮箱">
               <el-input
                 class="width280"
                 placeholder="请输入电子邮箱"
                 v-model="detail.email"
                 :disabled="type == 1?true:false"
               ></el-input>
-            </el-form-item>
-            <el-form-item label="项目" prop="project">
-              <!-- <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+            </el-form-item> -->
+            <!-- <el-form-item label="项目" prop="project">
+              <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -449,8 +449,8 @@
                 :value="Number(item.id)"
             ></el-option>
            
-              </el-select>-->
-              <div class="width280">{{detail.projectName||'--'}}</div>
+              </el-select>
+              <div class="width280">{{detail.projectName||'--'}}</div> -->
             </el-form-item>
 
             <el-form-item label="下次跟进时间">
@@ -463,14 +463,14 @@
                 placeholder="选择日期"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="QQ号码">
+            <!-- <el-form-item label="QQ号码">
               <el-input
                 class="width280"
                 placeholder="请输入QQ号码"
                 v-model="detail.qq"
                 :disabled="type == 1?true:false"
               ></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="手机号" prop="telephone">
               <el-input
                 class="width280"
@@ -488,8 +488,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <a :href="detail.sourceLink" v-if="type == 1"></a>
-            <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
+              <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
             </el-form-item>
             <el-form-item label="客户类型">
               <el-select
@@ -507,7 +506,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7" >
+            <!-- <el-form-item label="销售部人员" v-if="userInfo.role.roleId !=7" >
             <el-select clearable  class="width280" v-model="detail.personnel" placeholder="请选择客户类型" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in personnel"
@@ -572,8 +571,8 @@
             <el-form-item label="关键词">
               <el-input class="width280" placeholder="请输入关键词" disabled v-model="detail.keyword"></el-input>
             </el-form-item>
-            <el-form-item label="所属部门">
-              <el-input class="width280" placeholder="请输入所属部门" disabled v-model="detail.departmentName"></el-input>
+            <el-form-item label="销售部">
+              <el-input class="width280" placeholder="请输入销售部" disabled v-model="detail.departmentName"></el-input>
             </el-form-item>
             <el-form-item label="合同金额">
               <el-input class="width280" placeholder="请输入合同金额" disabled v-model="detail.money"></el-input>
@@ -696,11 +695,11 @@ import { dictApi ,idChangeStr,filterButton,encryptionTel} from "@/utils";
   import {userDepartmentList,departmentList} from '@/api/department'
 let customerInfo = {
         adMan:'',//广告负责人
-        department:"",//所属部门
+        department:"",//销售部
         platform:"",//逾期
         project:'',//项目
         qq:'',//有效
-        personnel:"",//所属人员
+        personnel:"",//销售员
         nextFollowUpDate:'',//下次跟进时间
         province:'',//省
         city:"",//市
@@ -759,7 +758,7 @@ export default {
         type:0,
         search:{
             adMan:'',//广告负责人
-            department:"",//所属部门
+            department:"",//销售部
             platform:"",//逾期
             project:'',//项目
             qq:'',//有效
@@ -767,12 +766,13 @@ export default {
             getDateEnd:"",
             disTimeBegin:'',
             disTimeEnd:'',
-            personnel:"",//所属人员
+            personnel:"",//销售员
             department:'',
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
             city:"",//市
             district:'',//区
+            isVisit:1,
             telephone:"",
             keyword:"",
             page:1,
@@ -1181,7 +1181,9 @@ export default {
         console.log(res,222222222222)
         res.data.map(item => {
           item.allMoney = Number(item.bpMoney)+Number(item.fpMoney)+Number(item.opMoney)
-          // item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+          if(item.sourceLink){
+             item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+         }
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
@@ -1412,7 +1414,7 @@ export default {
                         platform,
                         project,
                         qq,
-                        personnel,//所属人员
+                        personnel,//销售员
                         nextFollowUpDate,//下次跟进时间
                         province,//省
                         city,//市

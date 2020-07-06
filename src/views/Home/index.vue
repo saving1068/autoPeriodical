@@ -28,20 +28,17 @@
         <i class="count">{{totalInfo.all<10000?totalInfo.all:'9999+'}}</i></span>
           <addcustomer v-if="activeName =='addcustomer'"></addcustomer>
       </el-tab-pane> -->
-      <!-- <el-tab-pane name="untreated">
-        <span slot="label"> 废弃池 
+      <el-tab-pane name="untreated">
+        <span slot="label"> 
+        <p class="title">批量客户</p>
+        <i class="count">{{totalInfo.batch<10000?totalInfo.batch:'9999+'}}</i>
+        </span>
+        <untreatedCustomer  v-if="activeName =='untreated'"></untreatedCustomer>
+         
         
         </span>
-        <untreatedCustomer></untreatedCustomer>
-      </el-tab-pane>
-       
-      <el-tab-pane name="5">
-      <span slot="label" > 
-        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
-
-      </span>
         
-      </el-tab-pane> -->
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -87,11 +84,32 @@ export default {
       console.log(tab, event,"----------------------------")
     },
   async refresh(){
-    let res = await customerTotal();
+    let obj = {
+      all:{},
+      pending:{
+        isFollowUp:0,
+        isSuccess:0,
+        isAgainAllot:0,
+      },
+      own:{
+        isFollowUp:1,
+        isVisit:0,
+        isAgainAllot:0,
+      },
+      visit:{
+        isVisit:1,
+      },
+      batch:{
+        isAgainAllot:1,
+         isVisit:0,
+      }
+    }
+    let res = await customerTotal(obj);
     res.data.pending = res.data.pending||0;
     res.data.own = res.data.own||0;
     res.data.visit = res.data.visit||0;
     res.data.all = res.data.all||0;
+    res.data.batch = res.data.batch||0;
     this.totalInfo = res.data;
     console.log(res)
      console.log('refresh')

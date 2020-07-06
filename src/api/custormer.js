@@ -10,7 +10,7 @@ const customerList = (params) => { //客户资源列表
 
 const deleteCustomer = (params) => { //删除字典
     return request({
-        url: '/dic/customer',
+        url: '/customer/delete',
         method: 'delete',
         params
     });

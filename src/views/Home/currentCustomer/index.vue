@@ -72,13 +72,13 @@
                 </el-date-picker>
         </el-form-item> -->
          <!--
-        <el-form-item label="所属人员" > 经理
+        <el-form-item label="销售员" > 经理
            <el-select clearable class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" > 经理 
+        <el-form-item label="销售部" > 经理 
            <el-select clearable class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -162,12 +162,37 @@
             tooltip-effect="dark"
             @row-dblclick='rowDblclic'
             style="width: 100%"
+           
             @selection-change="handleSelectionChange">
             <el-table-column
             type="selection"
             width="55">
             </el-table-column>
             <el-table-column prop="name" align='center' label="客户姓名">
+                <template slot-scope="scope">
+                    <el-popover trigger="hover"  @show="contentDetail(scope.row)"  placement="top">
+                    <el-timeline v-if='recordList.length'>
+                        <el-timeline-item
+                            v-for="(item,index) in recordList"
+                            :key="index"
+                            size="large"
+                            :timestamp="item.fuTime"
+                        >
+                            <el-card >
+                            <div @click.stop='showDetail'>
+                                <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                                <p >{{item.fupName}}</p>
+                               
+                            </div>
+                            </el-card>
+                        </el-timeline-item>
+                    </el-timeline>
+                    <div v-else>暂无跟进记录</div>
+                    <div slot="reference" class="name-wrapper">
+                        {{ scope.row.name }}
+                    </div>
+                    </el-popover>
+                </template>
             </el-table-column>
             <!-- <el-table-column prop="telephone" align='center' label="手机号码">
             </el-table-column>
@@ -475,11 +500,11 @@
             ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="电子邮箱" >
+        <!-- <el-form-item label="电子邮箱" >
             <el-input class="width280" placeholder="请输入电子邮箱" v-model="detail.email" :disabled="type == 1?true:false"></el-input>
-        </el-form-item>
-        <el-form-item label="项目" prop="project">
-           <!-- <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+        </el-form-item> -->
+        <!-- <el-form-item label="项目" prop="project">
+           <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in projectList"
                 :key="Number(item.id)"
@@ -487,12 +512,12 @@
                 :value="Number(item.id)"
             ></el-option>
            
-            </el-select> -->
+            </el-select>
             <div class="width280">
                 {{detail.projectName||'--'}}
             </div>
             
-        </el-form-item>
+        </el-form-item> -->
         
         <el-form-item label="下次跟进时间" >
             <el-date-picker  style="width:200px" :disabled="type == 1?true:false"
@@ -504,18 +529,17 @@
                 placeholder="选择日期">
                 </el-date-picker>
         </el-form-item>
-        <el-form-item label="QQ号码" >
+        <!-- <el-form-item label="QQ号码" >
             <el-input  class="width280" placeholder="请输入QQ号码" v-model="detail.qq" :disabled="type == 1?true:false"></el-input>
-        </el-form-item>
-        <!-- <el-form-item label="手机号" prop="telephone" >
-            <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type == 1?true:false"></el-input>
         </el-form-item> -->
+        <el-form-item label="手机号" prop="telephone" >
+            <el-input class="width280" placeholder="请输入手机号" v-model="detail.telephone " :disabled="type == 1?true:false"></el-input>
+        </el-form-item>
         <el-form-item label="微信" >
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <a :href="detail.sourceLink" v-if="type == 1"></a>
-            <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
+            <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
         </el-form-item>
         <el-form-item label="客户类型" prop="type">
             <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
@@ -580,7 +604,7 @@
                 </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="无效原因" v-if='detail.isValid == 0'>
+            <el-form-item label="无效原因" v-if='detail.isValid == 0' prop='invalidCause'>
                 <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
             <el-form-item label="关键词" >
@@ -690,11 +714,11 @@ import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr,filterButton,encryptionTel} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
-        department:"",//所属部门
+        department:"",//销售部
         platform:"",//逾期
         project:'',//项目
         qq:'',//有效
-        personnel:"",//所属人员
+        personnel:"",//销售员
         nextFollowUpDate:'',//下次跟进时间
         province:'',//省
         city:"",//市
@@ -749,11 +773,11 @@ export default {
         ifAbandoned:false,
         detail:{
             adMan:'',//广告负责人
-            department:"",//所属部门
+            department:"",//销售部
             platform:"",//逾期
             project:'',//项目
             qq:'',//有效
-            personnel:"",//所属人员
+            personnel:"",//销售员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
             city:"",//市
@@ -773,7 +797,7 @@ export default {
         type:0,
         search:{
             adMan:'',//广告负责人
-            department:"",//所属部门
+            department:"",//销售部
             platform:"",//逾期
             project:'',//项目
             qq:'',//有效
@@ -781,7 +805,7 @@ export default {
             getDateEnd:"",
             disTimeBegin:'',
             disTimeEnd:'',
-            personnel:"",//所属人员
+            personnel:"",//销售员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
             city:"",//市
@@ -789,6 +813,7 @@ export default {
             isSuccess:0,
             keyword:"",
             isFollowUp:0,
+            isAgainAllot:0,
             page:1,
             limit:10
         },
@@ -833,6 +858,9 @@ export default {
                 isValid:[
                      { required: true, message: '请选择数据有效性', trigger: 'blur' },
                 ],
+                invalidCause:[
+                     { required: true, message: '请输入无效原因', trigger: 'blur' },
+                ],
                
             },
             currentType:[],
@@ -865,7 +893,9 @@ export default {
                 disabledDate(time){
                     return time.getTime()<Date.now() -24*60*60*1000
                 }
-            }
+            },
+            recordList:[],
+            
         }
     
   },
@@ -899,6 +929,77 @@ export default {
     //   },
   },
   methods: {
+      showDetail(){
+        
+        this.type = 1;
+        this.detailFlag = true;
+      },
+    async  contentDetail(item){
+          console.log(item,'contentDetail')
+          try {
+            
+            let res = await followList({id:item.id})
+            this.recordList = res.data;
+            let  {
+                        adMan,
+                        department,
+                        platform,
+                        project,
+                        qq,
+                        personnel,//销售员
+                        nextFollowUpDate,//下次跟进时间
+                        province,//省
+                        city,//市
+                        district,//区
+                        address,
+                        telephone,
+                        wechat,
+                        name,
+                        disTime,
+                        sourceLink,
+                        type,
+                        email,
+                        id,
+                        isValid,
+                        personnelName,
+                        departmentName,
+                        keyword,leaveWord,invalidCause,isValidStr
+                       
+                    } = {...item}
+                    
+                    this.detail = { adMan,
+                         department,
+                        platform,
+                        project,
+                        disTime,
+                        qq,
+                        id,
+                        nextFollowUpDate,//下次跟进时间
+                        province,//省
+                        city,//市
+                        district,//区
+                        address,
+                        telephone,
+                        wechat,
+                        name,
+                        personnelName,
+                        departmentName,
+                        sourceLink,
+                        type,
+                        keyword,leaveWord,
+                        isValid:isValid?isValid:isValid == 0?0:'',
+                        email,invalidCause
+                        };
+            this.detail.record = res.data
+          } catch (error) {
+             
+          }
+            
+      },
+      contentDetailHide(){
+        //   this.recordList = [];
+          console.log('contentDetailHide')
+      },
       resetList(arr){
         // console.log(arr)
         let pList = [];
@@ -1184,7 +1285,9 @@ export default {
         try {
             res.data.map(item => {
          
-          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+          if(item.sourceLink){
+             item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+         }
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
@@ -1399,12 +1502,12 @@ export default {
                this.type = value;
                this.choiseItem = {...item}
                 if(item){
-                    if(item.city&&item.district){
-                        let city = await cityList({fid:item.province});
-                         this.detailCity = city.data;
-                         let district = await districtList({fid:item.city});
-                        this.detailDistrict = district.data;
-                    }
+                    // if(item.city&&item.district){
+                    //     let city = await cityList({fid:item.province});
+                    //      this.detailCity = city.data;
+                    //      let district = await districtList({fid:item.city});
+                    //     this.detailDistrict = district.data;
+                    // }
                   
                    let  {
                         adMan,
@@ -1412,7 +1515,7 @@ export default {
                         platform,
                         project,
                         qq,
-                        personnel,//所属人员
+                        personnel,//销售员
                         nextFollowUpDate,//下次跟进时间
                         province,//省
                         city,//市
@@ -1517,6 +1620,13 @@ export default {
          this.$loading.hide()
          
      },
+    cellMouseEnter(row, column, cell, event){
+      console.log(row, column,'Enter')
+
+    },
+    cellMouseLeave(row, column, cell, event){
+      console.log(row, column,'Leave')
+    },
       handleSelectionChange(value){
           console.log(value)
           let list = [];

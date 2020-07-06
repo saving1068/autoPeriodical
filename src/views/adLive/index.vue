@@ -97,6 +97,7 @@
         @row-dblclick="rowDblclic"
         style="width: 100%"
         @selection-change="handleSelectionChange"
+        @cell-mouse-enter='cellMouseEnter'
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="name" align="center" label="客户姓名"></el-table-column>
@@ -109,10 +110,10 @@
         <el-table-column prop="personnelName" align="center" label="销售员"></el-table-column>
         <el-table-column prop="disTime" align="center" label="分配时间"></el-table-column>
         <el-table-column prop="getDate" align="center" label="获取时间"></el-table-column>
-        <el-table-column label="是否有效" align="center" prop="isValidStr">
-          <!-- <template slot-scope="scope">{{scope.row.isValid == 0?'无效':'有效'}}</template> -->
-        </el-table-column>
-        <el-table-column label="是否已成交" align="center" prop="isSuccessStr"></el-table-column>
+        
+        <el-table-column label="是否有效" align="center" prop="isValidStr"></el-table-column>
+        <el-table-column label="无效原因" align="center" prop="invalidCauseStr"></el-table-column>
+        <!-- <el-table-column label="是否已成交" align="center" prop="isSuccessStr"></el-table-column> -->
 
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -244,7 +245,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <a :href="detail.sourceLink">{{detail.sourceLink}}</a>
+              <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
               
             </el-form-item>
             <el-form-item label="客户类型" prop="type">
@@ -446,11 +447,11 @@ import { accountList } from "@/api/user";
 import { dictApi, idChangeStr, filterButton,encryptionTel } from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
-  department: "", //所属部门
+  department: "", //销售部
   platform: "", //逾期
   project: "", //项目
   qq: "", //有效
-  personnel: "", //所属人员
+  personnel: "", //销售员
   nextFollowUpDate: "", //下次跟进时间
   province: "", //省
   city: "", //市
@@ -525,7 +526,7 @@ export default {
       type: 0,
       search: {
         adMan: "", //广告负责人
-        department: "", //所属部门
+        department: "", //销售部
         platform: "", //逾期
         project: "", //项目
         qq: "", //有效
@@ -533,7 +534,7 @@ export default {
         getDateEnd: "",
         disTimeBegin: "",
         disTimeEnd: "",
-        personnel: "", //所属人员
+        personnel: "", //销售员
         nextFollowUpDate: "", //下次跟进时间
         province: "", //省
         city: "", //市
@@ -905,8 +906,19 @@ export default {
         console.log(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1,'console.log(this.userInfo.role.roleId)')
         res.data.map(item => {
           item.isSuccessStr = idChangeStr(this.isSuccess, item.isSuccess);
-          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+          if(item.sourceLink){
+             item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+         }
+         let isValidStr;
+          if(item.isValid !=''){
+            isValidStr = isValid == 0?'无效':'有效'
+          }else{
+            isValidStr = '空'
+          }
+          item.isValidStr = isValidStr;
+         item.invalidCauseStr = item.invalidCause?item.invalidCause:'空';
           item.platformStr = idChangeStr(this.platform, item.platform);
+
           console.log(item.sourceLink)
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
@@ -1121,7 +1133,7 @@ export default {
             platform,
             project,
             qq,
-            personnel, //所属人员
+            personnel, //销售员
             nextFollowUpDate, //下次跟进时间
             province, //省
             city, //市
@@ -1137,13 +1149,11 @@ export default {
             id,
             isValid,
             disTime,
+            isValidStr,
             keyword,
             leaveWord
           } = { ...item };
-          let isValidStr;
-          if(isValid !=''){
-            isValidStr = isValid == 0?'无效':'有效'
-          }
+          
           this.detail = {
             adMan,
             department,
@@ -1216,6 +1226,9 @@ export default {
         this.$loading.hide();
       }
       this.$loading.hide();
+    },
+    cellMouseEnter(row, column, cell, event){
+      console.log(row, column, cell, event)
     },
     handleSelectionChange(value) {
       console.log(value);

@@ -50,13 +50,13 @@
                 </el-date-picker>
         </el-form-item> -->
          <!--
-        <el-form-item label="所属人员" > 经理
+        <el-form-item label="销售员" > 经理
            <el-select clearable class="width280" v-model="search.personnel" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" > 经理 
+        <el-form-item label="销售部" > 经理 
            <el-select clearable class="width280" v-model="search.department" placeholder="活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -155,6 +155,8 @@
             tooltip-effect="dark"
             @row-dblclick='rowDblclic'
             style="width: 100%"
+            @cell-mouse-leave='cellMouseLeave'
+            @cell-mouse-enter ='cellMouseEnter'
             @selection-change="handleSelectionChange">
             <el-table-column
             type="selection"
@@ -188,12 +190,13 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                   
-                   <el-button type="text" v-show='filterButton(102)'  @click.native='transfer(scope.row)'>转接给他人</el-button>
+                <el-button type="text" @click.native='transfer(scope.row)'>转接给他人</el-button>
                    <!-- <el-button type="text" v-show='filterButton(103)' @click.native='getVisitList(scope.row)'>来访记录</el-button> -->
     
-                   <el-button type="text" v-show='filterButton(108)' @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
-                   <el-button type="text" v-show='filterButton(106)' @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
-                    <el-button  type="text" v-show='filterButton(107)' @click.native="waiveCustomer(scope.row)" slot="reference">放弃</el-button>
+                <el-button type="text"  @click.native='rowDblclic(scope.row,2)'>编辑</el-button>
+                <el-button type="text" @click.native='rowDblclic(scope.row,1)'>详情</el-button>            
+                <el-button  type="text"@click.native="waiveCustomer(scope.row)" >放弃</el-button>
+                <el-button  type="text"@click.native="deleteCustomerList(scope.row)" >删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -218,7 +221,7 @@
                 <el-input v-model="amountInfo.money" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="备注">
-                <el-input v-model="amountInfo.remark" placeholder="审批人"></el-input>
+                <el-input v-model="amountInfo.remark" placeholder="备注"></el-input>
             </el-form-item>
          </el-form >
         <span slot="footer" class="dialog-footer">
@@ -444,7 +447,7 @@
         center
         :before-close="handleClose">
         <div class="formCenter">
-        <div class="formContenView">
+        <div :class="[type != 1?'formContenView100':'formContenView']">
           <div class="title">基本信息</div>
           <el-form inline class="form-inline" label-width='100px'  :rules="detailRules" :model="detail" ref="detail">
             <el-form-item label="客户姓名" width='100%' prop="name">
@@ -519,11 +522,11 @@
             <el-input class="width280" placeholder="请输入微信" v-model="detail.wechat " :disabled="type == 1?true:false"></el-input>
         </el-form-item>
         <el-form-item label="来源连接" prop="sourceLink">
-            <a :href="detail.sourceLink" v-if="type == 1"></a>
+            <a style='display:block;height:28px;width:280px' v-if="type==1" :href="detail.sourceLink">{{detail.sourceLink}}</a>
             <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
         </el-form-item>
-        <!-- <el-form-item label="所属部门" v-if='type == 0'>
-            <el-select clearable  class="width280" v-model="detail.department" placeholder="请选择所属部门" :disabled="type == 1?true:false">
+        <!-- <el-form-item label="销售部" v-if='type == 0'>
+            <el-select clearable  class="width280" v-model="detail.department" placeholder="请选择销售部" :disabled="type == 1?true:false">
             <el-option
                 v-for="item in departmentList"
                 :key="String(item.id)"
@@ -533,8 +536,8 @@
            
             </el-select>
         </el-form-item> -->
-        <!-- <el-form-item label="所属人员" v-if="userInfo.role.roleId !=7" >
-            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="所属部门人员" :disabled="type == 1?true:false">
+        <!-- <el-form-item label="销售员" v-if="userInfo.role.roleId !=7" >
+            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="销售部人员" :disabled="type == 1?true:false">
                 <el-option
                     v-for="item in saleList"
                     :key="item.userId"
@@ -596,8 +599,8 @@
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
-            <el-form-item label="分配时间" prop="disTime">
-              <el-input class="width280" v-model="detail.disTime" disabled></el-input>
+            <el-form-item label="分配时间" prop="disTime" v-if='type ==1'>
+              <el-input class="width280"  v-model="detail.disTime" disabled></el-input>
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
               <el-input
@@ -692,11 +695,11 @@ import {accountList} from '@/api/user'
 import { dictApi ,idChangeStr,filterButton,downFile,encryptionTel} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
-        department:"",//所属部门
+        department:"",//销售部
         platform:"",//逾期
         project:'',//项目
         qq:'',//有效
-        personnel:"",//所属人员
+        personnel:"",//销售员
         nextFollowUpDate:'',//下次跟进时间
         province:'',//省
         city:"",//市
@@ -757,7 +760,7 @@ export default {
         type:0,
         search:{
             adMan:'',//广告负责人
-            department:"",//所属部门
+            department:"",//销售部
             platform:"",//逾期
             project:'',//项目
             qq:'',//有效
@@ -765,7 +768,7 @@ export default {
             getDateEnd:"",
             disTimeBegin:'',
             disTimeEnd:'',
-            personnel:"",//所属人员
+            personnel:"",//销售员
             nextFollowUpDate:'',//下次跟进时间
             province:'',//省
             city:"",//市
@@ -869,6 +872,19 @@ export default {
     //   },
   },
   methods: {
+      deleteCustomerList(item){
+           this.$confirm('确认删除该数据？')
+          .then(async _ => {
+              let obj = {
+                  id:item.id
+              }
+            let res = await deleteCustomer(obj);
+            this.$message.success(res.returnMsg);
+            this.search.page = 1;
+            this.customerList()
+          })
+          .catch(_ => {});
+      },
      clickTest(){
          alert('请使用导入模版导入')
          console.log(1)
@@ -1118,6 +1134,8 @@ export default {
         this.saleList = saleList.data;
         let project = await projectList();
         this.projectList = project.data;
+        // debugger
+
         // if(this.userInfo.role.roleId !=7){
         //      let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
         //     this.personnel = personnel.data;
@@ -1164,7 +1182,9 @@ export default {
         console.log(res,222222222222)
         res.data.map(item => {
           item.platformName = idChangeStr(this.platform,item.platform)
-          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+          if(item.sourceLink){
+             item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+         }
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
@@ -1379,7 +1399,7 @@ export default {
                         platform,
                         project,
                         qq,
-                        personnel,//所属人员
+                        personnel,//销售员
                         nextFollowUpDate,//下次跟进时间
                         province,//省
                         city,//市
@@ -1474,6 +1494,12 @@ export default {
          this.$loading.hide()
          
      },
+     cellMouseEnter(row, column, cell, event){
+      console.log(row, column,'Enter')
+    },
+    cellMouseLeave(row, column, cell, event){
+      console.log(row, column,'Leave')
+    },
       handleSelectionChange(value){
           console.log(value)
           let list = [];
@@ -1542,5 +1568,8 @@ export default {
     }
     .manager{
         color: red;
+    }
+    .formContenView100{
+        width:100%;
     }
 </style>

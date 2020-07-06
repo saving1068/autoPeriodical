@@ -157,7 +157,32 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="name" align="center" label="客户姓名"></el-table-column>
+        <el-table-column prop="name" align="center" label="客户姓名">
+           <template slot-scope="scope">
+                    <el-popover trigger="hover"  @show="contentDetail(scope.row)"  placement="top">
+                    <el-timeline v-if='recordList.length'>
+                        <el-timeline-item
+                            v-for="(item,index) in recordList"
+                            :key="index"
+                            size="large"
+                            :timestamp="item.fuTime"
+                        >
+                            <el-card >
+                            <div @click.stop='showDetail'>
+                                <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                                <p >{{item.fupName}}</p>
+                               
+                            </div>
+                            </el-card>
+                        </el-timeline-item>
+                    </el-timeline>
+                    <div v-else>暂无跟进记录</div>
+                    <div slot="reference" class="name-wrapper">
+                        {{ scope.row.name }}
+                    </div>
+                    </el-popover>
+                </template>
+        </el-table-column>
         <el-table-column prop="telephone" align="center" label="手机号码"></el-table-column>
         <el-table-column prop="adManName" align="center" label="广告负责人"></el-table-column>
         <el-table-column prop="projectName" align="center" label="项目名称"></el-table-column>
@@ -462,8 +487,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="来源连接" prop="sourceLink">
-              <a :href="detail.sourceLink" v-if="type == 1"></a>
-            <el-input class="width280" v-else placeholder="请输入来源连接" v-model="detail.sourceLink "></el-input>
+              <a style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
             </el-form-item>
             <el-form-item label="客户类型" prop="type">
               <el-select
@@ -483,7 +507,7 @@
             <el-form-item label="所属部门人员" v-if="userInfo.role.roleId !=7">
               <el-input v-model="detail.departmentName" disabled></el-input>
             </el-form-item>
-            <el-form-item label="所属人员">
+            <el-form-item label="销售员">
               <el-input v-model="detail.personnelName" disabled></el-input>
             </el-form-item>
 
@@ -624,11 +648,11 @@ import { userDepartmentList } from "@/api/department";
 import { dictApi, idChangeStr, filterButton ,encryptionTel} from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
-  department: "", //所属部门
+  department: "", //销售部
   platform: "", //逾期
   project: "", //项目
   qq: "", //有效
-  personnel: "", //所属人员
+  personnel: "", //销售员
   nextFollowUpDate: "", //下次跟进时间
   province: "", //省
   city: "", //市
@@ -691,7 +715,7 @@ export default {
       type: 0,
       search: {
         adMan: "", //广告负责人
-        department: "", //所属部门
+        department: "", //销售部
         platform: "", //逾期
         project: "", //项目
         qq: "", //有效
@@ -699,7 +723,7 @@ export default {
         getDateEnd: "",
         disTimeBegin: "",
         disTimeEnd: "",
-        personnel: "", //所属人员
+        personnel: "", //销售员
         nextFollowUpDate: "", //下次跟进时间
         province: "", //省
         city: "", //市
@@ -764,7 +788,8 @@ export default {
       amountInfo: {},
       delAmount: false,
       choiseItem: {},
-      total: 0
+      total: 0,
+      recordList:[]
     };
   },
   async created() {
@@ -791,6 +816,73 @@ export default {
     //   },
   },
   methods: {
+    showDetail(){
+        
+        this.type = 1;
+        this.detailFlag = true;
+      },
+    async  contentDetail(item){
+          console.log(item,'contentDetail')
+          try {
+            
+            let res = await followList({id:item.id})
+            this.recordList = res.data;
+            let  {
+                        adMan,
+                        department,
+                        platform,
+                        project,
+                        qq,
+                        personnel,//销售员
+                        nextFollowUpDate,//下次跟进时间
+                        province,//省
+                        city,//市
+                        district,//区
+                        address,
+                        telephone,
+                        wechat,
+                        name,
+                        disTime,
+                        sourceLink,
+                        type,
+                        email,
+                        id,
+                        isValid,
+                        personnelName,
+                        departmentName,
+                        keyword,leaveWord,invalidCause,isValidStr
+                       
+                    } = {...item}
+                    
+                    this.detail = { adMan,
+                         department,
+                        platform,
+                        project,
+                        disTime,
+                        qq,
+                        id,
+                        nextFollowUpDate,//下次跟进时间
+                        province,//省
+                        city,//市
+                        district,//区
+                        address,
+                        telephone,
+                        wechat,
+                        name,
+                        personnelName,
+                        departmentName,
+                        sourceLink,
+                        type,
+                        keyword,leaveWord,
+                        isValid:isValid?isValid:isValid == 0?0:'',
+                        email,invalidCause
+                        };
+            this.detail.record = res.data
+          } catch (error) {
+             
+          }
+            
+      },
     async delAmountList(item) {
       let res, list;
       let obj = {
@@ -1061,7 +1153,9 @@ export default {
       console.log(res, 222222222222);
      res.data.map(item => {
           item.isSuccessStr = idChangeStr(this.isSuccess, item.isSuccess);
-          item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+          if(item.sourceLink){
+             item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
+         }
           if(this.userInfo.role.roleId !=7&&this.userInfo.role.roleId !=1){
             item.telephone = encryptionTel(item.telephone)
           }
@@ -1259,12 +1353,12 @@ export default {
         this.type = value;
         this.choiseItem = { ...item };
         if (item) {
-          if (item.city && item.district) {
-            let city = await cityList({ fid: item.province });
-            this.detailCity = city.data;
-            let district = await districtList({ fid: item.city });
-            this.detailDistrict = district.data;
-          }
+          // if (item.city && item.district) {
+          //   let city = await cityList({ fid: item.province });
+          //   this.detailCity = city.data;
+          //   let district = await districtList({ fid: item.city });
+          //   this.detailDistrict = district.data;
+          // }
 
           let {
             adMan,
@@ -1272,7 +1366,7 @@ export default {
             platform,
             project,
             qq,
-            personnel, //所属人员
+            personnel, //销售员
             nextFollowUpDate, //下次跟进时间
             province, //省
             city, //市

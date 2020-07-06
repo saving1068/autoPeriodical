@@ -26,7 +26,7 @@
       <div class="center" style="flex:1">
           <div v-show="editUserFlag"  class="center" style="padding-bottom:20px;width:500px">
               <div style="padding-bottom:20px;">
-                所属部门：
+                销售部：
                 <el-tree :data="list"   ref="tree" show-checkbox :props="defaultProps" default-expand-all node-key="id" ></el-tree>
                 </div>
                 <el-form label-width="100px" size="mini"  :rules="muneInfoRules" :model="muneInfo" ref="muneInfo"   style="width:300px;flex:1;">
@@ -82,7 +82,7 @@
     >
     <div class="center">
       <div style="padding-bottom:20px;">
-        所属部门：
+        销售部：
         <el-tree :data="routerList" show-checkbox :props="defaultProps" node-key="id"  default-expand-all @check="sonCheck"></el-tree>
         <!-- <el-radio-group v-model="addMuneInfo.superior">
           <el-radio v-for="(item,index) in list" :key="index" :label="item.id">{{item.description}}</el-radio>

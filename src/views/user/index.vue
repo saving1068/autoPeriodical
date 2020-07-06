@@ -126,7 +126,7 @@
            </el-form>
            <div>
               
-              <div>所属部门</div>
+              <div>销售部</div>
                 <el-tree
                 v-if='userChange'
                  ref="departmentTree"
