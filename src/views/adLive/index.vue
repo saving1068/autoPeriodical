@@ -910,12 +910,17 @@ export default {
              item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
          }
          let isValidStr;
-          if(item.isValid !=''){
+          if(item.isValid){
             isValidStr = item.isValid == 0?'无效':'有效'
           }else{
-            isValidStr = '空'
+            if(item.isValid == 0){
+                isValidStr = '无效'
+            }else{
+              isValidStr = '空'
+            }
+            
           }
-          item.isValidStr = isValidStr;
+          item.isValidStr = isValidStr
          item.invalidCauseStr = item.invalidCause?item.invalidCause:'空';
           item.platformStr = idChangeStr(this.platform, item.platform);
 

@@ -97,7 +97,7 @@ const parseDate = (rawDate) => {
 
 const downFile = ((url)=>{
     try {
-        // http://wearewwx.com:8001 http://wearewwx.com:8001
+        // http://wearewwx.com:8001 http://wearewwx.com:8001 127.0.0.1.2y
         let request = 'http://211.149.157.83:8889/' +url
         console.log(request)
         let aLink = document.createElement("a");
