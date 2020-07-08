@@ -573,7 +573,6 @@
                 class="width280" 
                 style="width:510px"
                 type="textarea"
-                disabled
                 
                 show-word-limit
                         maxlength="1000"
