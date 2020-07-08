@@ -694,7 +694,7 @@ export default {
             {key:1,label:"是"}
         ],
         activeName:"first",
-         valid:[{
+        valid:[{
             key:1,
             label:"有效"
         },
@@ -1043,7 +1043,7 @@ export default {
       sonsTree(obj) {
         // console.log(obj.name,obj.child.length)
         // let son  = []
-        console.log(obj,'obj')
+       
         if(obj.child.length){
           obj.child.forEach((item)=>{
            

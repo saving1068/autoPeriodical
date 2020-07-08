@@ -200,7 +200,7 @@
     </el-form>
     <div class='table'>
         <div class='button'>
-            <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button> -->
+            <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
             <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>
              <!-- <el-button v-show='filterButton(109)'>导出</el-button> -->
         </div>
@@ -499,8 +499,8 @@
            
             </el-select>
         </el-form-item> -->
-        <!-- <el-form-item label="销售员" v-if="userInfo.role.roleId !=7" >
-            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="销售部人员" :disabled="type == 1?true:false">
+        <el-form-item label="销售员" v-if="userInfo.role.roleId !=7" prop='personnel'>
+            <el-select clearable  class="width280" v-model="detail.personnel" placeholder="销售部人员" :disabled="type != 0?true:false">
                 <el-option
                     v-for="item in saleList"
                     :key="item.userId"
@@ -509,7 +509,7 @@
                 ></el-option>
            
             </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <!-- <el-form-item label="所属省份">
   
                <el-select clearable class="width280" v-model="detail.province" @change="detailProvinceChange" placeholder="请选择所属省份" :disabled="type == 1?true:false">
@@ -544,7 +544,7 @@
                 </el-option>
                 </el-select>
             </el-form-item> -->
-             <!-- <el-form-item label="是否有效" >
+             <el-form-item label="是否有效" prop='isValid'>
            <el-select clearable class="width280" v-model="detail.isValid" :disabled="type == 1?true:false" placeholder="请选择是否有效">
                
                 <el-option 
@@ -554,7 +554,10 @@
                 :value="item.key">
                 </el-option>
                 </el-select>
-            </el-form-item> -->
+            </el-form-item>
+            <el-form-item label="无效原因" v-if='detail.isValid == 0' prop="invalidCause">
+                <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
+            </el-form-item>
             <el-form-item label="关键词" >
                 <el-input class="width280" placeholder="请输入关键词" v-model="detail.keyword"></el-input>
             </el-form-item>
@@ -565,7 +568,7 @@
             <el-form-item label="分配时间" prop="disTime" v-if='type ==1'>
               <el-input class="width280"  v-model="detail.disTime" disabled></el-input>
             </el-form-item>
-             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+             <el-form-item label="留言" prop="leaveWord">
               <el-input
                 class="width280" 
                 style="width:510px"
@@ -788,6 +791,9 @@ export default {
                 type:[
                      { required: true, message: '请输入客户类型', trigger: 'blur' },
                 ],
+                personnel:[
+                     { required: true, message: '请选择销售员', trigger: 'blur' },
+                ],
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },
                 ],
@@ -857,7 +863,7 @@ export default {
             
             let res = await followList({id:item.id})
             this.recordList = res.data;
-            
+            console.log(item)
             let  {
                         adMan,
                         department,
@@ -889,6 +895,7 @@ export default {
                          department,
                         platform,
                         project,
+                        personnel,
                         disTime,
                         qq,
                         id,
@@ -909,6 +916,7 @@ export default {
                         email,invalidCause
                         };
                         this.detail.record = res.data;
+                        console.log(this.detail,'detail.personnel')
           } catch (error) {
              
           }
@@ -1227,6 +1235,8 @@ export default {
                     if(this.userInfo.role.roleId == 7){
                         this.detail.personnel = this.userInfo.id;
                     }
+                    this.detail.isAgainAllot = 1;
+                    // this.detail.isValid = 1;
                     let res = await updateCustomer(this.detail);
                     this.$message.success(res.returnMsg)
                         this.customerList()
@@ -1296,6 +1306,7 @@ export default {
                          department,
                         platform,
                         project,
+                        personnel,
                         disTime,
                         qq,
                         id,

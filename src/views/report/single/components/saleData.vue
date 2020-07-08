@@ -169,9 +169,9 @@ export default {
                
             })
            
-            let sumVisTotalRate = !isNaN((sumVisTotal/sumTotal).toFixed(2))?(sumVisTotal/sumTotal).toFixed(2)*100+"(%)":'0(%)';
-            let sumValidTotalRate = !isNaN((sumValidTotal/sumTotal).toFixed(2))?(sumValidTotal/sumTotal).toFixed(2)*100+"(%)":'0(%)';
-            let sumDisVisTotalRate = !isNaN((sumDisVisTotal/sumTotal).toFixed(2))?(sumDisVisTotal/sumTotal).toFixed(2)*100+"(%)":'0(%)';
+            let sumVisTotalRate = !isNaN((sumVisTotal/sumTotal).toFixed(2))?(sumVisTotal/sumTotal*100).toFixed(2)+"(%)":'0(%)';
+            let sumValidTotalRate = !isNaN((sumValidTotal/sumTotal).toFixed(2))?(sumValidTotal/sumTotal*100).toFixed(2)+"(%)":'0(%)';
+            let sumDisVisTotalRate = !isNaN((sumDisVisTotal/sumTotal).toFixed(2))?(sumDisVisTotal/sumTotal*100).toFixed(2)+"(%)":'0(%)';
             this.info = {
                 sumTotal,sumVisTotal,sumValidTotal,sumDisVisTotal,
                 

@@ -137,7 +137,7 @@
             <!-- http://211.149.157.83:8889 http://wearewwx.com:8001-->
             <el-upload
                 class="upload-demo"
-                action="http://211.149.157.83:8889/customer/importData"
+                action="/api/customer/importData"
                 :headers='headers'
                 :on-success='onSuccess'
                 :show-file-list='false'
@@ -602,7 +602,7 @@
             <el-form-item label="分配时间" prop="disTime" v-if='type ==1'>
               <el-input class="width280"  v-model="detail.disTime" disabled></el-input>
             </el-form-item>
-             <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+             <el-form-item label="留言" prop="leaveWord">
               <el-input
                 class="width280" 
                 style="width:510px"
@@ -900,7 +900,7 @@ export default {
                   this.fileList.pop()
               }else{
                   this.fileList = [];
-                  this.$message.warning('上传失败,请下载导入模版进行导入')
+                  this.$message.warning(response.returnMsg)
               }
           }else{
               this.$message.success(response.returnMsg||'导入成功')
