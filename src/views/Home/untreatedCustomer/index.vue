@@ -418,7 +418,7 @@
         </el-form-item>
         <el-form-item label="广告负责人" prop="adMan">
             <!-- <div v-if="type == 0"> -->
-                <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type == 1?true:false">
+                <el-select clearable class="width280" v-model="detail.adMan" placeholder="请选择广告负责人" :disabled="type != 0?true:false">
                     <el-option 
                         v-for="item in userList"
                         :key="item.id"
@@ -450,7 +450,7 @@
         </el-form-item>
         <el-form-item label="项目" prop="project">
             <!-- <div v-if="type == 0"> -->
-                <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type == 1?true:false">
+                <el-select clearable  class="width280" v-model="detail.project" placeholder="请选择项目" :disabled="type != 0?true:false">
                 <el-option
                     v-for="item in projectList"
                     :key="Number(item.id)"
