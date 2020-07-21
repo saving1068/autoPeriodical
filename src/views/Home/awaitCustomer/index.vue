@@ -287,9 +287,11 @@
         </el-table>
          <el-pagination
         style=" padding:20px;"
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :page-sizes="[10,20, 50, 100, 200]"
         :page-size="10"
-        layout="total, prev, pager, next"
+        layout="total, prev, pager, next,sizes"
         :total="total">
     </el-pagination>
     </div>
@@ -688,7 +690,7 @@ export default {
                     return time.getTime()<Date.now() -24*60*60*1000
                 }
             },
-        nowDate:0,
+        nowDate:'',
         nowList:[
             {key:0,label:"否"},
             {key:1,label:"是"}
@@ -1376,6 +1378,11 @@ export default {
           })
           this.waiveInfo.ids = list;
           this.transferListInfo.list = transferListInfo;
+      },
+      handleSizeChange(val) {
+        this.search.limit = val;
+       this.customerList()
+        console.log(`当前页: ${val}`);
       },
       handleCurrentChange(val) {
         this.search.page = val;

@@ -171,8 +171,9 @@
         <el-table-column align="center" prop="opMoney" label="其他收入(元)"></el-table-column>
         <el-table-column align="center" prop="money" label="合同金额(元)"></el-table-column>
         <el-table-column align="center" prop="allMoney" label="合计收入(元)"></el-table-column>
+        <el-table-column prop="visitingTime" align='center' label="最新的来访时间"></el-table-column>
         <el-table-column align="center" prop="getDate" label="获取时间"></el-table-column>
-        <el-table-column label="操作" width="250px">
+        <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!-- <el-popconfirm
               title="确定成交该数据？"
@@ -183,11 +184,13 @@
             >
               <el-button style="margin-right:10px" type="text" slot="reference">成交</el-button>
             </el-popconfirm> -->
+            <el-button type="text" @click.native="rowDblclic(scope.row,1)">详情</el-button>
             <el-button type="text" @click.native="successShow(scope.row)">成交</el-button>
+            
             <el-button type="text" @click.native="amount(scope.row,0)">前场金额</el-button>
             <el-button type="text" @click.native="amount(scope.row,1)">后场金额</el-button>
             <el-button type="text" @click.native="amount(scope.row,2)">其他收入金额</el-button>
-            <el-button type="text" @click.native="rowDblclic(scope.row,1)">详情</el-button>
+            
           </template>
         </el-table-column>
       </el-table>

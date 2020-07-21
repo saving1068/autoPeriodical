@@ -4,6 +4,9 @@
       <el-form-item label="客户姓名" width="100%">
         <el-input class="width280" v-model="search.name" placeholder="请输入客户姓名"></el-input>
       </el-form-item>
+      <el-form-item label="手机号码">
+        <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
+      </el-form-item>
       <el-form-item label="广告负责人" v-if="showAdMan">
         <el-select clearable class="width280" v-model="search.adMan" placeholder="请选择广告负责人">
           <el-option
@@ -25,9 +28,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="手机号码">
-        <el-input class="width280" placeholder="请输入手机号码" v-model="search.telephone"></el-input>
-      </el-form-item>
+      
       <el-form-item label="是否已成交">
         <el-select clearable class="width280" v-model="search.isSuccess" placeholder="请选择是否已成交">
           <el-option
@@ -75,7 +76,7 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="分配时间">
+      <!-- <el-form-item label="分配时间">
         <el-date-picker
           v-model="disTime"
           type="daterange"
@@ -85,7 +86,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <div class="center">
         <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
       </div>
@@ -108,7 +109,7 @@
         <el-table-column prop="sourceLink" align="center" label="来源连接"></el-table-column>
         <el-table-column prop="platformStr" align="center" label="平台"></el-table-column>
         <el-table-column prop="personnelName" align="center" label="销售员"></el-table-column>
-        <el-table-column prop="disTime" align="center" label="分配时间"></el-table-column>
+        <!-- <el-table-column prop="disTime" align="center" label="分配时间"></el-table-column> -->
         <el-table-column prop="getDate" align="center" label="获取时间"></el-table-column>
         
         <el-table-column label="是否有效" align="center" prop="isValidStr"></el-table-column>

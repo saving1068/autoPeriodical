@@ -555,6 +555,17 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="客户类型" prop="type">
+            <el-select clearable  class="width280" v-model="detail.type" placeholder="请选择客户类型" :disabled="type == 1?true:false">
+            <el-option
+                v-for="item in currentType"
+                :key="String(item.key)"
+                :label="item.value"
+                :value="String(item.key)"
+            ></el-option>
+           
+            </el-select>
+        </el-form-item>
             <el-form-item label="无效原因" v-if='detail.isValid == 0' prop="invalidCause">
                 <el-input class="width280" placeholder="请输入无效原因" :disabled="type == 1?true:false" v-model="detail.invalidCause"></el-input>
             </el-form-item>
@@ -1225,7 +1236,8 @@ export default {
           try {
         this.$refs['detail'].validate((valid) => {
           if (valid) {
-                this.$confirm('是否确认新增客户', "提示", {
+              let tips = this.type ==0?'是否确认客户':'是否编辑客户'
+                this.$confirm(tips, "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
