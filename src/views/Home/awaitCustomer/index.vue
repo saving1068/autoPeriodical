@@ -216,22 +216,33 @@
             <el-table-column prop="name"  align='center' label="客户姓名">
                 <template slot-scope="scope">
                     <el-popover trigger="hover"  @show="contentDetail(scope.row)"  placement="top">
-                    <el-timeline v-if='recordList.length'>
+                    <!-- <el-timeline v-if='recordList.length'>
                         <el-timeline-item
                             v-for="(item,index) in recordList"
                             :key="index"
                             size="large"
                             :timestamp="item.fuTime"
                         >
-                            <el-card >
-                            <div @click.stop='showDetail'>
-                                <h4 :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                                <p >{{item.fupName}}</p>
-                               
+                            <el-card > -->
+                            <div v-if='recordList.length'>
+                                <div 
+                                class='space-between'
+                                style='padding:5px 0;'
+                                v-for="(item,index) in recordList"
+                                :key="index"
+                                @click.stop='showDetail' >
+                                <div >
+                                    <h4 style='max-width:200px' :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                                    <p>{{item.fupName}}</p>
+                                </div>
+                                
+                                <div style='padding:25px 0px 0 10px'>{{item.fuTime}}</div>
                             </div>
-                            </el-card>
+                            </div>
+                            
+                            <!-- </el-card>
                         </el-timeline-item>
-                    </el-timeline>
+                    </el-timeline> -->
                     <div v-else>暂无跟进记录</div>
                     <div slot="reference" class="name-wrapper">
                         {{ scope.row.name }}

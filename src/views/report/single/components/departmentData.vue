@@ -65,25 +65,24 @@
                     prop="valid"
                     label="有效率(%)">
                 </el-table-column>
-
                 <el-table-column
-                align='center'
-                    prop="visTotal"
+                    align='center'
+                    prop="disVisTotal"
                     label="来访量(分配时间)">
                 </el-table-column>
                  <el-table-column
                  align='center'
-                    prop="visTotalRate"
+                    prop="disVisTotalRate"
                     label="来访率(%)(分配时间)">
                 </el-table-column>
                 <el-table-column
-                align='center'
-                    prop="disVisTotal"
+                    align='center'
+                    prop="visTotal"
                     label="来访量(来访时间)">
                 </el-table-column>
                  <el-table-column
-                 align='center'
-                    prop="disVisTotalRate"
+                    align='center'
+                    prop="visTotalRate"
                     label="来访率(%)(来访时间)">
                 </el-table-column>
                
