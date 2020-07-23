@@ -92,15 +92,18 @@
       </div>
     </el-form>
     <div class="table">
+      <div class="button">
+        <el-button v-if="userInfo.role.roleId == 1"  type="primary" @click="exportCustomer">导出</el-button>
+      </div>
       <el-table
         :data="tableData"
         tooltip-effect="dark"
         @row-dblclick="rowDblclic"
         style="width: 100%"
         @selection-change="handleSelectionChange"
-        @cell-mouse-enter='cellMouseEnter'
+       
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="name" align="center" label="客户姓名"></el-table-column>
         <el-table-column prop="telephone" align="center" label="手机号码"></el-table-column>
         <el-table-column prop="adManName" align="center" label="广告负责人"></el-table-column>
@@ -445,7 +448,7 @@ import {
 import { departmentList } from "@/api/department";
 import { projectList } from "@/api/project";
 import { accountList } from "@/api/user";
-import { dictApi, idChangeStr, filterButton,encryptionTel } from "@/utils";
+import { dictApi, idChangeStr, filterButton,encryptionTel,downFile } from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
   department: "", //销售部
@@ -637,6 +640,12 @@ export default {
     //   },
   },
   methods: {
+    exportCustomer(){
+      let obj = JSON.stringify(this.search);
+      console.log(obj)
+      let url =`customer/liveExport?jsonStr=${obj}`;
+      downFile(url)
+    },
     async delAmountList(item) {
       let res, list;
       let obj = {
@@ -1234,9 +1243,7 @@ export default {
       }
       this.$loading.hide();
     },
-    cellMouseEnter(row, column, cell, event){
-      console.log(row, column, cell, event)
-    },
+
     handleSelectionChange(value) {
       console.log(value);
       let list = [];
