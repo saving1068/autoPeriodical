@@ -233,7 +233,7 @@
                                 :key="index"
                                 @click.stop='showDetail' >
                                 <div >
-                                    <h4 style='max-width:200px' :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                                    <h4 style='max-width:500px' :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
                                     <p>{{item.fupName}}</p>
                                 </div>
                                 

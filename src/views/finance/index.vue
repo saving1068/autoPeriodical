@@ -778,6 +778,7 @@ export default {
             isVisit:1,
             telephone:"",
             keyword:"",
+            orderField:0,
             page:1,
             limit:10
         },
