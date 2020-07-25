@@ -167,7 +167,7 @@
         <el-table-column align="center" prop="personnelName" label="销售员"></el-table-column>
         <el-table-column align="center" prop="departmentName" label="销售部"></el-table-column>
         <el-table-column align="center" prop="bpMoney" label="前场收入(元)"></el-table-column>
-        <el-table-column align="center" prop="opMoney" label="后场收入(元)"></el-table-column>
+        <el-table-column align="center" prop="fpMoney" label="后场收入(元)"></el-table-column>
         <el-table-column align="center" prop="opMoney" label="其他收入(元)"></el-table-column>
         <el-table-column align="center" prop="money" label="合同金额(元)"></el-table-column>
         <el-table-column align="center" prop="allMoney" label="合计收入(元)"></el-table-column>
@@ -1184,7 +1184,8 @@ export default {
         let res = await customerList(this.search)
         console.log(res,222222222222)
         res.data.map(item => {
-          item.allMoney = Number(item.bpMoney)+Number(item.fpMoney)+Number(item.opMoney)
+          item.allMoney = Number(item.bpMoney)+Number(item.fpMoney)+Number(item.opMoney);
+          item.money = item.money?item.money:0;
           if(item.sourceLink){
              item.sourceLink = item.sourceLink.indexOf('?')<0?item.sourceLink:item.sourceLink.split('?')[0];
          }

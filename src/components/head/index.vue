@@ -28,7 +28,7 @@
                             small
                               @size-change="handleSizeChange"
                              @current-change="handleCurrentChange"
-                            layout="prev, pager, next"
+                            layout="total, prev, pager, next"
                             :total="total">
                             </el-pagination>
                     </el-dropdown-menu>

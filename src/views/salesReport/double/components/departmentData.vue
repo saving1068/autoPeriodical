@@ -72,7 +72,7 @@
                 </el-table>
                 <el-pagination
                    
-                    layout="prev, pager, next"
+                    layout="total, prev, pager, next"
                     :total="total"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
