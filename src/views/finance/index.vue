@@ -119,7 +119,7 @@
       <el-form-item label="关键词">
         <el-input class="width280" placeholder="请输入关键词" v-model="search.keyword"></el-input>
       </el-form-item>
-      <el-form-item label="获取时间">
+      <!-- <el-form-item label="获取时间">
         <el-date-picker
           v-model="time"
           type="daterange"
@@ -130,7 +130,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="分配时间" >
             <el-date-picker
                 v-model="disTime"
@@ -172,7 +172,7 @@
         <el-table-column align="center" prop="money" label="合同金额(元)"></el-table-column>
         <el-table-column align="center" prop="allMoney" label="合计收入(元)"></el-table-column>
         <el-table-column prop="visitingTime" align='center' label="最新的来访时间"></el-table-column>
-        <el-table-column align="center" prop="getDate" label="获取时间"></el-table-column>
+        <!-- <el-table-column align="center" prop="getDate" label="获取时间"></el-table-column> -->
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!-- <el-popconfirm
@@ -493,6 +493,17 @@
             <el-form-item label="来源连接" prop="sourceLink">
               <a target="_blank" style='display:block;height:28px;width:280px' :href="detail.sourceLink">{{detail.sourceLink}}</a>
             </el-form-item>
+            <el-form-item label="资源类别" prop="resourceType">
+                <el-select clearable  class="width280" v-model="detail.resourceType" placeholder="请选择资源类别" :disabled="type == 1?true:false">
+                <el-option
+                    v-for="item in resourceType"
+                    :key="String(item.key)"
+                    :label="item.value"
+                    :value="Number(item.key)"
+                ></el-option>
+                
+                </el-select>
+            </el-form-item>
             <el-form-item label="客户类型">
               <el-select
                 clearable
@@ -601,23 +612,25 @@
                 :disabled="type == 1?true:false"
               ></el-input>
             </el-form-item>
-            <el-form-item label="分配时间" prop="disTime">
+            <el-form-item label="分配时间" prop="disTime" v-if="type == 1">
               <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
-            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
+            <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
+              <div v-html="detail.leaveWord" class="center"></div>
+
+            </el-form-item>
+             <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280"
+                class="width280" 
                 style="width:510px"
                 type="textarea"
-                
                 show-word-limit
-                        maxlength="1000"
-                disabled
-                resize="none"
+                maxlength="1000"
+                resize='none'
                 placeholder="请输入内容"
-                v-model="detail.leaveWord"
-              ></el-input>
-              <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
+                v-model="detail.leaveWord">
+                </el-input>
+                
             </el-form-item>
           </el-form>
         </div>
@@ -811,6 +824,9 @@ export default {
                 project:[
                      { required: true, message: '请选择项目', trigger: 'blur' },
                 ],
+                resourceType:[
+                     { required: true, message: '请输入资源类别', trigger: 'blur' },
+                ],
                 platform:[
                      { required: true, message: '请选择平台', trigger: 'blur' },
                 ],
@@ -861,6 +877,7 @@ export default {
                      { required: true, message: '请输入金额', trigger: 'blur' },
                 ],
             },
+            resourceType:[]
         }
     
   },
@@ -1132,6 +1149,7 @@ export default {
        
         
         //  
+        this.resourceType = await dictApi('resourceType')
         this.platform = await dictApi("platform");
         this.currentType = await dictApi('currentType');
         let userList = await accountList({roleId:8});
@@ -1433,6 +1451,7 @@ export default {
                         email,
                         id,
                         disTime,
+                        resourceType,
                         isValid,
                         keyword,leaveWord,departmentName,bpMoney,fpMoney,opMoney,money
                     } = {...item}
@@ -1452,6 +1471,7 @@ export default {
                         wechat,
                         name,
                         sourceLink,
+                        resourceType,
                         disTime,
                         type,
                         email,isValid:isValid?isValid:isValid == 0?0:'',

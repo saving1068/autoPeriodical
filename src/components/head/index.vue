@@ -235,23 +235,25 @@
             <el-form-item label="详细地址" prop="address">
                 <el-input class="width280" placeholder="请输入详细地址" v-model="detail.address" :disabled="type == 1?true:false"></el-input>
             </el-form-item>
-            <el-form-item label="分配时间" prop="disTime">
+            <el-form-item label="分配时间" prop="disTime" v-if="type == 1">
               <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
-            <el-form-item label="留言" prop="leaveWord" v-if="type != 0">
-             <el-input
+            <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
+              <div v-html="detail.leaveWord" class="center"></div>
+
+            </el-form-item>
+             <el-form-item label="留言" prop="leaveWord" v-else>
+              <el-input
                 class="width280" 
                 style="width:510px"
                 type="textarea"
                 show-word-limit
-                        maxlength="1000"
-                
-                disabled
+                maxlength="1000"
                 resize='none'
                 placeholder="请输入内容"
                 v-model="detail.leaveWord">
                 </el-input>
-                <!-- <el-input class="width280" placeholder="请输入留言" v-model="detail.leaveWord" :disabled="true"></el-input> -->
+                
             </el-form-item>
         </el-form>
         </div>
