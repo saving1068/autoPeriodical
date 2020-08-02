@@ -158,7 +158,7 @@
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="name" align="center" label="客户姓名">
-           <template slot-scope="scope">
+          <template slot-scope="scope">
                     <el-popover trigger="hover"  @show="contentDetail(scope.row)"  placement="top">
                     <!-- <el-timeline v-if='recordList.length'>
                         <el-timeline-item
@@ -170,17 +170,17 @@
                             <el-card > -->
                             <div v-if='recordList.length'>
                                 <div 
-                                class='space-between'
+                                
                                 style='padding:5px 0;'
                                 v-for="(item,index) in recordList"
                                 :key="index"
                                 @click.stop='showDetail' >
-                                <div >
-                                    <h4 style='max-width:500px' :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
-                                    <p>{{item.fupName}}</p>
-                                </div>
-                                
-                                <div style='padding:25px 0px 0 10px'>{{item.fuTime}}</div>
+                                    <div >
+                                        <h4 style='max-width:500px' :class="item.roleId != 7?'manager':''">{{item.remark}}</h4>
+                                        <p>{{item.fupName}}</p>
+                                    </div>
+                                    
+                                    <div style='padding:5px 0'>{{item.fuTime}}</div>
                             </div>
                             </div>
                             
@@ -611,13 +611,13 @@
               <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
-              <div v-html="detail.leaveWord" class="center"></div>
+              <div v-html="detail.leaveWord" class="center width280"></div>
 
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280" 
-                style="width:510px"
+               
+                style="width:480px"
                 type="textarea"
                 show-word-limit
                 maxlength="1000"
@@ -1389,7 +1389,10 @@ export default {
           //   let district = await districtList({ fid: item.city });
           //   this.detailDistrict = district.data;
           // }
-
+          let obj = {
+                    id:item.id
+                  }
+                  let resD =  await detailCustomer(obj)
           let {
             adMan,
             department,
@@ -1417,7 +1420,7 @@ export default {
             disTime,
             invalidCause,
             resourceType
-          } = { ...item };
+          } = { ...resD.data };
 
           this.detail = {
             adMan,
@@ -1444,7 +1447,7 @@ export default {
             keyword,
             leaveWord,
             invalidCause,
-            resourceType
+            resourceType,record:[]
           };
           console.log(this.detail);
           let res = await followList({ id: item.id });

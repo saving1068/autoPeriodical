@@ -1,4 +1,5 @@
 import {detailDic} from '@/api/admin';
+import axios from 'axios'
 
 const dictApi = (async (sign)=>{
     let res = await detailDic({sign})
@@ -93,7 +94,31 @@ const parseDate = (rawDate) => {
     
 
 
-
+const downFileGet = ((url)=>{
+    axios.get(url, {
+        withCredentials:true,
+         headers:{
+             "token":sessionStorage.getItem('token')
+         },
+         responseType: 'blob', //二进制流
+     }).then(function (res) {
+         console.log(res)
+         if(!res) return
+         let blob = new Blob([res.data])
+         let url = window.URL.createObjectURL(blob);
+         let aLink = document.createElement("a");
+         aLink.target = '_blank';
+         aLink.style.display = "none";
+         aLink.href = url;
+         aLink.setAttribute("download",'推广实况.xlsx');
+         document.body.appendChild(aLink);
+         aLink.click();
+         document.body.removeChild(aLink); 
+         window.URL.revokeObjectURL(url); 
+     }).catch(function (error) {
+         console.log(error)
+     });
+})
 
 const downFile = ((url)=>{
     try {
@@ -101,6 +126,7 @@ const downFile = ((url)=>{
         let request = '/api/' +url
         console.log(request)
         let aLink = document.createElement("a");
+            aLink.target = '_blank';
              aLink.style.display = "none";
              aLink.href = request;
              document.body.appendChild(aLink);
@@ -118,4 +144,4 @@ const encryptionTel = ((tel)=>{
 })
 
 
-export {dictApi,idChangeStr,downFile,filterButton,initDate,parseDate,encryptionTel}
+export {dictApi,idChangeStr,downFile,filterButton,initDate,parseDate,encryptionTel,downFileGet}

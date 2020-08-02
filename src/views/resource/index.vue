@@ -202,9 +202,11 @@
         </el-table>
          <el-pagination
             style=" padding:20px;"
+            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
+            :page-sizes="[10,20, 50, 100, 200]"
             :page-size="10"
-            layout="total, prev, pager, next"
+            layout="total, prev, pager, next,sizes"
             :total="total">
         </el-pagination>
     </div>
@@ -614,13 +616,13 @@
               <el-input class="width280"  v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
-              <div v-html="detail.leaveWord" class="center"></div>
+              <div v-html="detail.leaveWord" class="center width280"></div>
 
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280" 
-                style="width:510px"
+               
+                style="width:480px"
                 type="textarea"
                 show-word-limit
                 maxlength="1000"
@@ -1442,7 +1444,10 @@ export default {
                          let district = await districtList({fid:item.city});
                         this.detailDistrict = district.data;
                     }
-                  
+                  let obj = {
+                    id:item.id
+                  }
+                  let resD =  await detailCustomer(obj)
                    let  {
                         adMan,
                         department,
@@ -1464,7 +1469,7 @@ export default {
                         email,
                         id,isValid,
                         keyword,leaveWord,resourceType
-                    } = {...item}
+                    } = {...resD.data}
                     
                     this.detail = { adMan,
                          department,
@@ -1485,7 +1490,7 @@ export default {
                         type,
                         email,
                         isValid:isValid?isValid:isValid == 0?0:'',
-                        keyword,leaveWord,resourceType
+                        keyword,leaveWord,resourceType,record:[]
                         };
                         
                     let res = await followList({id:item.id})
@@ -1561,6 +1566,11 @@ export default {
           this.waiveInfo.ids = list;
           this.transferListInfo.list = transferListInfo;
           
+      },
+      handleSizeChange(val) {
+        this.search.limit = val;
+       this.customerList()
+        console.log(`当前页: ${val}`);
       },
       handleCurrentChange(val) {
         this.search.page = val;

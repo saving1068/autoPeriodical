@@ -65,7 +65,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="获取时间">
+      <el-form-item label="获取时间" v-if="showAdMan||userInfo.role.roleId!=4" >
         <el-date-picker
           v-model="time"
           type="daterange"
@@ -75,8 +75,8 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item> -->
-      <!-- <el-form-item label="分配时间">
+      </el-form-item>
+      <el-form-item label="分配时间" v-else>
         <el-date-picker
           v-model="disTime"
           type="daterange"
@@ -86,7 +86,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item> -->
+      </el-form-item>
       <div class="center">
         <el-button type="primary" @click="customerList" icon="el-icon-seach">搜索</el-button>
       </div>
@@ -112,9 +112,9 @@
         <el-table-column prop="sourceLink" align="center" label="来源连接"></el-table-column>
         <el-table-column prop="platformStr" align="center" label="平台"></el-table-column>
         <el-table-column prop="personnelName" align="center" label="销售员"></el-table-column>
-        <!-- <el-table-column prop="disTime" align="center" label="分配时间"></el-table-column> -->
-        <!-- <el-table-column prop="getDate" align="center" label="获取时间"></el-table-column> -->
         
+        <el-table-column prop="getDate" v-if="showAdMan||userInfo.role.roleId!=4" align="center" label="获取时间"></el-table-column>
+        <el-table-column prop="disTime" v-else align="center"  label="分配时间"></el-table-column>
         <el-table-column label="是否有效" align="center" prop="isValidStr"></el-table-column>
         <el-table-column label="无效原因" align="center" prop="invalidCauseStr"></el-table-column>
         <!-- <el-table-column label="是否已成交" align="center" prop="isSuccessStr"></el-table-column> -->
@@ -369,13 +369,12 @@
             </el-form-item>
 
             <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
-              <div v-html="detail.leaveWord" class="center"></div>
+              <div v-html="detail.leaveWord" class="center width280"></div>
 
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280" 
-                style="width:510px"
+                style="width:480px"
                 type="textarea"
                 show-word-limit
                 maxlength="1000"
@@ -462,7 +461,7 @@ import {
 import { departmentList } from "@/api/department";
 import { projectList } from "@/api/project";
 import { accountList } from "@/api/user";
-import { dictApi, idChangeStr, filterButton,encryptionTel,downFile } from "@/utils";
+import { dictApi, idChangeStr, filterButton,encryptionTel,downFile,downFileGet } from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
   department: "", //销售部
@@ -624,7 +623,8 @@ export default {
       choiseItem: {},
       total: 0,
       showAdMan: true,
-      resourceType:[]
+      resourceType:[],
+
     };
   },
   async created() {
@@ -632,7 +632,8 @@ export default {
     if (
       this.userInfo.role.roleId == 1 ||
       this.userInfo.role.roleId == 3 ||
-      this.userInfo.role.roleId == 6
+      this.userInfo.role.roleId == 6 ||
+      this.userInfo.role.roleId == 8
     ) {
       this.showAdMan = true;
     } else {
@@ -661,8 +662,8 @@ export default {
     exportCustomer(){
       let obj = JSON.stringify(this.search);
       console.log(obj)
-      let url =`customer/liveExport?jsonStr=${obj}`;
-      downFile(url)
+      let url =`api/customer/liveExport?jsonStr=${obj}`;
+      downFileGet(url)
     },
     async delAmountList(item) {
       let res, list;
@@ -1161,6 +1162,10 @@ export default {
             let district = await districtList({ fid: item.city });
             this.detailDistrict = district.data;
           }
+           let obj = {
+            id:item.id
+          }
+          let resD =  await detailCustomer(obj)
 
           let {
             adMan,
@@ -1187,7 +1192,7 @@ export default {
             isValidStr,
             keyword,
             leaveWord,resourceType
-          } = { ...item };
+          } = { ...resD.data };
           
           this.detail = {
             adMan,

@@ -164,6 +164,15 @@ const routes = [
 				},
 				component:() => import('@/views/adLive'),
 			},
+			{
+				path: '/downFileList',
+				name: 'downFileList',
+				meta:{
+					title:'广告实况下载列表'
+				},
+				component:() => import('@/views/downFileList'),
+				
+			}
 	
 		]
 	},

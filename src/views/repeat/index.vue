@@ -496,13 +496,13 @@
               <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
-              <div v-html="detail.leaveWord" class="center"></div>
+              <div v-html="detail.leaveWord" class="center width280"></div>
 
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280" 
-                style="width:510px"
+               
+                style="width:480px"
                 type="textarea"
                 show-word-limit
                 maxlength="1000"
@@ -1247,7 +1247,10 @@ export default {
                          let district = await districtList({fid:item.city});
                         this.detailDistrict = district.data;
                     }
-                  
+                  let obj = {
+                    id:item.id
+                  }
+                  let resD =  await detailCustomer(obj)
                    let  {
                         adMan,
                         department,
@@ -1269,7 +1272,7 @@ export default {
                         disTime,
                         id,isValid,
                         keyword,leaveWord,resourceType
-                    } = {...item}
+                    } = {...resD.data}
                     
                     this.detail = { adMan,
                          department,
@@ -1290,7 +1293,7 @@ export default {
                         type,
                         email,
                         isValid:isValid?isValid:isValid == 0?0:'',
-                        keyword,leaveWord,resourceType
+                        keyword,leaveWord,resourceType,record:{}
                         };
                         
                         this.followFlag = false;

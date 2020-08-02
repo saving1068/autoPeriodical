@@ -1,6 +1,6 @@
 <template>
   <div class="warp" v-loading="loading">
-    <el-form inline class="form-inline" label-width="100px">
+    <el-form inline class="form-inline" label-width="125px">
       <el-form-item label="客户姓名" width="100%">
         <el-input class="width280" v-model="search.name" placeholder="请输入客户姓名"></el-input>
       </el-form-item>
@@ -133,7 +133,7 @@
         <el-select
           clearable
           class="width280"
-          disabled
+         
           v-model="search.isVisit"
           placeholder="请选择是否已来访"
         >
@@ -253,9 +253,11 @@
       </el-table>
       <el-pagination
         style=" padding:20px;"
-        @current-change="handleCurrentChange"
-        :page-size="10"
-        layout="total, prev, pager, next"
+        @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[10,20, 50, 100, 200]"
+            :page-size="10"
+            layout="total, prev, pager, next,sizes"
         :total="total"
       ></el-pagination>
     </div>
@@ -653,13 +655,13 @@
               <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
-              <div v-html="detail.leaveWord" class="center"></div>
+              <div v-html="detail.leaveWord" class="center width280"></div>
 
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280" 
-                style="width:510px"
+               
+                style="width:480px"
                 type="textarea"
                 show-word-limit
                 maxlength="1000"
@@ -744,8 +746,9 @@ import {
 } from "@/api/amount";
 import { projectList } from "@/api/project";
 import { userDepartmentList } from "@/api/department";
+import {departmentList} from '@/api/department'
 import { accountList } from "@/api/user";
-import { dictApi, idChangeStr, filterButton ,encryptionTel} from "@/utils";
+import { dictApi, idChangeStr, filterButton ,encryptionTel,initDate} from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
   department: "", //销售部
@@ -777,6 +780,8 @@ export default {
       filterButton: filterButton,
       visitTime: "",
       time: "",
+      nowDate:'',
+      departmentList:[],
       detailFlag: false,
       addVisible: false,
       transferVisible: false,
@@ -876,7 +881,29 @@ export default {
       amountInfo: {},
       delAmount: false,
       total: 0,
-      resourceType:[]
+      resourceType:[],
+      nowList:[
+            {key:0,label:"否"},
+            {key:1,label:"是"}
+        ],
+        valid:[{
+            key:1,
+            label:"有效"
+        },
+        {
+            key:0,
+            label:"无效"
+        }
+        ],
+      visitSelect:[{
+            key:1,
+            lable:"是"
+        },
+        {
+            key:0,
+            lable:"否"
+        }
+        ],
     };
   },
   async created() {
@@ -1161,6 +1188,8 @@ export default {
       this.saleList = saleList.data;
       let project = await projectList();
       this.projectList = project.data;
+      let department = await departmentList();
+        this.resetList(department.data);
       // if(this.userInfo.role.roleId !=7){
       //      let personnel = await accountList({roleId:this.userInfo.role.roleId,did:this.userInfo.did});
       //     this.personnel = personnel.data;
@@ -1168,9 +1197,36 @@ export default {
 
       console.log(this.projectList, 21312);
     },
-
+    resetList(arr){
+        // console.log(arr)
+        let pList = [];
+        arr.forEach(item =>{
+         this.departmentList.push(item)
+          if(item.child.length){
+            this.sonsTree(item);
+            // console.log(son,'son')
+           
+          }
+        })
+        
+        // console.log(pList,123123)
+      },
+      sonsTree(obj) {
+        // console.log(obj.name,obj.child.length)
+        // let son  = []
+       
+        if(obj.child.length){
+          obj.child.forEach((item)=>{
+           
+           this.departmentList.push(item)
+           
+            this.sonsTree(item)
+          })
+        }
+      },
     async customerList() {
       //客户列表
+       this.search.nextFollowUpDate = this.nowDate == 0?"":initDate()
       let res = await waiveList(this.search);
       console.log(res, 222222222222);
       res.data.map(item => {
@@ -1372,13 +1428,17 @@ export default {
         this.type = value;
 
         if (item) {
-          if (item.city && item.district) {
-            let city = await cityList({ fid: item.province });
-            this.detailCity = city.data;
-            let district = await districtList({ fid: item.city });
-            this.detailDistrict = district.data;
+          // if (item.city && item.district) {
+          //   let city = await cityList({ fid: item.province });
+          //   this.detailCity = city.data;
+          //   let district = await districtList({ fid: item.city });
+          //   this.detailDistrict = district.data;
+          // }
+          let obj = {
+            id:item.id
           }
-
+          let resD =  await detailCustomer(obj)
+          console.log(resD)
           let {
             adMan,
             department,
@@ -1403,7 +1463,7 @@ export default {
             invalidCause,
             resourceType,
             id
-          } = { ...item };
+          } = { ...resD.data };
 
           this.detail = {
             adMan,
@@ -1427,7 +1487,8 @@ export default {
             disTime,
             invalidCause,
             resourceType,
-            email
+            email,
+            record:[]
           };
 
           let res = await followList({ id: item.id });
@@ -1471,6 +1532,11 @@ export default {
       this.waiveInfo.ids = list;
       this.transferListInfo.list = transferListInfo;
     },
+     handleSizeChange(val) {
+        this.search.limit = val;
+       this.customerList()
+        console.log(`当前页: ${val}`);
+      },
     handleCurrentChange(val) {
       this.search.page = val;
       this.customerList();

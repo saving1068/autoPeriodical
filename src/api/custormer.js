@@ -159,6 +159,14 @@ const customerLive = (params) => { //客户资源列表
         data:params
     });
 }
+const downloadRecords = (params) => { //客户资源列表
+    return request({
+        url: '/userDownloadRecords/list',
+        method: 'POST',
+        data:params
+    });
+}
+
 
 
 export {
@@ -182,5 +190,5 @@ export {
     customerSuccess,
     reusePhoneList,
     deleteReusePhone,
-    customerLive
+    customerLive,downloadRecords
 }

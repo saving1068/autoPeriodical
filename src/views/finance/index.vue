@@ -153,12 +153,12 @@
       </div>
       <el-table
         :data="tableData"
-        tooltip-effect="dark"
+        
         @row-dblclick="rowDblclic"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column align="center" prop="name" label="客户姓名"></el-table-column>
         <el-table-column align="center" prop="telephone" label="手机号码"></el-table-column>
         <el-table-column align="center" prop="adManName" label="广告负责人"></el-table-column>
@@ -166,8 +166,8 @@
         <el-table-column align="center" prop="address" label="详细地址"></el-table-column>
         <el-table-column align="center" prop="personnelName" label="销售员"></el-table-column>
         <el-table-column align="center" prop="departmentName" label="销售部"></el-table-column>
-        <el-table-column align="center" prop="bpMoney" label="前场收入(元)"></el-table-column>
-        <el-table-column align="center" prop="fpMoney" label="后场收入(元)"></el-table-column>
+        <el-table-column align="center" prop="bpMoney" label="后场收入(元)"></el-table-column>
+        <el-table-column align="center" prop="fpMoney" label="前场收入(元)"></el-table-column>
         <el-table-column align="center" prop="opMoney" label="其他收入(元)"></el-table-column>
         <el-table-column align="center" prop="money" label="合同金额(元)"></el-table-column>
         <el-table-column align="center" prop="allMoney" label="合计收入(元)"></el-table-column>
@@ -218,13 +218,22 @@
     </el-dialog>
 
     <!-- 新增已付金额管理 -->
-    <el-dialog title="新增已付金额管理" :before-close='amountInfoClose' :visible.sync="amountInfoVisi" width="40%" center>
-      <el-form :rules="amountInfoRules" :model="amountInfo" ref="amountInfo">
-        <el-form-item label="金额" prop="money">
-          <el-input v-model="amountInfo.money" placeholder="金额"></el-input>
+    <el-dialog title="新增已付金额管理" :before-close='amountInfoClose' :visible.sync="amountInfoVisi" width="30%" center>
+      <el-form :rules="amountInfoRules" :model="amountInfo" ref="amountInfo" label-width="100px">
+        <el-form-item label="金额：" prop="money">
+          <el-input class="width280"  v-model="amountInfo.money" placeholder="金额"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="amountInfo.remark" placeholder="备注"></el-input>
+        <el-form-item label="付款时间：" prop="colTime">
+          <el-date-picker
+            class="width280" 
+            v-model="amountInfo.colTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择付款时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="备注：">
+          <el-input class="width280"  v-model="amountInfo.remark" placeholder="备注"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -591,11 +600,11 @@
             <el-form-item label="合同金额">
               <el-input class="width280" placeholder="请输入合同金额" disabled v-model="detail.money"></el-input>
             </el-form-item>
-            <el-form-item label="前场金额">
-              <el-input class="width280" placeholder="请输入前场金额" disabled v-model="detail.bpMoney"></el-input>
-            </el-form-item>
             <el-form-item label="后场金额">
-              <el-input class="width280" placeholder="请输入后场金额" disabled v-model="detail.fpMoney"></el-input>
+              <el-input class="width280" placeholder="请输入后场金额" disabled v-model="detail.bpMoney"></el-input>
+            </el-form-item>
+            <el-form-item label="前场金额">
+              <el-input class="width280" placeholder="请输入前场金额" disabled v-model="detail.fpMoney"></el-input>
             </el-form-item>
              <el-form-item label="其他金额">
               <el-input class="width280" placeholder="请输入后场金额" disabled v-model="detail.opMoney"></el-input>
@@ -616,13 +625,12 @@
               <el-input class="width280" v-model="detail.disTime" disabled></el-input>
             </el-form-item>
             <el-form-item label="留言" prop="leaveWord" v-if="type == 1">
-              <div v-html="detail.leaveWord" class="center"></div>
+              <div v-html="detail.leaveWord" class="center width280"></div>
 
             </el-form-item>
              <el-form-item label="留言" prop="leaveWord" v-else>
               <el-input
-                class="width280" 
-                style="width:510px"
+                style="width:480px"
                 type="textarea"
                 show-word-limit
                 maxlength="1000"
@@ -730,7 +738,8 @@ let customerInfo = {
     }
     let amountInfo = {
         remark:'',
-        money:''
+        money:'',
+        colTime:""
     }
 export default {
   data() {
@@ -860,6 +869,9 @@ export default {
                  money:[
                      { required: true, message: '请输入金额', trigger: 'blur' },
                 ],
+                // colTime:[
+                //      { required: true, message: '请输入付款时间', trigger: 'blur' },
+                // ],
             },
             
             delAmount:false,
@@ -918,6 +930,7 @@ export default {
       amountInfoClose(){
           console.log(111)
            this.$refs['amountInfo'].resetField;
+           this.amountInfoVisi =false
       },
     async delAmountList(item){
         let res,list;
@@ -1005,7 +1018,8 @@ export default {
                   id:item.id,
                   ctId:this.ctId,
                   money:item.money,
-                  remark:item.remark
+                  remark:item.remark,
+                  colTime:item.colTime
               }
               this.amountInfo = {...obj}
           }else{
@@ -1430,7 +1444,10 @@ export default {
                          let district = await districtList({fid:item.city});
                         this.detailDistrict = district.data;
                     }
-                  
+                  let obj = {
+                    id:item.id
+                  }
+                  let resD =  await detailCustomer(obj)
                    let  {
                         adMan,
                         department,
@@ -1454,7 +1471,7 @@ export default {
                         resourceType,
                         isValid,
                         keyword,leaveWord,departmentName,bpMoney,fpMoney,opMoney,money
-                    } = {...item}
+                    } = {...resD.data}
                     let allMoney = (Number(bpMoney)+Number(fpMoney)+Number(opMoney)).toFixed(2)
                     this.detail = { adMan,
                          department,
@@ -1475,7 +1492,8 @@ export default {
                         disTime,
                         type,
                         email,isValid:isValid?isValid:isValid == 0?0:'',
-                        keyword,leaveWord,departmentName,bpMoney,fpMoney,opMoney,money,allMoney
+                        keyword,leaveWord,departmentName,bpMoney,fpMoney,opMoney,money,allMoney,
+                        record:[]
                         };
                         
                         this.followFlag = false;

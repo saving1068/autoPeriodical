@@ -5,10 +5,22 @@
                 <div>
                     欢迎进入嘉信自动化招商系统
                 </div>
-                <div>
-                    {{nowDate}}
-                </div>
+                
             </div>
+            <el-form  style="padding:5px 0" inline>
+                <el-form-item label="当前时间" >
+                   <div>{{nowDate}}</div>
+                </el-form-item>
+                <el-form-item label="本次登录ip" >
+                   <div>{{userInfo.loginIp}}</div>
+                </el-form-item>
+                <el-form-item label="上次登录时间" >
+                    <div>{{userInfo.lastLoginTime}}</div>
+                </el-form-item>
+                <el-form-item label="上次登录ip">
+                    <div>{{userInfo.lastLoginIp}}</div>
+                </el-form-item>
+                </el-form>
         </el-card>
     </div>
 </template>
@@ -21,9 +33,11 @@ export default {
         return{
             nowDate:"",
             timer:null,
+            userInfo:{}
         }
     },
     created(){
+        this.userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
         // 
         // console.log(this.nowDate)
         console.log(this);
