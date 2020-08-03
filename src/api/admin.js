@@ -43,6 +43,13 @@ const updateItemDic = (params) => { //更新字典数据
         data:params
     });
 }
+const loginRecord = (params) => { //登录记录
+    return request({
+        url: '/user/loginRecord',
+        method: 'POST',
+        data:params
+    });
+}
 
 
 
@@ -54,5 +61,5 @@ export {
     listDic,
     detailDic,
     deleteDic,
-    
+    loginRecord
 }

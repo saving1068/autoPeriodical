@@ -172,7 +172,17 @@ const routes = [
 				},
 				component:() => import('@/views/downFileList'),
 				
-			}
+			},
+			{
+				path: '/loginRecord',
+				name: 'loginRecord',
+				meta:{
+					title:'登录记录'
+				},
+				component:() => import('@/views/loginRecord'),
+				
+			},
+			
 	
 		]
 	},
