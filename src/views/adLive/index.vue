@@ -1167,7 +1167,7 @@ export default {
           }
           let resD =  await detailCustomer(obj)
           if(resD.data.sourceLink){
-              resD.data.sourceLink = resD.data.sourceLink.indexOf('?')<0?resD.data.sourceLink:resD.data.split('?')[0];
+              resD.data.sourceLink = resD.data.sourceLink.indexOf('?')<0?resD.data.sourceLink:resD.data.sourceLink.split('?')[0];
           }
           let {
             adMan,
