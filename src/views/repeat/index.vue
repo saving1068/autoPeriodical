@@ -573,7 +573,7 @@ import {
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
   import {userDepartmentList} from '@/api/department'
-import { dictApi ,idChangeStr,filterButton,encryptionTel} from "@/utils";
+import { dictApi ,idChangeStr,filterButton,encryptionTel,initDate} from "@/utils";
 let customerInfo = {
         adMan:'',//广告负责人
         department:"",//销售部
@@ -1206,6 +1206,11 @@ export default {
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(async()=>{
+                    let date = new Date(`${initDate()} 00:00`);
+                    let nextFollowUpDate = new Date(this.detail.nextFollowUpDate)
+                    if(nextFollowUpDate.getTime() - date.getTime() == 0){
+                        return this.$message.warning('请精确到分秒（请勿输入00：00）')
+                    }
                     this.detail.department = this.userInfo.did;
                     if(this.userInfo.role.roleId == 7){
                         this.detail.personnel = this.userInfo.id;
@@ -1251,6 +1256,9 @@ export default {
                     id:item.id
                   }
                   let resD =  await detailCustomer(obj)
+                  if(resD.data.sourceLink){
+                        resD.data.sourceLink = resD.data.sourceLink.indexOf('?')<0?resD.data.sourceLink:resD.data.split('?')[0];
+                    }
                    let  {
                         adMan,
                         department,

@@ -345,11 +345,12 @@
         <div v-else>暂无记录</div>
         <div class="divider" >
             <el-input placeholder="请输入备注" style='width:220px' v-model="visitInfo.remark"></el-input>
+            <!-- :picker-options='limitDate' -->
             <el-date-picker
              style="padding:20px 0;"
              v-model="visitInfo.visitingTime"
              value-format='yyyy-MM-dd'
-             :picker-options='limitDate'
+             
             type="date"
             placeholder="选择日期">
             </el-date-picker>
@@ -1274,6 +1275,11 @@ export default {
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(async()=>{
+                    let date = new Date(`${initDate()} 00:00`);
+                    let nextFollowUpDate = new Date(this.detail.nextFollowUpDate)
+                    if(nextFollowUpDate.getTime() - date.getTime() == 0){
+                        return this.$message.warning('请精确到分秒（请勿输入00：00）')
+                    }
                     this.detail.department = this.userInfo.did;
                     if(this.userInfo.role.roleId == 7){
                         this.detail.personnel = this.userInfo.id;
@@ -1321,6 +1327,9 @@ export default {
                     id:item.id
                   }
                   let resD =  await detailCustomer(obj)
+                  if(resD.data.sourceLink){
+                        resD.data.sourceLink = resD.data.sourceLink.indexOf('?')<0?resD.data.sourceLink:resD.data.split('?')[0];
+                    }
                    let  {
                         adMan,
                         department,

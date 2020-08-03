@@ -1393,6 +1393,9 @@ export default {
                     id:item.id
                   }
                   let resD =  await detailCustomer(obj)
+          if(resD.data.sourceLink){
+              resD.data.sourceLink = resD.data.sourceLink.indexOf('?')<0?resD.data.sourceLink:resD.data.split('?')[0];
+          }
           let {
             adMan,
             department,

@@ -35,9 +35,11 @@
                 </el-dropdown>
             </el-badge>
             
-            <div class="avatar">
+            <div class="avatar space-between">
                 <!-- <el-avatar  size="small" src="../../images/icon.jpg"></el-avatar> -->
-                {{userInfo.contactName}}
+                <div class="userInfo">{{userInfo.contactName}}</div>
+                <div class="userInfo">{{userInfo.loginTime}}</div>
+                <div class="userInfo">{{userInfo.loginIp}}</div>
             </div>
             <div style="margin:0 10px;">
                 <el-button type='warning' @click="updatapasswar = true">
@@ -297,7 +299,7 @@
 
         <span slot="footer" class="dialog-footer">
             <el-button @click="detailFlag = false;">取 消</el-button>
-            <el-button type="primary"@click="suerAdd()">确 定</el-button>
+            <el-button type="primary" @click="suerAdd()">确 定</el-button>
         </span>
         </el-dialog>
 
@@ -324,7 +326,7 @@
 import {detailCustomer,updateFollow,followList,updateCustomer
     } from '@/api/custormer'
 import {loginOut,updatePassword} from '@/api/user'
-import {dictApi} from "@/utils"
+import {dictApi,initDate} from "@/utils"
 import {projectList} from '@/api/project'
 import {accountList} from '@/api/user'
 import {departmentList,userDepartmentList} from '@/api/department'
@@ -426,10 +428,16 @@ import md5 from 'md5'
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(async()=>{
+                    let date = new Date(`${initDate()} 00:00`);
+                    let nextFollowUpDate = new Date(this.detail.nextFollowUpDate)
+                    if(nextFollowUpDate.getTime() - date.getTime() == 0){
+                        return this.$message.warning('请精确到分秒（请勿输入00：00）')
+                    }
                     this.detail.department = this.userInfo.did;
                     if(this.userInfo.role.roleId == 7){
                         this.detail.personnel = this.userInfo.id;
                     }
+                    
                     let res = await updateCustomer(this.detail);
                     this.$message.success(res.returnMsg)
                     this.notReadMsg() 
@@ -533,6 +541,9 @@ import md5 from 'md5'
                 console.log(item)
                 try {
                     let detail = await detailCustomer({id:item.ctId})
+                    if(detail.data.sourceLink){
+                        detail.data.sourceLink = detail.data.sourceLink.indexOf('?')<0?detail.data.sourceLink:detail.data.split('?')[0];
+                    }
                     this.detail = {...detail.data,record:[]};
                     let res = await followList({id:item.ctId});
                     this.detail.record = res.data;
@@ -622,6 +633,9 @@ import md5 from 'md5'
         height: 60px;
         .avatar{
             padding: 0 20px;
+            .userInfo{
+                padding:0 10px;
+            }
         }
         .login{
             display: flex;

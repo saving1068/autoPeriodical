@@ -1,5 +1,5 @@
 <template>
-	  <el-container style="padding:20px 20px;background:#eef1f6;">
+	  <el-container style="padding:20px 20px;background:#eef1f6;min-width: 1125px;">
 		 <el-header style="background:#fff;"> 
 				<myhead></myhead>	
 		</el-header>
@@ -13,7 +13,7 @@
 				
 			</el-aside>
 		<el-container>
-			<el-main style="padding:0 0px 0 20px;min-width:1125px;" :style="{'height':maxHeight+'px'}">
+			<el-main style="padding:0 0px 0 20px;" :style="{'height':maxHeight+'px'}">
 				<el-scrollbar id="scorll" :style='{"height":maxHeight+"px"}' style="background:#fff;">
 				<!-- <el-header style="background:#fff;"> 
 					<myhead></myhead>	

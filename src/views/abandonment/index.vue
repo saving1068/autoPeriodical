@@ -518,6 +518,7 @@
                 type="datetime"
                 format="yyyy-MM-dd HH:mm"
                 value-format="yyyy-MM-dd HH:mm"
+                :picker-options='limitDate'
                 placeholder="选择日期"
               ></el-date-picker>
             </el-form-item>
@@ -748,7 +749,7 @@ import { projectList } from "@/api/project";
 import { userDepartmentList } from "@/api/department";
 import {departmentList} from '@/api/department'
 import { accountList } from "@/api/user";
-import { dictApi, idChangeStr, filterButton ,encryptionTel,initDate} from "@/utils";
+import { dictApi, idChangeStr, filterButton ,encryptionTel,initDate,parseDate} from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
   department: "", //销售部
@@ -775,6 +776,11 @@ let amountInfo = {
 export default {
   data() {
     return {
+      limitDate:{
+        disabledDate(time){
+          return time.getTime()<Date.now() -24*60*60*1000
+        }
+      },
       disTime: "",
       activeName: "first",
       filterButton: filterButton,
@@ -1390,6 +1396,7 @@ export default {
 
     async suerAdd() {
       try {
+        
         this.$refs["detail"].validate(valid => {
           if (valid) {
             this.$confirm("是否确认新增客户", "提示", {
@@ -1397,6 +1404,11 @@ export default {
               cancelButtonText: "取消",
               type: "warning"
             }).then(async () => {
+              let date = new Date(`${initDate()} 00:00`);
+              let nextFollowUpDate = new Date(this.detail.nextFollowUpDate)
+              if(nextFollowUpDate.getTime() - date.getTime() == 0){
+                return this.$message.warning('请精确到分秒（请勿输入00：00）')
+              }
               this.detail.department = this.userInfo.did;
               if (this.userInfo.role.roleId == 7) {
                 this.detail.personnel = this.userInfo.id;
@@ -1438,6 +1450,9 @@ export default {
             id:item.id
           }
           let resD =  await detailCustomer(obj)
+          if(resD.data.sourceLink){
+              resD.data.sourceLink = resD.data.sourceLink.indexOf('?')<0?resD.data.sourceLink:resD.data.split('?')[0];
+          }
           console.log(resD)
           let {
             adMan,
