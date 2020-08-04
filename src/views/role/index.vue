@@ -164,6 +164,9 @@ let addItemInfo = {
                       // console.log(list)
                       
                       this.$refs.tree.getCheckedNodes().forEach(item =>{
+                          if(item.pid != 0){
+                            this.addItemInfo.pids.push(item.pid)
+                          }
                            this.addItemInfo.pids.push(item.id)
                       })
                      this.addItemInfo.pids = Array.from(new Set([...this.addItemInfo.pids])) 
@@ -243,25 +246,37 @@ let addItemInfo = {
             try {
               let res =  await roleDetail({id:item.roleId})
            let perList = [];
+           
           let menuList = [...this.initMenuList];//全部角色
+          let curList = menuList.find(item =>item.id == 229);//客户跟进
           let contrastList = [];//父角色中的东西
           let perItem = null;
-          console.log(menuList)
-          console.log(res.data.perList)
+          // console.log(menuList)
+          // console.log(res.data.perList)
           // contrastList = res.data.perList.map(item => item.pid == 0);
            res.data.perList.forEach((item,index) =>{//当前角色的
             // console.log(index,menuList.length-1,menuList[index])
             //   perItem = menuList.find(sitem =>sitem.id == item.id);
             //   console.log(perItem)
             //   if(item.pid !=0||(item.pid==0&&perItem)){
+              console.log(item)
+            
+                if(item.pid == 229){
+                  perList.push(item.id)
+                }
+
                 contrastList.push(item.id)
               // } 
              
            })
+           if(curList.children.length != perList.length){
+             contrastList = contrastList.filter(item => item!=229)
+           }
+           
            console.log(contrastList)
             this.itemPowerList = contrastList;
-            console.log(this.itemPowerList,'itemPowerList')
-           console.log(res)
+            // console.log(this.itemPowerList,'itemPowerList')
+          //  console.log(res)
             this.addItemInfo = {...res.data}
             } catch (error) {
               console.log(error)
