@@ -37,7 +37,7 @@
                 </div>
             </div>   
         </div>
-        <div class="table center">
+        <div class="table">
             <el-table
                 :data="tableData"
                 fit
