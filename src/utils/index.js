@@ -94,7 +94,7 @@ const parseDate = (rawDate) => {
     
 
 
-const downFileGet = ((url)=>{
+const downFileGet = ((url,type)=>{
     axios.get(url, {
         withCredentials:true,
          headers:{
@@ -110,7 +110,7 @@ const downFileGet = ((url)=>{
          aLink.target = '_blank';
          aLink.style.display = "none";
          aLink.href = url;
-         aLink.setAttribute("download",'推广实况.xlsx');
+         aLink.setAttribute("download",!type?'推广实况.xlsx':'废弃资源.xlsx');
          document.body.appendChild(aLink);
          aLink.click();
          document.body.removeChild(aLink); 

@@ -207,7 +207,8 @@
         <!-- <el-button type="primary" @click='addDetail(0)'>新增客户</el-button>
         <el-button type="danger" @click="waiveCustomerList">批量放弃</el-button>-->
         <el-button type="warning" @click="getTransferList">批量转移</el-button>
-        <!-- <el-button >导出</el-button> -->
+        <el-button v-if="userInfo.role.roleId == 1"  type="primary" @click="exportCustomer">导出</el-button>
+
       </div>
       <el-table
         :data="tableData"
@@ -749,7 +750,7 @@ import { projectList } from "@/api/project";
 import { userDepartmentList } from "@/api/department";
 import {departmentList} from '@/api/department'
 import { accountList } from "@/api/user";
-import { dictApi, idChangeStr, filterButton ,encryptionTel,initDate,parseDate} from "@/utils";
+import { dictApi, idChangeStr, filterButton ,encryptionTel,initDate,parseDate,downFileGet} from "@/utils";
 let customerInfo = {
   adMan: "", //广告负责人
   department: "", //销售部
@@ -936,6 +937,12 @@ export default {
     //   },
   },
   methods: {
+    exportCustomer(){
+      let obj = JSON.stringify(this.search);
+      console.log(obj)
+      let url =`api/customer/waiveListExport?jsonStr=${obj}`;
+      downFileGet(url,1)
+    },
      deleteCustomerList(item){
            this.$confirm('确认删除该数据？')
           .then(async _ => {

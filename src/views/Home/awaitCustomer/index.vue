@@ -266,10 +266,11 @@
             </el-table-column>
             <el-table-column prop="disTime" align='center' label="分配时间">
             </el-table-column>
+            <el-table-column prop="nextFollowUpDate" align='center' label="下次跟进时间">
+            </el-table-column>
             <el-table-column label="是否有效" align="center" prop="isValidStr"></el-table-column>
             <el-table-column label="无效原因" align="center" prop="invalidCauseStr"></el-table-column>
-            <!-- <el-table-column prop="getDate" align='center' label="获取时间">
-            </el-table-column> -->
+            
             <!-- <el-table-column label="是否已成交" align='center' prop='isSuccessStr'>
             
             </el-table-column> -->
