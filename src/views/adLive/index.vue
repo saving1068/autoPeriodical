@@ -93,7 +93,7 @@
     </el-form>
     <div class="table">
       <div class="button">
-        <el-button v-if="userInfo.role.roleId == 1"  type="primary" @click="exportCustomer">导出</el-button>
+        <el-button v-if="userInfo.role.roleId == 1||userInfo.role.roleId == 8"  type="primary" @click="exportCustomer">导出</el-button>
       </div>
       <el-table
         :data="tableData"
